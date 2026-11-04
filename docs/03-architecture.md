@@ -145,7 +145,8 @@ Catatan: versi Postgres, pemilihan GitHub Actions sebagai CI, dan struktur proye
 ### ADR-004: Peta
 - **Status:** terbuka. Kandidat: `flutter_map` dengan tile OSM atau penyedia tile berbayar murah, atau `google_maps_flutter`.
 - **Pertimbangan:** biaya per muatan peta, kualitas data Indonesia, kebijakan penggunaan tile publik OSM (tidak untuk pemakaian berat tanpa penyedia sendiri). **[Belum diverifikasi]**
-- **Keputusan ditunda ke akhir spike.**
+- **Keputusan (Sprint 0A, 2026-11-04): `flutter_map`.** Tag platform di pub.dev (diperiksa hari itu): `flutter_map` mendukung Android, iOS, Linux, web, Windows, macOS. `google_maps_flutter` hanya Android, iOS, web. Pengujian dilakukan di Linux, jadi hanya `flutter_map` yang berjalan di semua klien.
+- **Belum diputuskan:** penyedia tile (biaya, kebijakan pemakaian OSM, kualitas data Indonesia). Diputuskan di Sprint 3.
 
 ### ADR-005: Pustaka lokasi background
 - **Status:** terbuka, diputuskan lewat spike.

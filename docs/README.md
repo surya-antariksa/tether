@@ -12,6 +12,8 @@ Tether adalah aplikasi berbagi lokasi dan keselamatan untuk keluarga Indonesia, 
 | 05 | [Privasi, Keamanan, Kepatuhan](05-privacy-security.md) | UU PDP, kebijakan store, model ancaman | Draf 1 |
 | 06 | [Roadmap & Rencana Uji](06-roadmap.md) | Fase kerja, spike, rencana pengujian, risiko | Draf 1 |
 | 07 | [Diagram OOAD](07-uml-diagrams.md) | Use case, activity, sequence, class, state (Mermaid) | Draf 1 |
+| 08 | [Design System (gaya Apple)](08-design-system.md) | Warna, tipografi, komponen, izin, Liquid Glass berbasis HIG | Draf 1 |
+| 09 | [Sprint Plan](09-sprint-plan.md) | Jadwal sprint 0 sampai 7, tugas, definisi selesai, alur push per sprint | Draf 1 |
 
 Diagram lain: komponen dan deployment di 03, ERD di 04, DFD di 05.
 
@@ -19,6 +21,11 @@ Diagram lain: komponen dan deployment di 03, ERD di 04, DFD di 05.
 - Target: keluarga Indonesia.
 - Monetisasi: gratis dulu, diputuskan setelah MVP.
 - Backend: Supabase.
+- Desain: satu desain gaya Apple untuk Android dan iOS (lihat 08).
+- Git: satu push per sprint, branch `sprint/N-nama`, tag `sprint-N` (lihat 09).
+- Platform rilis pertama: Android saja, ke Google Play. iOS ditunda (tidak ada Mac dan iPhone).
+- Lingkungan uji: komputer Linux ini (desktop Linux, Chrome, emulator Android). Satu Redmi hanya untuk uji lokasi background (Sprint 0B, sebelum Sprint 3).
+- Pelaksana: Claude. Pemilik produk mereview tiap sprint, menguji di Redmi, lalu revisi sebelum sprint berikutnya.
 - Klien: Flutter (Android dan iOS).
 
 ## Aturan dokumen

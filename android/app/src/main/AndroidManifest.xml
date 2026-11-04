@@ -1,4 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pelacakan lokasi (F5, F13). BELUM TERVERIFIKASI: build Android terblokir
+         lisensi SDK. Layanan foreground bertipe location (GeolocatorLocationService)
+         dideklarasikan oleh manifest plugin geolocator_android dan digabung otomatis,
+         jadi tidak diulang di sini. Manifest plugin geolocator_android 5.2.1 tidak
+         memuat izin FOREGROUND_SERVICE di bawah, jadi harus ada di sini. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="tether"
         android:name="${applicationName}"

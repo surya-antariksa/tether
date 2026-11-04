@@ -1,0 +1,2 @@
+-- Data uji lokal. Sejak Sprint 4 tempat (places) wajib milik sebuah Circle, dan Circle butuh
+-- pengguna terautentikasi, jadi tidak ada data awal di sini. Tes pgTAP membuat datanya sendiri.

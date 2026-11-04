@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.0
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      # Kode drift (.g.dart) ikut di repo, tetapi dibangun ulang agar pasti sinkron.
+      - run: dart run build_runner build --delete-conflicting-outputs
+      - run: flutter analyze
+      # Tes integrasi Supabase dilewati otomatis tanpa SUPABASE_URL/KEY (tidak ada rahasia di CI).
+      - run: flutter test

@@ -81,12 +81,11 @@ Ringkasan hubungan:
 ```mermaid
 flowchart TD
     A([Mulai: aplikasi dibuka pertama kali]) --> B[Layar penjelasan: kenapa lokasi dibagikan]
-    B --> C{Pengguna setuju lanjut?}
-    C -- Tidak --> Z1([Selesai: tanpa berbagi lokasi])
-    C -- Ya --> D[Minta izin lokasi saat aplikasi dipakai]
+    B --> C[Satu tombol: Lanjut]
+    C --> D[Dialog izin lokasi sistem iOS atau Android]
     D --> E{Izin diberikan?}
     E -- Tidak --> F[Tampilkan dampak dan tombol buka pengaturan]
-    F --> Z1
+    F --> Z1([Selesai: tanpa berbagi lokasi])
     E -- Ya --> G[Penjelasan izin lokasi selalu]
     G --> H[Minta izin lokasi selalu]
     H --> I{Diberikan?}

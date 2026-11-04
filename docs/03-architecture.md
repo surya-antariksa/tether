@@ -40,6 +40,93 @@ Versi: Draf 1. Semua pilihan pustaka bersifat kandidat sampai spike (06) selesai
 1. Klien memanggil Edge Function `trigger_sos` dengan lokasi terbaru.
 2. Fungsi membuat `alert` dan mengirim push prioritas tinggi ke semua anggota.
 
+## 2a. Diagram komponen
+
+```mermaid
+flowchart LR
+    subgraph Client["Aplikasi Flutter"]
+        UI["UI dan state (Riverpod)"]
+        Track["Layanan lokasi background"]
+        Queue[("Antrean lokal SQLite")]
+        PushRecv["Penerima push"]
+        UI --> Track
+        Track --> Queue
+    end
+
+    subgraph Supa["Supabase"]
+        Auth["Auth"]
+        DB[("Postgres dan PostGIS dengan RLS")]
+        RT["Realtime"]
+        Edge["Edge Functions"]
+        Cron["pg_cron"]
+        Store["Storage foto profil"]
+        DB --> RT
+        Edge --> DB
+        Cron --> DB
+    end
+
+    subgraph Notif["Layanan notifikasi"]
+        FCM["FCM"]
+        APNs["APNs"]
+        FCM --> APNs
+    end
+
+    Queue -- "HTTPS batch lokasi" --> DB
+    UI -- "HTTPS" --> Auth
+    UI -- "HTTPS" --> Edge
+    UI -- "unggah foto" --> Store
+    RT -- "WebSocket" --> UI
+    Edge -- "kirim push" --> FCM
+    FCM -- "Android" --> PushRecv
+    APNs -- "iOS" --> PushRecv
+```
+
+## 2b. Diagram deployment
+
+```mermaid
+flowchart TB
+    subgraph Phone["Ponsel pengguna (Android atau iOS)"]
+        App["Aplikasi Tether"]
+        BG["Layanan background (foreground service / mode lokasi iOS)"]
+        Local[("SQLite lokal")]
+        App --- BG
+        BG --- Local
+    end
+
+    subgraph Cloud["Supabase Cloud (satu proyek per lingkungan)"]
+        API["PostgREST dan Auth"]
+        DB[("Postgres 15 dan PostGIS")]
+        RTs["Realtime server"]
+        EF["Edge Functions (Deno)"]
+        API --- DB
+        RTs --- DB
+        EF --- DB
+    end
+
+    subgraph Google["Google"]
+        FCMs["Firebase Cloud Messaging"]
+    end
+
+    subgraph Apple["Apple"]
+        APNss["APNs"]
+    end
+
+    subgraph CI["CI/CD (GitHub Actions)"]
+        Build["Build dan tes Flutter"]
+        Mig["Migrasi Supabase CLI"]
+    end
+
+    Phone -- "HTTPS dan WSS (TLS)" --> Cloud
+    EF -- "HTTPS" --> FCMs
+    FCMs --> APNss
+    FCMs -- "push Android" --> Phone
+    APNss -- "push iOS" --> Phone
+    Build -. "artefak ke Play Console dan TestFlight" .-> Phone
+    Mig -. "terapkan skema" .-> Cloud
+```
+
+Catatan: versi Postgres, pemilihan GitHub Actions sebagai CI, dan struktur proyek per lingkungan adalah usulan dan belum diverifikasi. Diagram urutan dan state ada di [07-uml-diagrams.md](07-uml-diagrams.md).
+
 ## 3. ADR (Architecture Decision Records)
 
 ### ADR-001: Flutter untuk klien

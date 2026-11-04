@@ -11,6 +11,9 @@ Tether adalah aplikasi berbagi lokasi dan keselamatan untuk keluarga Indonesia, 
 | 04 | [Model Data](04-data-model.md) | ERD, tabel, aturan RLS | Draf 1 |
 | 05 | [Privasi, Keamanan, Kepatuhan](05-privacy-security.md) | UU PDP, kebijakan store, model ancaman | Draf 1 |
 | 06 | [Roadmap & Rencana Uji](06-roadmap.md) | Fase kerja, spike, rencana pengujian, risiko | Draf 1 |
+| 07 | [Diagram OOAD](07-uml-diagrams.md) | Use case, activity, sequence, class, state (Mermaid) | Draf 1 |
+
+Diagram lain: komponen dan deployment di 03, ERD di 04, DFD di 05.
 
 ## Keputusan yang sudah diambil
 - Target: keluarga Indonesia.

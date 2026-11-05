@@ -12,34 +12,54 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        Expanded(child: navigationShell),
-        CupertinoTabBar(
-          currentIndex: navigationShell.currentIndex,
-          // Ketuk tab aktif lagi kembali ke halaman awal tab itu.
-          onTap: (i) => navigationShell.goBranch(
-            i,
-            initialLocation: i == navigationShell.currentIndex,
+        Positioned.fill(
+          child: navigationShell,
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: CupertinoTabBar(
+            currentIndex: navigationShell.currentIndex,
+            backgroundColor: CupertinoDynamicColor.resolve(
+              CupertinoColors.systemBackground.withValues(alpha: 0.82),
+              context,
+            ),
+            border: Border(
+              top: BorderSide(
+                color: CupertinoDynamicColor.resolve(
+                  CupertinoColors.separator.withValues(alpha: 0.35),
+                  context,
+                ),
+                width: 0.5,
+              ),
+            ),
+            // Ketuk tab aktif lagi kembali ke halaman awal tab itu.
+            onTap: (i) => navigationShell.goBranch(
+              i,
+              initialLocation: i == navigationShell.currentIndex,
+            ),
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.map_fill),
+                label: AppStrings.tabMap,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.person_2_fill),
+                label: AppStrings.tabCircle,
+              ),
+              BottomNavigationBarItem(
+                icon: ActivityTabIcon(),
+                label: AppStrings.tabActivity,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.person_crop_circle_fill),
+                label: AppStrings.tabProfile,
+              ),
+            ],
           ),
-          items: [
-            const BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.map_fill),
-              label: AppStrings.tabMap,
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person_2_fill),
-              label: AppStrings.tabCircle,
-            ),
-            const BottomNavigationBarItem(
-              icon: ActivityTabIcon(),
-              label: AppStrings.tabActivity,
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person_crop_circle_fill),
-              label: AppStrings.tabProfile,
-            ),
-          ],
         ),
       ],
     );

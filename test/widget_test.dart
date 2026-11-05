@@ -1,30 +1,25 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:tether/main.dart';
+import 'package:tether/features/location_tracking/presentation/spike_page.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('SpikePage tampil tanpa Supabase dan tidak crash saat mulai', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      const CupertinoApp(home: SpikePage(supabaseConfigured: false)),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Mulai rute simulasi'), findsOneWidget);
+    expect(find.text('Berhenti'), findsAtLeastNWidgets(1));
+    expect(find.text('Putuskan jaringan (simulasi)'), findsOneWidget);
+    expect(find.text('Antrean'), findsOneWidget);
+    expect(find.text('Terkirim'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.tap(find.text('Mulai rute simulasi'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.textContaining('SUPABASE_URL kosong'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

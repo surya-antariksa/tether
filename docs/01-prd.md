@@ -80,7 +80,7 @@ Chat, laporan berkendara, deteksi tabrakan, berbagi kecepatan, riwayat lokasi le
 | Baterai | Pelacakan adaptif: lebih jarang saat diam, lebih rapat saat bergerak. |
 | Jaringan | Antrean lokal saat offline, kirim batch saat tersambung. Hemat kuota. |
 | Keamanan | TLS, RLS di database, tidak ada kunci rahasia di klien. Lihat 05. |
-| Kompatibilitas | Android 8.0+ (API 26+), iOS 15+. [asumsi, sesuaikan] |
+| Kompatibilitas | Rilis pertama: Android 8.0+ (API 26+) saja, lewat Google Play. iOS 15+ ditunda sampai ada Mac dan iPhone untuk uji (lihat [09](09-sprint-plan.md)). [asumsi, sesuaikan] |
 | Lokalisasi | Bahasa Indonesia penuh, English sebagai cadangan. |
 | Aksesibilitas | Kontras cukup, ukuran sentuh minimal 48 dp, mendukung font besar. |
 | Observabilitas | Crash reporting, metrik keberhasilan upload lokasi, tanpa menyimpan lokasi di log. |

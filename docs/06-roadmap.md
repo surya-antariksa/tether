@@ -2,6 +2,8 @@
 
 Versi: Draf 1. Durasi adalah perkiraan kasar untuk satu pengembang dan harus dikoreksi setelah Fase 0.
 
+> **Diganti sebagian oleh [09-sprint-plan.md](09-sprint-plan.md):** rilis pertama hanya Android lewat Google Play, perangkat uji hanya satu Redmi dan emulator (matriks perangkat dan langkah iOS di bawah belum berlaku), dan jadwal memakai siklus kerjakan, review, revisi per sprint tanpa tanggal kalender.
+
 ## Fase
 
 ### Fase 0: Validasi (spike) ~ 2 minggu

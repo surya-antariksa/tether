@@ -11,7 +11,8 @@ import 'auth_strings.dart';
 
 enum _Mode { signIn, signUp }
 
-/// Masuk dan daftar dalam satu halaman. Setelah berhasil, auth gate
+/// Masuk dan daftar dalam satu halaman dengan identitas Apple Hero Branding
+/// dan form bergaya iOS Inset Grouped. Setelah berhasil, auth gate
 /// (currentUserIdProvider) memindahkan ke tab lewat redirect router.
 class AuthPage extends ConsumerStatefulWidget {
   const AuthPage({super.key});
@@ -94,44 +95,6 @@ class _AuthPageState extends ConsumerState<AuthPage> {
     _formKey.currentState?.reset();
   }
 
-  Widget _field({
-    required String label,
-    required TextEditingController controller,
-    required String placeholder,
-    required String? Function(String?) validator,
-    TextInputType? keyboardType,
-    bool obscure = false,
-    TextInputAction action = TextInputAction.next,
-    Iterable<String>? autofillHints,
-    TextCapitalization capitalization = TextCapitalization.none,
-    VoidCallback? onSubmit,
-  }) {
-    return CupertinoFormSection.insetGrouped(
-      margin: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
-      header: Text(label),
-      children: [
-        Semantics(
-          label: label,
-          child: CupertinoTextFormFieldRow(
-            controller: controller,
-            placeholder: placeholder,
-            enabled: !_busy,
-            keyboardType: keyboardType,
-            obscureText: obscure,
-            autocorrect: false,
-            enableSuggestions: !obscure,
-            textInputAction: action,
-            textCapitalization: capitalization,
-            autofillHints: autofillHints,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: validator,
-            onFieldSubmitted: onSubmit == null ? null : (_) => onSubmit(),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final signUp = _mode == _Mode.signUp;
@@ -142,84 +105,148 @@ class _AuthPageState extends ConsumerState<AuthPage> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 480),
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               children: [
+                const SizedBox(height: 12),
+                Center(
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          color: CupertinoColors.black.withValues(alpha: 0.08),
+                          blurRadius: 18,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18),
+                      child: Image.asset(
+                        'assets/branding/app_icon.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 Semantics(
                   header: true,
                   child: Text(
                     AuthStrings.title,
+                    textAlign: TextAlign.center,
                     style: AppTextStyles.largeTitle(context, emphasized: true),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   AuthStrings.subtitle,
+                  textAlign: TextAlign.center,
                   style: AppTextStyles.subhead(
                     context,
                     color: AppColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 24),
-                CupertinoSlidingSegmentedControl<_Mode>(
-                  groupValue: _mode,
-                  onValueChanged: _busy ? (_) {} : _setMode,
-                  children: {
-                    _Mode.signIn: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Text(AuthStrings.modeSignIn),
-                    ),
-                    _Mode.signUp: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Text(AuthStrings.modeSignUp),
-                    ),
-                  },
+                SizedBox(
+                  width: double.infinity,
+                  child: CupertinoSlidingSegmentedControl<_Mode>(
+                    groupValue: _mode,
+                    onValueChanged: _busy ? (_) {} : _setMode,
+                    children: {
+                      _Mode.signIn: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          AuthStrings.modeSignIn,
+                          style: AppTextStyles.subhead(context),
+                        ),
+                      ),
+                      _Mode.signUp: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          AuthStrings.modeSignUp,
+                          style: AppTextStyles.subhead(context),
+                        ),
+                      ),
+                    },
+                  ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 Form(
                   key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  child: CupertinoFormSection.insetGrouped(
+                    margin: EdgeInsets.zero,
                     children: [
                       if (signUp)
-                        _field(
+                        Semantics(
                           label: AuthStrings.nameLabel,
-                          controller: _name,
-                          placeholder: AuthStrings.namePlaceholder,
-                          validator: (v) =>
-                              _validate(AuthValidators.displayName(v)),
-                          autofillHints: const [AutofillHints.name],
-                          capitalization: TextCapitalization.words,
+                          child: CupertinoTextFormFieldRow(
+                            controller: _name,
+                            placeholder: AuthStrings.namePlaceholder,
+                            enabled: !_busy,
+                            autocorrect: false,
+                            enableSuggestions: true,
+                            textInputAction: TextInputAction.next,
+                            textCapitalization: TextCapitalization.words,
+                            autofillHints: const [AutofillHints.name],
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (v) =>
+                                _validate(AuthValidators.displayName(v)),
+                          ),
                         ),
-                      _field(
+                      Semantics(
                         label: AuthStrings.emailLabel,
-                        controller: _email,
-                        placeholder: AuthStrings.emailPlaceholder,
-                        validator: (v) => _validate(AuthValidators.email(v)),
-                        keyboardType: TextInputType.emailAddress,
-                        autofillHints: const [AutofillHints.email],
+                        child: CupertinoTextFormFieldRow(
+                          controller: _email,
+                          placeholder: AuthStrings.emailPlaceholder,
+                          enabled: !_busy,
+                          keyboardType: TextInputType.emailAddress,
+                          autocorrect: false,
+                          enableSuggestions: true,
+                          textInputAction: TextInputAction.next,
+                          autofillHints: const [AutofillHints.email],
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (v) => _validate(AuthValidators.email(v)),
+                        ),
                       ),
-                      _field(
+                      Semantics(
                         label: AuthStrings.passwordLabel,
-                        controller: _password,
-                        placeholder: AuthStrings.passwordPlaceholder,
-                        validator: (v) => _validate(AuthValidators.password(v)),
-                        obscure: true,
-                        action: TextInputAction.done,
-                        autofillHints: [
-                          signUp
-                              ? AutofillHints.newPassword
-                              : AutofillHints.password,
-                        ],
-                        onSubmit: _submit,
+                        child: CupertinoTextFormFieldRow(
+                          controller: _password,
+                          placeholder: AuthStrings.passwordPlaceholder,
+                          enabled: !_busy,
+                          obscureText: true,
+                          autocorrect: false,
+                          enableSuggestions: false,
+                          textInputAction: TextInputAction.done,
+                          autofillHints: [
+                            signUp
+                                ? AutofillHints.newPassword
+                                : AutofillHints.password,
+                          ],
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (v) =>
+                              _validate(AuthValidators.password(v)),
+                          onFieldSubmitted: (_) => _submit(),
+                        ),
                       ),
                     ],
                   ),
                 ),
                 if (_message != null) ...[
-                  const SizedBox(height: 8),
-                  _MessageRow(message: _message!, isError: _messageIsError),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: _MessageRow(
+                      message: _message!,
+                      isError: _messageIsError,
+                    ),
+                  ),
                 ],
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 PrimaryButton(
                   label: signUp
                       ? AuthStrings.submitSignUp
@@ -228,6 +255,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                   busy: _busy,
                   onPressed: _submit,
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),

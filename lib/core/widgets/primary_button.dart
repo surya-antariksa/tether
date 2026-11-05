@@ -29,7 +29,9 @@ class PrimaryButton extends StatelessWidget {
       label: busy ? busyLabel : label,
       excludeSemantics: true,
       child: CupertinoButton.filled(
-        minimumSize: const Size(44, 44),
+        minimumSize: const Size(44, 50),
+        borderRadius: BorderRadius.circular(14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         onPressed: busy ? null : onPressed,
         child: Row(
           mainAxisSize: MainAxisSize.min,

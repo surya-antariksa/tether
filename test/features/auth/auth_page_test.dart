@@ -190,6 +190,17 @@ void main() {
     expect(find.byType(CupertinoButton), findsOneWidget);
   });
 
+  testWidgets('hero branding: menampilkan ikon logo Tether', (tester) async {
+    await pumpTetherApp(tester, auth: FakeAuthRepository());
+    final imgFinder = find.byWidgetPredicate(
+      (w) =>
+          w is Image &&
+          w.image is AssetImage &&
+          (w.image as AssetImage).assetName == 'assets/branding/app_icon.png',
+    );
+    expect(imgFinder, findsOneWidget);
+  });
+
   testWidgets('Semantics: tombol utama dan kolom berlabel', (tester) async {
     final handle = tester.ensureSemantics();
     await pumpTetherApp(tester, auth: FakeAuthRepository());

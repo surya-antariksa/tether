@@ -283,7 +283,7 @@ class _Card extends StatelessWidget {
           AppColors.groupedItemBackground,
           context,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: child,
     );

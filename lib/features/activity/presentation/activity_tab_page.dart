@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/selected_circle.dart';
 import '../../auth/data/auth_providers.dart';
@@ -91,34 +92,45 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
     final circlesAsync = ref.watch(myCirclesProvider);
     final selectedId = ref.watch(selectedCircleIdProvider);
     final circles = circlesAsync.value;
+    final selfId = ref.watch(currentUserIdProvider);
+    final now = ref.watch(activityClockProvider);
 
-    Widget body;
-    if (circles == null) {
-      body = circlesAsync.hasError
-          ? _Failed(onRetry: () => ref.invalidate(myCirclesProvider))
-          : const Center(child: CupertinoActivityIndicator());
-    } else if (circles.isEmpty) {
-      body = const _Message(
-        icon: CupertinoIcons.bell,
-        title: ActivityStrings.noCircleTitle,
-        body: ActivityStrings.noCircleBody,
-      );
-    } else {
-      final current = _resolve(circles, selectedId);
-      body = _CircleActivity(
-        key: ValueKey(current.id),
-        circle: current,
-        circles: circles,
-        onSelectCircle: (id) =>
-            ref.read(selectedCircleIdProvider.notifier).select(id),
-        onNewest: _markRead,
-      );
-    }
     return CupertinoPageScaffold(
+      backgroundColor: AppColors.groupedBackground,
       navigationBar: const CupertinoNavigationBar(
         middle: Text(ActivityStrings.title),
       ),
-      child: SafeArea(child: body),
+      child: SafeArea(
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            if (circles == null)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: circlesAsync.hasError
+                    ? _Failed(onRetry: () => ref.invalidate(myCirclesProvider))
+                    : const Center(child: CupertinoActivityIndicator()),
+              )
+            else if (circles.isEmpty)
+              const SliverFillRemaining(
+                hasScrollBody: false,
+                child: _Message(
+                  icon: CupertinoIcons.bell,
+                  title: ActivityStrings.noCircleTitle,
+                  body: ActivityStrings.noCircleBody,
+                ),
+              )
+            else
+              ..._buildCircleSlivers(
+                context,
+                circles,
+                selectedId,
+                selfId,
+                now,
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -134,105 +146,96 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
     });
     return circles.first;
   }
-}
 
-class _CircleActivity extends ConsumerWidget {
-  const _CircleActivity({
-    super.key,
-    required this.circle,
-    required this.circles,
-    required this.onSelectCircle,
-    required this.onNewest,
-  });
-
-  final Circle circle;
-  final List<Circle> circles;
-  final ValueChanged<String> onSelectCircle;
-  final ValueChanged<DateTime> onNewest;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(activityListProvider(circle.id));
+  List<Widget> _buildCircleSlivers(
+    BuildContext context,
+    List<Circle> circles,
+    String? selectedId,
+    String? selfId,
+    DateTime now,
+  ) {
+    final current = _resolve(circles, selectedId);
+    final async = ref.watch(activityListProvider(current.id));
     final state = async.value;
-    final selfId = ref.watch(currentUserIdProvider);
-    final now = ref.watch(activityClockProvider);
 
     if (state == null) {
-      return async.hasError
-          ? _Failed(
-              onRetry: () => ref.invalidate(activityListProvider(circle.id)),
-            )
-          : const Center(child: CupertinoActivityIndicator());
+      return [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: async.hasError
+              ? _Failed(
+                  onRetry: () => ref.invalidate(activityListProvider(current.id)),
+                )
+              : const Center(child: CupertinoActivityIndicator()),
+        ),
+      ];
     }
-    if (state.events.isNotEmpty) onNewest(state.events.first.createdAt);
 
-    final notifier = ref.read(activityListProvider(circle.id).notifier);
+    if (state.events.isNotEmpty) _markRead(state.events.first.createdAt);
+
+    final notifier = ref.read(activityListProvider(current.id).notifier);
     final canSwitch = circles.length > 1;
-
-    // Indeks 0: kepala; lalu event; terakhir: kaki (muat lagi / akhir).
     final eventCount = state.events.length;
-    return CustomScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      slivers: [
-        CupertinoSliverRefreshControl(onRefresh: notifier.refresh),
+
+    return [
+      CupertinoSliverRefreshControl(onRefresh: notifier.refresh),
+      SliverToBoxAdapter(
+        child: _Header(
+          name: current.name,
+          canSwitch: canSwitch,
+          offline: !state.realtimeConnected,
+          onTap: canSwitch ? () => _pick(context, current, circles) : null,
+        ),
+      ),
+      if (eventCount == 0)
+        const SliverFillRemaining(
+          hasScrollBody: false,
+          child: _Message(
+            icon: CupertinoIcons.bell,
+            title: ActivityStrings.emptyTitle,
+            body: ActivityStrings.emptyBody,
+          ),
+        )
+      else ...[
+        SliverList.separated(
+          itemCount: eventCount,
+          separatorBuilder: (context, _) => const SizedBox(height: 8),
+          itemBuilder: (context, i) {
+            final e = state.events[i];
+            final isSelf = e.userId == selfId;
+            final who = isSelf
+                ? ActivityStrings.you
+                : (e.displayName ??
+                      state.names[e.userId] ??
+                      ActivityStrings.someone);
+            return ActivityTile(
+              key: ValueKey(e.id),
+              event: e,
+              who: who,
+              now: now,
+              onShowOnMap: e.type == ActivityType.sos && e.hasCoordinates
+                  ? () => _showOnMap(context, e)
+                  : null,
+            );
+          },
+        ),
         SliverToBoxAdapter(
-          child: _Header(
-            name: circle.name,
-            canSwitch: canSwitch,
-            offline: !state.realtimeConnected,
-            onTap: canSwitch ? () => _pick(context) : null,
+          child: _Footer(
+            hasMore: state.hasMore,
+            loading: state.loadingMore,
+            failed: state.loadMoreFailed,
+            onLoadMore: notifier.loadMore,
           ),
         ),
-        if (eventCount == 0)
-          const SliverFillRemaining(
-            hasScrollBody: false,
-            child: _Message(
-              icon: CupertinoIcons.bell,
-              title: ActivityStrings.emptyTitle,
-              body: ActivityStrings.emptyBody,
-            ),
-          )
-        else ...[
-          SliverList.separated(
-            itemCount: eventCount,
-            separatorBuilder: (context, _) => Container(
-              height: 0.5,
-              margin: const EdgeInsets.only(left: 52),
-              color: CupertinoColors.separator.resolveFrom(context),
-            ),
-            itemBuilder: (context, i) {
-              final e = state.events[i];
-              final isSelf = e.userId == selfId;
-              final who = isSelf
-                  ? ActivityStrings.you
-                  : (e.displayName ??
-                        state.names[e.userId] ??
-                        ActivityStrings.someone);
-              return ActivityTile(
-                key: ValueKey(e.id),
-                event: e,
-                who: who,
-                now: now,
-                onShowOnMap: e.type == ActivityType.sos && e.hasCoordinates
-                    ? () => _showOnMap(context, ref, e)
-                    : null,
-              );
-            },
-          ),
-          SliverToBoxAdapter(
-            child: _Footer(
-              hasMore: state.hasMore,
-              loading: state.loadingMore,
-              failed: state.loadMoreFailed,
-              onLoadMore: notifier.loadMore,
-            ),
-          ),
-        ],
       ],
-    );
+    ];
   }
 
-  Future<void> _pick(BuildContext context) async {
+  Future<void> _pick(
+    BuildContext context,
+    Circle current,
+    List<Circle> circles,
+  ) async {
     final id = await showCupertinoModalPopup<String>(
       context: context,
       builder: (ctx) => CupertinoActionSheet(
@@ -240,7 +243,7 @@ class _CircleActivity extends ConsumerWidget {
         actions: [
           for (final c in circles)
             CupertinoActionSheetAction(
-              isDefaultAction: c.id == circle.id,
+              isDefaultAction: c.id == current.id,
               onPressed: () => Navigator.of(ctx).pop(c.id),
               child: Text(c.name),
             ),
@@ -251,10 +254,12 @@ class _CircleActivity extends ConsumerWidget {
         ),
       ),
     );
-    if (id != null && id != circle.id) onSelectCircle(id);
+    if (id != null && id != current.id) {
+      ref.read(selectedCircleIdProvider.notifier).select(id);
+    }
   }
 
-  void _showOnMap(BuildContext context, WidgetRef ref, ActivityEvent e) {
+  void _showOnMap(BuildContext context, ActivityEvent e) {
     ref.read(selectedCircleIdProvider.notifier).select(e.circleId);
     ref
         .read(activityMapFocusProvider.notifier)

@@ -20,6 +20,32 @@ IconData activityIcon(ActivityType type) => switch (type) {
   ActivityType.sharingChanged => CupertinoIcons.arrow_2_circlepath_circle,
 };
 
+Color _iconBgColor(ActivityType type) => switch (type) {
+  ActivityType.arrive ||
+  ActivityType.checkin ||
+  ActivityType.resumed => const Color(0xFF34C759).withValues(alpha: 0.15),
+  ActivityType.leave ||
+  ActivityType.paused => const Color(0xFFFF9500).withValues(alpha: 0.15),
+  ActivityType.memberJoined => const Color(0xFF007AFF).withValues(alpha: 0.15),
+  ActivityType.memberLeft ||
+  ActivityType.memberRemoved => const Color(0xFFFF3B30).withValues(alpha: 0.15),
+  ActivityType.sos => const Color(0xFFFF3B30).withValues(alpha: 0.15),
+  ActivityType.sharingChanged => const Color(0xFF5856D6).withValues(alpha: 0.15),
+};
+
+Color _iconFgColor(ActivityType type) => switch (type) {
+  ActivityType.arrive ||
+  ActivityType.checkin ||
+  ActivityType.resumed => const Color(0xFF34C759),
+  ActivityType.leave ||
+  ActivityType.paused => const Color(0xFFFF9500),
+  ActivityType.memberJoined => const Color(0xFF007AFF),
+  ActivityType.memberLeft ||
+  ActivityType.memberRemoved => const Color(0xFFFF3B30),
+  ActivityType.sos => const Color(0xFFFF3B30),
+  ActivityType.sharingChanged => const Color(0xFF5856D6),
+};
+
 /// Satu baris aktivitas. SOS tampil menonjol dengan tombol ke peta.
 class ActivityTile extends StatelessWidget {
   const ActivityTile({
@@ -55,43 +81,66 @@ class ActivityTile extends StatelessWidget {
 
   Widget _buildPlain(BuildContext context) {
     final sentence = ActivityStrings.sentence(event, who);
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 56),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Row(
-          children: [
-            ExcludeSemantics(
-              child: Icon(
-                activityIcon(event.type),
-                size: 24,
-                color: CupertinoTheme.of(context).primaryColor,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Semantics(
-                container: true,
-                label: '$sentence, $_timeLabel',
-                excludeSemantics: true,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(sentence, style: AppTextStyles.body(context)),
-                    Text(
-                      _timeLabel,
-                      style: AppTextStyles.footnote(
-                        context,
-                        color: CupertinoColors.secondaryLabel.resolveFrom(
-                          context,
-                        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: CupertinoDynamicColor.resolve(
+            AppColors.groupedItemBackground,
+            context,
+          ),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 56),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            child: Row(
+              children: [
+                ExcludeSemantics(
+                  child: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: _iconBgColor(event.type),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        activityIcon(event.type),
+                        size: 20,
+                        color: _iconFgColor(event.type),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Semantics(
+                    container: true,
+                    label: '$sentence, $_timeLabel',
+                    excludeSemantics: true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(sentence, style: AppTextStyles.body(context)),
+                        const SizedBox(height: 2),
+                        Text(
+                          _timeLabel,
+                          style: AppTextStyles.footnote(
+                            context,
+                            color: CupertinoColors.secondaryLabel.resolveFrom(
+                              context,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -101,7 +150,7 @@ class ActivityTile extends StatelessWidget {
     final sentence = ActivityStrings.sentence(event, who);
     final hasMap = event.hasCoordinates && onShowOnMap != null;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: activityBadgeColor.withValues(alpha: 0.12),

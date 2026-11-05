@@ -19,6 +19,8 @@ void main() {
 
   test('tanpa --dart-define konfigurasi bawaan kosong', () {
     expect(const AppConfig.fromEnvironment().isConfigured, isFalse);
+    expect(const AppConfig.fromEnvironment().supabaseUrl, isEmpty);
+    expect(const AppConfig.fromEnvironment().supabaseAnonKey, isEmpty);
   });
 
   testWidgets('ConfigMissingApp menampilkan penjelasan tanpa crash', (

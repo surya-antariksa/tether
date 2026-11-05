@@ -38,6 +38,14 @@ abstract final class CircleStrings {
   static String memberLabel(String name, CircleRole r, SharingStatus s) =>
       '$name, ${role(r)}, ${status(s)}';
 
+  // Sakelar berbagi per Circle
+  static const sharingSection = 'Berbagi';
+  static const sharingRow = 'Berbagi lokasi';
+  static const sharingHint =
+      'Sakelar untuk Circle ini. Untuk jeda sementara, pakai tombol Jeda '
+      'di tab Peta.';
+  static const sharingFailedTitle = 'Gagal mengubah berbagi';
+
   // Undang
   static const invite = 'Undang';
   static const inviting = 'Membuat undangan';

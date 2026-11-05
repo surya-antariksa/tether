@@ -15,13 +15,14 @@ class SupabaseCircleRepository implements CircleRepository {
       'role, joined_at, sharing_enabled, paused_until, user_id, '
       'profiles(display_name, color)';
 
-  /// Tipe event yang mengubah daftar anggota atau status jeda.
+  /// Tipe event yang mengubah daftar anggota atau status jeda/berbagi.
   static const memberEventTypes = {
     'member_joined',
     'member_left',
     'member_removed',
     'paused',
     'resumed',
+    'sharing_changed',
   };
 
   @override
@@ -30,7 +31,7 @@ class SupabaseCircleRepository implements CircleRepository {
       final rows = await _client
           .from('circles')
           .select('id, name')
-          .order('created_at');
+          .order('created_at', ascending: true);
       return [
         for (final r in rows)
           Circle(id: r['id'] as String, name: r['name'] as String),
@@ -47,7 +48,7 @@ class SupabaseCircleRepository implements CircleRepository {
           .from('circle_members')
           .select(_memberColumns)
           .eq('circle_id', circleId)
-          .order('joined_at');
+          .order('joined_at', ascending: true);
       return [for (final r in rows) memberFromRow(r)];
     } catch (e) {
       throw mapCircleError(e, forbidden: CircleErrorKind.notMember);
@@ -124,6 +125,18 @@ class SupabaseCircleRepository implements CircleRepository {
       );
     } catch (e) {
       throw mapCircleError(e);
+    }
+  }
+
+  @override
+  Future<void> setSharingEnabled(String circleId, bool enabled) async {
+    try {
+      await _client.rpc(
+        'set_sharing_enabled',
+        params: {'p_circle_id': circleId, 'p_enabled': enabled},
+      );
+    } catch (e) {
+      throw mapCircleError(e, forbidden: CircleErrorKind.notMember);
     }
   }
 

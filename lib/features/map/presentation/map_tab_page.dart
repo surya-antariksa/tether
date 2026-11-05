@@ -6,6 +6,7 @@ import '../../../app/routes.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/selected_circle.dart';
 import '../../../core/widgets/primary_button.dart';
+import '../../places/data/place_providers.dart';
 import '../data/map_providers.dart';
 import '../domain/map_circle.dart';
 import 'circle_map_view.dart';
@@ -63,6 +64,7 @@ class _MapTabPageState extends ConsumerState<MapTabPage>
     final id = ref.read(selectedCircleIdProvider);
     if (id != null) {
       ref.read(mapMembersProvider(id).notifier).refresh();
+      ref.read(placesProvider(id).notifier).refresh();
     }
   }
 

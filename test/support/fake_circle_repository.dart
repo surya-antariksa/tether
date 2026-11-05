@@ -112,8 +112,9 @@ class FakeCircleRepository implements CircleRepository {
     final id = joinTargets[code];
     if (id == null) return null;
     final name = previews[code]?.circleName ?? 'Circle';
-    if (!circles.any((c) => c.id == id))
+    if (!circles.any((c) => c.id == id)) {
       circles.add(Circle(id: id, name: name));
+    }
     membersByCircle.putIfAbsent(id, () => []);
     if (!membersByCircle[id]!.any((m) => m.userId == selfId)) {
       membersByCircle[id]!.add(fakeMember(selfId, selfName));
@@ -132,6 +133,28 @@ class FakeCircleRepository implements CircleRepository {
   Future<void> removeMember(String circleId, String userId) async {
     await _enter('removeMember:$circleId:$userId');
     membersByCircle[circleId]?.removeWhere((m) => m.userId == userId);
+  }
+
+  /// Mencatat panggilan di [calls] dengan kunci
+  /// `'setSharingEnabled:<circleId>:<enabled>'` dan mengubah anggota sendiri.
+  @override
+  Future<void> setSharingEnabled(String circleId, bool enabled) async {
+    await _enter('setSharingEnabled:$circleId:$enabled');
+    final list = membersByCircle[circleId];
+    final i = list?.indexWhere((m) => m.userId == selfId) ?? -1;
+    if (list != null && i >= 0) {
+      final m = list[i];
+      list[i] = CircleMember(
+        userId: m.userId,
+        displayName: m.displayName,
+        color: m.color,
+        role: m.role,
+        joinedAt: m.joinedAt,
+        sharingEnabled: enabled,
+        pausedUntil: m.pausedUntil,
+        pausedIndefinitely: m.pausedIndefinitely,
+      );
+    }
   }
 
   @override

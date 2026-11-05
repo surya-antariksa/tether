@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/activity/presentation/activity_tab_icon.dart';
 import 'app_strings.dart';
 
 /// Kerangka tab bar bawah (Cupertino). Urutan sama dengan cabang di router.
@@ -21,20 +22,20 @@ class AppShell extends StatelessWidget {
             i,
             initialLocation: i == navigationShell.currentIndex,
           ),
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.map_fill),
               label: AppStrings.tabMap,
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.person_2_fill),
               label: AppStrings.tabCircle,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.bell_fill),
+            const BottomNavigationBarItem(
+              icon: ActivityTabIcon(),
               label: AppStrings.tabActivity,
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.person_crop_circle_fill),
               label: AppStrings.tabProfile,
             ),

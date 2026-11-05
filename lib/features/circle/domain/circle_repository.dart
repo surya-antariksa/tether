@@ -27,6 +27,9 @@ abstract interface class CircleRepository {
   /// Admin saja, tidak untuk diri sendiri.
   Future<void> removeMember(String circleId, String userId);
 
+  /// Sakelar berbagi jangka panjang milik sendiri untuk Circle ini.
+  Future<void> setSharingEnabled(String circleId, bool enabled);
+
   /// Emit tiap ada perubahan keanggotaan atau jeda di Circle ini (dari tabel
   /// events), sebagai isyarat untuk mengambil ulang [members].
   Stream<void> memberChanges(String circleId);

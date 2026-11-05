@@ -16,8 +16,9 @@ ParsedPause parsePausedUntil(Object? raw) {
   if (raw is! String) return (until: null, indefinite: false);
   final trimmed = raw.trim();
   final s = trimmed.toLowerCase();
-  if (s == 'infinity' || s == '+infinity')
+  if (s == 'infinity' || s == '+infinity') {
     return (until: null, indefinite: true);
+  }
   if (s.isEmpty || s == '-infinity') return (until: null, indefinite: false);
   return (until: DateTime.tryParse(trimmed)?.toUtc(), indefinite: false);
 }

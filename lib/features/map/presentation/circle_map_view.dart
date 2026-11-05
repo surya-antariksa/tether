@@ -3,9 +3,16 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../app/theme/app_text_styles.dart';
+import '../../activity/data/activity_providers.dart';
+import '../../places/data/place_providers.dart';
+import '../../places/domain/place.dart';
+import '../../places/places_routes.dart';
+import '../../places/presentation/place_strings.dart';
+import '../../safety/presentation/safety_sheet.dart';
 import '../../tracking/presentation/tracking_overlay.dart';
 import '../data/map_providers.dart';
 import '../domain/map_circle.dart';
@@ -43,12 +50,29 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
   final _map = MapController();
   final _sheet = DraggableScrollableController();
   final _extent = ValueNotifier<double>(kSheetMedium);
-  late final AnimationController _cam = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 400),
-  );
+  // Dibuat di initState, bukan lazy: dispose() yang menyentuh field lazy
+  // membuat Ticker pada elemen yang sudah tidak aktif (assertion di debug).
+  late final AnimationController _cam;
   VoidCallback? _camTick;
   bool _busy = false;
+
+  /// Fokus dari tab Aktivitas yang belum bisa diterapkan karena FlutterMap
+  /// belum terpasang (anggota Circle masih dimuat). Diterapkan begitu peta
+  /// dibangun.
+  LatLng? _pendingFocus;
+
+  @override
+  void initState() {
+    super.initState();
+    _cam = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    // Fokus yang sudah diminta sebelum peta ini terpasang (dari tab Aktivitas).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _applyActivityFocus(ref.read(activityMapFocusProvider));
+    });
+  }
 
   @override
   void dispose() {
@@ -57,6 +81,27 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
     _sheet.dispose();
     _map.dispose();
     super.dispose();
+  }
+
+  /// Pusatkan kamera pada lokasi SOS yang dibuka dari tab Aktivitas.
+  void _applyActivityFocus(ActivityMapFocus? f) {
+    if (f == null || f.circleId != widget.circle.id) return;
+    _pendingFocus = LatLng(f.lat, f.lng);
+    ref.read(activityMapFocusProvider.notifier).clear();
+    _flushPendingFocus();
+  }
+
+  /// Menerapkan fokus tertunda bila peta sudah terpasang; bila belum
+  /// (controller melempar), dicoba lagi saat peta dibangun.
+  void _flushPendingFocus() {
+    final target = _pendingFocus;
+    if (target == null) return;
+    try {
+      _focus(target);
+      _pendingFocus = null;
+    } catch (_) {
+      // FlutterMap belum dirender; _content menjadwalkan percobaan berikutnya.
+    }
   }
 
   bool get _reduceMotion => MediaQuery.disableAnimationsOf(context);
@@ -212,6 +257,7 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
   @override
   Widget build(BuildContext context) {
     final id = widget.circle.id;
+    ref.listen(activityMapFocusProvider, (_, f) => _applyActivityFocus(f));
     final async = ref.watch(mapMembersProvider(id));
     final now = ref.watch(mapClockProvider);
     return async.when(
@@ -224,11 +270,19 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
   }
 
   Widget _content(BuildContext context, MapSnapshot snap, DateTime now) {
+    if (_pendingFocus != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _flushPendingFocus();
+      });
+    }
     final entries = _entries(snap, now);
     final media = MediaQuery.of(context);
     final selfEntry = entries.where((e) => e.isSelf).firstOrNull;
     final canSwitch = widget.circles.length > 1;
     final tileProvider = ref.watch(mapTileProviderProvider);
+    // Galat memuat tempat tidak boleh mengganggu peta: pakai data terakhir.
+    final places =
+        ref.watch(placesProvider(widget.circle.id)).value ?? const <Place>[];
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -237,6 +291,7 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
           controller: _map,
           entries: entries,
           tileProvider: tileProvider,
+          places: places,
           initialPadding: EdgeInsets.fromLTRB(
             48,
             media.padding.top + 96,
@@ -307,6 +362,15 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
                             ? null
                             : () => _focus(selfEntry.point),
                       ),
+                      const SizedBox(height: 12),
+                      GlassIconButton(
+                        icon: CupertinoIcons.placemark_fill,
+                        label: PlaceStrings.openFromMap,
+                        onPressed: () =>
+                            context.push(PlacesRoutes.list(widget.circle.id)),
+                      ),
+                      const SizedBox(height: 12),
+                      SafetyActionsButton(circleId: widget.circle.id),
                     ],
                   ),
                 ],

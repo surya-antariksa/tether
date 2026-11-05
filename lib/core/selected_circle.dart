@@ -10,5 +10,6 @@ class SelectedCircleId extends Notifier<String?> {
   void select(String? circleId) => state = circleId;
 }
 
-final selectedCircleIdProvider =
-    NotifierProvider<SelectedCircleId, String?>(SelectedCircleId.new);
+final selectedCircleIdProvider = NotifierProvider<SelectedCircleId, String?>(
+  SelectedCircleId.new,
+);

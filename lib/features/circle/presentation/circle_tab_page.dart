@@ -215,6 +215,7 @@ class _CircleContent extends ConsumerStatefulWidget {
 
 class _CircleContentState extends ConsumerState<_CircleContent> {
   bool _inviting = false;
+  bool _sharing = false;
 
   Future<void> _switch(Circle current) async {
     final picked = await showCupertinoModalPopup<Circle>(
@@ -297,6 +298,26 @@ class _CircleContentState extends ConsumerState<_CircleContent> {
     }
   }
 
+  /// Sakelar berbagi jangka panjang (set_sharing_enabled). Nilai sakelar tetap
+  /// mengikuti server: kalau gagal, anggota dimuat ulang dan sakelar kembali.
+  Future<void> _toggleSharing(Circle current, bool enabled) async {
+    if (_sharing) return;
+    setState(() => _sharing = true);
+    bool ok = true;
+    try {
+      await ref
+          .read(circleRepositoryProvider)
+          .setSharingEnabled(current.id, enabled);
+    } catch (e) {
+      ok = false;
+      if (mounted) await showCircleError(context, e);
+    }
+    if (ok && mounted) {
+      await ref.read(membersProvider(current.id).notifier).refresh();
+    }
+    if (mounted) setState(() => _sharing = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final circles = widget.circles;
@@ -335,6 +356,17 @@ class _CircleContentState extends ConsumerState<_CircleContent> {
               busyLabel: CircleStrings.inviting,
               busy: _inviting,
               onPressed: () => _invite(current),
+            ),
+          ],
+          if (members.hasValue && list.any((m) => m.userId == uid)) ...[
+            const SizedBox(height: 16),
+            const _SectionHeader(CircleStrings.sharingSection),
+            _ShareCard(
+              enabled: list
+                  .firstWhere((m) => m.userId == uid)
+                  .sharingEnabled,
+              busy: _sharing,
+              onChanged: (v) => _toggleSharing(current, v),
             ),
           ],
           const SizedBox(height: 24),
@@ -601,6 +633,46 @@ class _MemberRow extends StatelessWidget {
                 child: removeButton,
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Kartu sakelar berbagi jangka panjang (per Circle) milik sendiri.
+class _ShareCard extends StatelessWidget {
+  const _ShareCard({
+    required this.enabled,
+    required this.busy,
+    required this.onChanged,
+  });
+
+  final bool enabled;
+  final bool busy;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
+        child: CupertinoListTile(
+          backgroundColor: CupertinoColors.transparent,
+          title: Text(
+            CircleStrings.sharingRow,
+            style: AppTextStyles.body(context),
+          ),
+          subtitle: Text(
+            CircleStrings.sharingHint,
+            style: AppTextStyles.footnote(
+              context,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          trailing: CupertinoSwitch(
+            value: enabled,
+            onChanged: busy ? null : onChanged,
+          ),
         ),
       ),
     );

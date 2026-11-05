@@ -115,8 +115,21 @@ void main() {
 
       setUpAll(() async {
         client = await newUser();
-        final places = await _rows(client, 'places', 'id,name');
-        placeId = places.singleWhere((p) => p['name'] == 'Titik Uji')['id'];
+        // Place spike global sudah dihapus (Sprint 4): buat Circle dan tempat uji sendiri.
+        final circleId = await client.rpc(
+          'create_circle',
+          params: {'p_name': 'Circle Uji'},
+        );
+        placeId = await client.rpc(
+          'create_place',
+          params: {
+            'p_circle_id': circleId,
+            'p_name': 'Titik Uji',
+            'p_lat': -6.2,
+            'p_lng': 106.8167,
+            'p_radius_m': 150,
+          },
+        );
       });
 
       test(

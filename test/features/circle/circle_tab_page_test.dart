@@ -103,7 +103,8 @@ void main() {
       expect(find.text('SD'), findsOneWidget);
       expect(find.text('Admin'), findsOneWidget);
       expect(find.text('Anggota'), findsNWidgets(2));
-      expect(find.text('Berbagi lokasi'), findsNWidgets(2));
+      // 2 status anggota + 1 judul baris sakelar berbagi.
+      expect(find.text('Berbagi lokasi'), findsNWidgets(3));
       expect(find.text('Menjeda berbagi lokasi'), findsOneWidget);
       expect(selectedCircle(c), 'c1');
 
@@ -135,7 +136,7 @@ void main() {
         );
         await pumpCircleApp(tester, repo: repo);
 
-        expect(find.text('Berbagi lokasi'), findsNWidgets(2));
+        expect(find.text('Berbagi lokasi'), findsNWidgets(3)); // 2 status + baris sakelar
         expect(find.text('Berbagi lokasi dimatikan'), findsOneWidget);
         expect(find.text('Menjeda berbagi lokasi'), findsNothing);
       },
@@ -149,6 +150,72 @@ void main() {
         ];
       final c = await pumpCircleApp(tester, repo: repo);
       expect(selectedCircle(c), 'c1');
+    });
+  });
+
+  group('sakelar berbagi', () {
+    testWidgets('sakelar mengikuti status berbagi diri sendiri', (tester) async {
+      final repo = FakeCircleRepository(
+        circles: [keluarga],
+        members: {
+          'c1': [
+            fakeMember(
+              'user-1',
+              'Rina Wati',
+              role: CircleRole.admin,
+              sharingEnabled: false,
+            ),
+            fakeMember('user-2', 'Raka'),
+          ],
+        },
+      );
+      await pumpCircleApp(tester, repo: repo);
+
+      Finder sw({bool? value}) => find.byWidgetPredicate(
+        (w) => w is CupertinoSwitch && (value == null || w.value == value),
+      );
+      expect(sw(value: false), findsOneWidget);
+      expect(sw(value: true), findsNothing);
+    });
+
+    testWidgets('menggeser sakelar menyimpan dan status diperbarui', (
+      tester,
+    ) async {
+      final repo = adminRepo();
+      await pumpCircleApp(tester, repo: repo);
+
+      Finder sw({bool? value}) => find.byWidgetPredicate(
+        (w) => w is CupertinoSwitch && (value == null || w.value == value),
+      );
+      await tester.tap(sw(value: true));
+      await tester.pumpAndSettle();
+
+      expect(repo.calls, contains('setSharingEnabled:c1:false'));
+      expect(sw(value: false), findsOneWidget);
+      expect(find.text('Berbagi lokasi dimatikan'), findsOneWidget);
+    });
+
+    testWidgets('gagal menyimpan: sakelar kembali dan dialog galat', (
+      tester,
+    ) async {
+      final repo = adminRepo()
+        ..failures['setSharingEnabled:c1:false'] = const CircleError(
+          CircleErrorKind.network,
+        );
+      await pumpCircleApp(tester, repo: repo);
+
+      Finder sw({bool? value}) => find.byWidgetPredicate(
+        (w) => w is CupertinoSwitch && (value == null || w.value == value),
+      );
+      await tester.tap(sw(value: true));
+      await tester.pumpAndSettle();
+
+      expect(inDialog('Tidak bisa terhubung. Periksa koneksi internet kamu.'),
+          findsOneWidget);
+      expect(sw(value: true), findsOneWidget);
+      expect(find.text('Berbagi lokasi dimatikan'), findsNothing);
+      await tester.tap(inDialog('Tutup'));
+      await tester.pumpAndSettle();
     });
   });
 

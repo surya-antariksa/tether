@@ -160,6 +160,8 @@ void main() {
     final auth = FakeAuthRepository(userId: 'user-1');
     await openProfile(tester, auth: auth);
 
+    await tester.ensureVisible(find.widgetWithText(CupertinoButton, 'Keluar'));
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(CupertinoButton, 'Keluar'));
     await tester.pumpAndSettle();
 
@@ -189,6 +191,10 @@ void main() {
       final auth = FakeAuthRepository(userId: 'user-1');
       await openProfile(tester, auth: auth);
 
+      await tester.ensureVisible(
+        find.widgetWithText(CupertinoButton, 'Keluar'),
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(CupertinoButton, 'Keluar'));
       await tester.pumpAndSettle();
       await tester.tap(inDialog('Keluar'));
@@ -265,6 +271,10 @@ void main() {
       await tester.tap(inDialog('Batal'));
       await tester.pumpAndSettle();
 
+      await tester.ensureVisible(
+        find.widgetWithText(CupertinoButton, 'Keluar'),
+      );
+      await tester.pumpAndSettle();
       await tester.ensureVisible(
         find.widgetWithText(CupertinoButton, 'Keluar'),
       );

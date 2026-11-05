@@ -35,6 +35,12 @@ class RefreshNeeded extends MapRealtimeEvent {
   const RefreshNeeded();
 }
 
+/// Daftar tempat Circle berubah (di dalam maupun oleh anggota lain): muat
+/// ulang daftar tempat.
+class PlacesChanged extends MapRealtimeEvent {
+  const PlacesChanged();
+}
+
 class ConnectionChanged extends MapRealtimeEvent {
   const ConnectionChanged({required this.connected});
 

@@ -58,6 +58,7 @@ class SupabaseProfileRepository implements ProfileRepository {
     displayName: row['display_name'] as String,
     color: row['color'] as String,
     avatarUrl: row['avatar_url'] as String?,
+    email: _client.auth.currentUser?.email,
   );
 
   ProfileFailure _map(Object e) {

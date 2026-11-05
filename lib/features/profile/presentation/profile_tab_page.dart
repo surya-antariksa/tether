@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../app/routes.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/member_colors.dart';
@@ -10,7 +12,9 @@ import '../../auth/domain/auth_validators.dart';
 import '../data/profile_providers.dart';
 import '../domain/profile.dart';
 import '../domain/profile_repository.dart';
+import '../profile_routes.dart';
 import 'profile_strings.dart';
+import 'settings_row.dart';
 
 class ProfileTabPage extends ConsumerWidget {
   const ProfileTabPage({super.key});
@@ -202,8 +206,64 @@ class _ProfileContent extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
+          SettingsRow(
+            label: ProfileStrings.historyRow,
+            subtitle: ProfileStrings.historySubtitle,
+            onPressed: () =>
+                context.push('${AppRoutes.profile}/${ProfileRoutes.history}'),
+          ),
+          const SizedBox(height: 12),
+          SettingsRow(
+            label: ProfileStrings.notificationRow,
+            subtitle: ProfileStrings.notificationSubtitle,
+            onPressed: () => context.push(
+              '${AppRoutes.profile}/${ProfileRoutes.notifications}',
+            ),
+          ),
+          const SizedBox(height: 24),
+          if (profile.email != null) ...[
+            _SectionHeader(ProfileStrings.accountSection),
+            _Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Semantics(
+                  label: ProfileStrings.accountLabel(profile.email!),
+                  excludeSemantics: true,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      profile.email!,
+                      style: AppTextStyles.body(context),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           const _SignOutButton(),
+          const SizedBox(height: 16),
+          SettingsRow(
+            label: ProfileStrings.deleteAccount,
+            destructive: true,
+            onPressed: () => context.push(
+              '${AppRoutes.profile}/${ProfileRoutes.deleteAccount}',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: Text(
+              ProfileStrings.privacyNote,
+              style: AppTextStyles.footnote(
+                context,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
         ],
       ),
     );

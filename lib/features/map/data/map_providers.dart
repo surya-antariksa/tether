@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/supabase/supabase_client_provider.dart';
 import '../../auth/data/auth_providers.dart';
+import '../../places/data/place_providers.dart';
 import '../domain/map_circle.dart';
 import '../domain/map_member.dart';
 import '../domain/map_repository.dart';
@@ -125,6 +126,11 @@ class MapMembersNotifier extends AsyncNotifier<MapSnapshot> {
         );
       case RefreshNeeded():
         unawaited(refresh());
+      case PlacesChanged():
+        // Tempat berubah (oleh anggota lain): muat ulang daftar tempat.
+        unawaited(
+          ref.read(placesProvider(circleId).notifier).refresh(),
+        );
       case ConnectionChanged(:final connected):
         _setConnected(connected);
     }

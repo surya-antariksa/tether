@@ -22,6 +22,7 @@ class SupabaseMapRepository implements MapRepository {
   static const _refreshEventTypes = {
     'paused',
     'resumed',
+    'sharing_changed',
     'member_joined',
     'member_left',
     'member_removed',
@@ -150,6 +151,17 @@ class SupabaseMapRepository implements MapRepository {
                 if (_refreshEventTypes.contains(p.newRecord['type'])) {
                   controller.add(const RefreshNeeded());
                 }
+              },
+            )
+            // Tempat: INSERT/UPDATE difilter RLS per pelanggan; DELETE hanya
+            // minta muat ulang (payload hanya id, tanpa keanggotaan).
+            .onPostgresChanges(
+              event: PostgresChangeEvent.all,
+              schema: 'public',
+              table: 'places',
+              callback: (p) {
+                if (controller.isClosed) return;
+                controller.add(const PlacesChanged());
               },
             )
             .subscribe((status, _) {

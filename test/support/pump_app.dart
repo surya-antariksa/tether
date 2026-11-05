@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/app/app.dart';
+import 'package:tether/features/activity/data/activity_providers.dart';
 import 'package:tether/features/auth/data/auth_providers.dart';
 import 'package:tether/features/profile/data/profile_providers.dart';
 
+import '../features/activity/fake_activity.dart';
 import 'fakes.dart';
 
 /// Menjalankan TetherApp penuh dengan repository palsu (tanpa server).
@@ -20,6 +22,11 @@ Future<void> pumpTetherApp(
     ProviderScope(
       overrides: [
         authRepositoryProvider.overrideWithValue(auth),
+        activityRepositoryProvider.overrideWithValue(FakeActivityRepository()),
+        notificationGatewayProvider.overrideWithValue(
+          FakeNotificationGateway(),
+        ),
+        readMarkerStoreProvider.overrideWithValue(MemoryReadMarkerStore()),
         profileRepositoryProvider.overrideWithValue(
           profile ?? FakeProfileRepository(),
         ),

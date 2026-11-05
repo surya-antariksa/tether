@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../places/domain/place.dart';
+import '../../places/presentation/place_map_layers.dart';
 import '../domain/presence.dart';
 import 'member_marker.dart';
 
@@ -48,6 +50,7 @@ class MembersMap extends StatefulWidget {
     required this.tileProvider,
     required this.initialPadding,
     required this.onMarkerTap,
+    this.places = const [],
   });
 
   final MapController controller;
@@ -57,6 +60,9 @@ class MembersMap extends StatefulWidget {
   /// Padding fit-bounds awal (menghindari panel dan tombol).
   final EdgeInsets initialPadding;
   final ValueChanged<String> onMarkerTap;
+
+  /// Tempat Circle: lingkaran radius dan nama, di bawah marker anggota.
+  final List<Place> places;
 
   @override
   State<MembersMap> createState() => _MembersMapState();
@@ -149,6 +155,8 @@ class _MembersMapState extends State<MembersMap>
           tileProvider: widget.tileProvider,
           maxNativeZoom: 19,
         ),
+        PlaceCirclesLayer(places: widget.places),
+        PlaceLabelsLayer(places: widget.places),
         AnimatedBuilder(
           animation: _anim,
           builder: (context, _) => MarkerLayer(

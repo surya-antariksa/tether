@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/theme/app_text_styles.dart';
 import '../data/safety_providers.dart';
 import '../domain/safety_error.dart';
 import 'safety_strings.dart';
@@ -63,24 +62,41 @@ class SosFlowDialog extends ConsumerWidget {
         );
         content = Column(
           children: [
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             ExcludeSemantics(
-              child: Text(
-                '${s.secondsLeft}',
-                key: const ValueKey('sos-countdown-number'),
-                style: AppTextStyles.largeTitle(
-                  context,
-                  emphasized: true,
-                  color: CupertinoColors.systemRed.resolveFrom(context),
+              child: Container(
+                width: 76,
+                height: 76,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: CupertinoColors.systemRed
+                      .resolveFrom(context)
+                      .withValues(alpha: 0.1),
+                  border: Border.all(
+                    color: CupertinoColors.systemRed.resolveFrom(context),
+                    width: 3.5,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    '${s.secondsLeft}',
+                    key: const ValueKey('sos-countdown-number'),
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: CupertinoColors.systemRed,
+                    ),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             const Text(SafetyStrings.countdownBody),
           ],
         );
         actions = [
           CupertinoDialogAction(
+            isDestructiveAction: true,
             isDefaultAction: true,
             onPressed: () => _close(context, ref),
             child: const Text(SafetyStrings.cancel),

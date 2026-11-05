@@ -112,9 +112,18 @@ class _SosHoldButtonState extends ConsumerState<SosHoldButton>
               final progress = reduce ? (raw * 3).floor() / 3 : raw;
               final holding = raw > 0;
               return ClipRRect(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(16),
                 child: DecoratedBox(
-                  decoration: BoxDecoration(color: red),
+                  decoration: BoxDecoration(
+                    color: red,
+                    boxShadow: [
+                      BoxShadow(
+                        color: red.withValues(alpha: holding ? 0.45 : 0.25),
+                        blurRadius: holding ? 18 : 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -135,18 +144,33 @@ class _SosHoldButtonState extends ConsumerState<SosHoldButton>
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 14,
+                          vertical: 16,
                         ),
-                        child: Text(
-                          holding
-                              ? SafetyStrings.holdActive
-                              : SafetyStrings.holdIdle,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.body(
-                            context,
-                            emphasized: true,
-                            color: CupertinoColors.white,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              holding
+                                  ? CupertinoIcons.exclamationmark_triangle_fill
+                                  : CupertinoIcons.exclamationmark_shield_fill,
+                              color: CupertinoColors.white,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                holding
+                                    ? SafetyStrings.holdActive
+                                    : SafetyStrings.holdIdle,
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.body(
+                                  context,
+                                  emphasized: true,
+                                  color: CupertinoColors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

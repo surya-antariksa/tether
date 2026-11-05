@@ -99,21 +99,39 @@ class SafetySheet extends ConsumerWidget {
                   SafetyStrings.checkinHint,
                   style: AppTextStyles.footnote(context, color: secondary),
                 ),
-                const SizedBox(height: 8),
-                _CheckinButton(
-                  kind: CheckinKind.arrived,
-                  filled: true,
-                  onPressed: id == null || sending
-                      ? null
-                      : () => send(CheckinKind.arrived),
-                ),
-                const SizedBox(height: 8),
-                _CheckinButton(
-                  kind: CheckinKind.safe,
-                  filled: false,
-                  onPressed: id == null || sending
-                      ? null
-                      : () => send(CheckinKind.safe),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: CupertinoDynamicColor.resolve(
+                      CupertinoColors.secondarySystemGroupedBackground,
+                      context,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: CupertinoColors.separator.resolveFrom(context),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      _CheckinButton(
+                        kind: CheckinKind.arrived,
+                        filled: true,
+                        onPressed: id == null || sending
+                            ? null
+                            : () => send(CheckinKind.arrived),
+                      ),
+                      const SizedBox(height: 10),
+                      _CheckinButton(
+                        kind: CheckinKind.safe,
+                        filled: false,
+                        onPressed: id == null || sending
+                            ? null
+                            : () => send(CheckinKind.safe),
+                      ),
+                    ],
+                  ),
                 ),
                 if (status != null) ...[
                   const SizedBox(height: 8),
@@ -190,7 +208,24 @@ class _CheckinButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = Text(SafetyStrings.label(kind), textAlign: TextAlign.center);
+    final icon = kind == CheckinKind.arrived
+        ? CupertinoIcons.checkmark_alt_circle_fill
+        : CupertinoIcons.shield_fill;
+    final label = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 18),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            SafetyStrings.label(kind),
+            textAlign: TextAlign.center,
+            style: AppTextStyles.body(context, emphasized: true),
+          ),
+        ),
+      ],
+    );
+
     return Semantics(
       button: true,
       enabled: onPressed != null,
@@ -199,12 +234,16 @@ class _CheckinButton extends StatelessWidget {
       onTap: onPressed,
       child: filled
           ? CupertinoButton.filled(
-              minimumSize: const Size(44, 44),
+              minimumSize: const Size(44, 48),
+              borderRadius: BorderRadius.circular(12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               onPressed: onPressed,
               child: label,
             )
           : CupertinoButton.tinted(
-              minimumSize: const Size(44, 44),
+              minimumSize: const Size(44, 48),
+              borderRadius: BorderRadius.circular(12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               onPressed: onPressed,
               child: label,
             ),

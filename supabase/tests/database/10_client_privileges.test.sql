@@ -37,8 +37,9 @@ select is((select count(*)::int from unnest(array[
   'public.upload_points(jsonb)', 'public.is_circle_member(uuid)', 'public.is_circle_admin(uuid)',
   'public.shares_circle(uuid)', 'public.shares_active_circle(uuid)',
   'public.create_place(uuid,text,double precision,double precision,int)', 'public.update_place(uuid,text,int)',
-  'public.delete_place(uuid)', 'public.checkin(uuid,text)', 'public.trigger_sos(double precision,double precision,real)',
-  'public.register_device(text,text)', 'public.unregister_device(text)', 'public.delete_account()']::regprocedure[]) f
+  'public.delete_place(uuid)', 'public.checkin(uuid,text)', 'public.trigger_sos(double precision,double precision,real,uuid,timestamp with time zone)',
+  'public.register_device(text,text)', 'public.unregister_device(text)', 'public.delete_account()',
+  'public.delete_my_location_history()']::regprocedure[]) f
   where has_function_privilege('anon', f, 'execute') or has_function_privilege('public', f, 'execute')), 0,
   'anon dan PUBLIC tidak punya EXECUTE pada RPC dan fungsi bantu');
 select is((select count(*)::int from unnest(array[
@@ -48,9 +49,10 @@ select is((select count(*)::int from unnest(array[
   'public.upload_points(jsonb)', 'public.is_circle_member(uuid)', 'public.is_circle_admin(uuid)',
   'public.shares_circle(uuid)', 'public.shares_active_circle(uuid)',
   'public.create_place(uuid,text,double precision,double precision,int)', 'public.update_place(uuid,text,int)',
-  'public.delete_place(uuid)', 'public.checkin(uuid,text)', 'public.trigger_sos(double precision,double precision,real)',
-  'public.register_device(text,text)', 'public.unregister_device(text)', 'public.delete_account()']::regprocedure[]) f
-  where has_function_privilege('authenticated', f, 'execute')), 22,
+  'public.delete_place(uuid)', 'public.checkin(uuid,text)', 'public.trigger_sos(double precision,double precision,real,uuid,timestamp with time zone)',
+  'public.register_device(text,text)', 'public.unregister_device(text)', 'public.delete_account()',
+  'public.delete_my_location_history()']::regprocedure[]) f
+  where has_function_privilege('authenticated', f, 'execute')), 23,
   'authenticated punya EXECUTE pada semua RPC dan fungsi bantu');
 select is((select count(*)::int from unnest(array[
   'public.handle_new_user()', 'public.hash_invite_code(text)', 'public.generate_invite_code()',

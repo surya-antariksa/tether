@@ -17,14 +17,14 @@ end $$;
 -- ---------------------------------------------------------------------------
 select is((select array_agg(tablename::text order by tablename) from pg_publication_tables
            where pubname = 'supabase_realtime' and schemaname = 'public'),
-  array['events', 'member_status'], 'supabase_realtime hanya memuat events dan member_status di schema public');
+  array['events', 'member_status', 'places'], 'supabase_realtime memuat events, member_status, dan places di schema public');
 select is((select count(*)::int from pg_publication_tables
            where pubname = 'supabase_realtime' and tablename = 'circle_members'), 0,
   'circle_members TIDAK ada di publikasi (event DELETE tidak difilter RLS)');
 select is((select count(*)::int from pg_publication_tables
            where pubname = 'supabase_realtime' and tablename in
-           ('places', 'devices', 'push_outbox', 'member_place_state', 'notification_settings', 'location_points', 'invites')), 0,
-  'tabel sensitif lain tidak dipublikasikan');
+           ('devices', 'push_outbox', 'member_place_state', 'notification_settings', 'location_points', 'invites')), 0,
+  'tabel sensitif lain tidak dipublikasikan (places diterbitkan sejak 131000)');
 
 -- ---------------------------------------------------------------------------
 -- purge_old_events (90 hari)
@@ -81,10 +81,10 @@ begin
 end $$;
 select case when pg_temp.cron_jobs() is null then skip('pg_cron tidak tersedia', 1)
   else is(pg_temp.cron_jobs(), array[
-    'tether_purge_deleted_accounts|0 3 * * *|select public.purge_deleted_accounts()',
+    'tether_purge_deleted_accounts|17 * * * *|select public.purge_deleted_accounts()',
     'tether_purge_events|10 3 * * *|select public.purge_old_events()',
     'tether_purge_location_points|0 * * * *|select public.purge_old_location_points()'],
-    'pg_cron: tiga job purge terjadwal (jam, harian, harian)') end;
+    'pg_cron: tiga job purge: titik per jam, akun terhapus tiap jam (lihat 130900), events harian') end;
 
 select * from finish();
 rollback;

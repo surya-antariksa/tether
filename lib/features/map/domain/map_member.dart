@@ -1,6 +1,7 @@
 import 'package:latlong2/latlong.dart';
 
 import 'paused_until.dart';
+import 'vehicle_type.dart';
 
 /// Baris `member_status` yang terlihat (RLS: hanya anggota yang berbagi dan
 /// tidak dijeda, ditambah milik sendiri).
@@ -10,12 +11,21 @@ class MemberLocation {
     required this.lastSeenAt,
     this.batteryPct,
     this.isMoving,
+    this.speedMps,
   });
 
   final LatLng point;
   final DateTime lastSeenAt;
   final int? batteryPct;
   final bool? isMoving;
+  final double? speedMps;
+
+  /// Kecepatan dalam km/jam (null bila tidak tersedia).
+  double? get speedKmh => speedMpsToKmh(speedMps);
+
+  /// Tipe kendaraan atau mobilitas saat ini.
+  VehicleType get vehicle =>
+      detectVehicle(speedMps: speedMps, isMoving: isMoving);
 }
 
 /// Anggota satu Circle: profil + pengaturan berbagi + lokasi terakhir (bila

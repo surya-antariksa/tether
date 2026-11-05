@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/app/theme/app_theme.dart';
 import 'package:tether/features/map/domain/presence.dart';
+import 'package:tether/features/map/domain/vehicle_type.dart';
 import 'package:tether/features/map/presentation/member_marker.dart';
 
 Future<int Function()> pumpMarker(
@@ -11,6 +13,8 @@ Future<int Function()> pumpMarker(
   PresenceState presence = PresenceState.active,
   bool isSelf = false,
   bool? isMoving,
+  VehicleType vehicle = VehicleType.none,
+  double? speedKmh,
   String label = 'Rina Wati, Aktif',
   double textScale = 1.0,
 }) async {
@@ -28,6 +32,8 @@ Future<int Function()> pumpMarker(
             presence: presence,
             isSelf: isSelf,
             isMoving: isMoving,
+            vehicle: vehicle,
+            speedKmh: speedKmh,
             semanticLabel: label,
             onTap: () => taps++,
           ),
@@ -117,6 +123,28 @@ void main() {
       find.byIcon(CupertinoIcons.arrow_up_right_circle_fill),
       findsNothing,
     );
+  });
+
+  testWidgets('badge kendaraan: motor dan mobil di atas marker', (
+    tester,
+  ) async {
+    await pumpMarker(
+      tester,
+      isMoving: true,
+      vehicle: VehicleType.motorcycle,
+      speedKmh: 35,
+    );
+    expect(find.byIcon(Icons.two_wheeler), findsOneWidget);
+    expect(find.text('35 km/j'), findsOneWidget);
+
+    await pumpMarker(
+      tester,
+      isMoving: true,
+      vehicle: VehicleType.car,
+      speedKmh: 60,
+    );
+    expect(find.byIcon(CupertinoIcons.car_fill), findsOneWidget);
+    expect(find.text('60 km/j'), findsOneWidget);
   });
 
   testWidgets('basi dipudarkan setengah, aktif penuh', (tester) async {

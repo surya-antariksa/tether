@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import '../../places/domain/place.dart';
 import '../../places/presentation/place_map_layers.dart';
 import '../domain/presence.dart';
+import '../domain/vehicle_type.dart';
 import 'member_marker.dart';
 
 /// Pusat awal bila belum ada anggota yang punya marker (Jakarta).
@@ -27,6 +28,8 @@ class MarkerEntry {
     required this.presence,
     required this.isSelf,
     required this.isMoving,
+    this.vehicle = VehicleType.none,
+    this.speedKmh,
     required this.semanticLabel,
   });
 
@@ -37,6 +40,8 @@ class MarkerEntry {
   final PresenceState presence;
   final bool isSelf;
   final bool? isMoving;
+  final VehicleType vehicle;
+  final double? speedKmh;
   final String semanticLabel;
 }
 
@@ -172,6 +177,8 @@ class _MembersMapState extends State<MembersMap>
                     presence: e.presence,
                     isSelf: e.isSelf,
                     isMoving: e.isMoving,
+                    vehicle: e.vehicle,
+                    speedKmh: e.speedKmh,
                     semanticLabel: e.semanticLabel,
                     onTap: () => widget.onMarkerTap(e.userId),
                   ),

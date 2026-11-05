@@ -155,6 +155,37 @@ void main() {
       );
     });
 
+    testWidgets('badge kendaraan: motor dan mobil di kartu anggota sheet', (
+      tester,
+    ) async {
+      await pumpSheet(
+        tester,
+        members: [
+          member(
+            'u2',
+            'Budi',
+            location: locationAt(
+              fixedNow,
+              moving: true,
+              speedMps: 8.5, // 30.6 km/jam -> motor
+            ),
+          ),
+          member(
+            'u3',
+            'Siti',
+            location: locationAt(
+              fixedNow,
+              moving: true,
+              speedMps: 18.0, // 64.8 km/jam -> mobil
+            ),
+          ),
+        ],
+      );
+
+      expect(inRow('Motor · 31 km/jam'), findsOneWidget);
+      expect(inRow('Mobil · 65 km/jam'), findsOneWidget);
+    });
+
     testWidgets('aktif diam dan aktif tanpa data gerak', (tester) async {
       await pumpSheet(
         tester,

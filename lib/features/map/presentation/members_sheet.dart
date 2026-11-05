@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show Icons;
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
@@ -6,6 +7,7 @@ import '../../../core/widgets/member_avatar.dart';
 import '../domain/map_member.dart';
 import '../domain/paused_until.dart';
 import '../domain/presence.dart';
+import '../domain/vehicle_type.dart';
 import 'map_strings.dart';
 import 'relative_time.dart';
 
@@ -289,6 +291,10 @@ class MemberRow extends StatelessWidget {
     final updated = presence == PresenceState.active ? ago : null;
     final battery = showFix ? loc?.batteryPct : null;
     final moving = presence == PresenceState.active ? loc?.isMoving : null;
+    final vehicle = presence == PresenceState.active
+        ? (loc?.vehicle ?? VehicleType.none)
+        : VehicleType.none;
+    final speedKmh = presence == PresenceState.active ? loc?.speedKmh : null;
     final dim = presence != PresenceState.active;
     final secondary = AppColors.textSecondary;
 
@@ -332,14 +338,27 @@ class MemberRow extends StatelessWidget {
                           : member.displayName,
                       style: AppTextStyles.body(context, emphasized: true),
                     ),
-                    Text(
-                      status,
-                      style: AppTextStyles.subhead(
-                        context,
-                        color: presence == PresenceState.paused
-                            ? AppColors.warning
-                            : secondary,
-                      ),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 6,
+                      runSpacing: 2,
+                      children: [
+                        Text(
+                          status,
+                          style: AppTextStyles.subhead(
+                            context,
+                            color: presence == PresenceState.paused
+                                ? AppColors.warning
+                                : secondary,
+                          ),
+                        ),
+                        if (vehicle != VehicleType.none &&
+                            vehicle != VehicleType.walking)
+                          _VehicleSheetBadge(
+                            vehicle: vehicle,
+                            speedKmh: speedKmh,
+                          ),
+                      ],
                     ),
                     if (updated != null)
                       Text(
@@ -376,6 +395,64 @@ class MemberRow extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Badge kendaraan (mobil/motor) dan kecepatan km/jam di kartu anggota sheet.
+class _VehicleSheetBadge extends StatelessWidget {
+  const _VehicleSheetBadge({
+    required this.vehicle,
+    this.speedKmh,
+  });
+
+  final VehicleType vehicle;
+  final double? speedKmh;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconData = switch (vehicle) {
+      VehicleType.motorcycle => Icons.two_wheeler,
+      VehicleType.car => CupertinoIcons.car_fill,
+      VehicleType.walking => Icons.directions_walk,
+      VehicleType.none => null,
+    };
+    if (iconData == null) return const SizedBox.shrink();
+
+    final label = vehicle == VehicleType.motorcycle
+        ? 'Motor'
+        : (vehicle == VehicleType.car ? 'Mobil' : 'Jalan');
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: CupertinoDynamicColor.resolve(
+          AppColors.tint.withValues(alpha: 0.12),
+          context,
+        ),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            iconData,
+            size: 13,
+            color: CupertinoDynamicColor.resolve(AppColors.tint, context),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            speedKmh != null && speedKmh! >= 1.5
+                ? '$label · ${speedKmh!.round()} km/jam'
+                : label,
+            style: AppTextStyles.caption2(
+              context,
+              emphasized: true,
+              color: CupertinoDynamicColor.resolve(AppColors.tint, context),
+            ),
+          ),
+        ],
       ),
     );
   }

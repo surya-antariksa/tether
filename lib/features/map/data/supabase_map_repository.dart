@@ -60,14 +60,24 @@ class SupabaseMapRepository implements MapRepository {
           )
           .eq('circle_id', circleId);
       final ids = [for (final r in memberRows) r['user_id'] as String];
-      final statusRows = ids.isEmpty
-          ? const <Map<String, dynamic>>[]
-          : await _client
-                .from('member_status')
-                .select(
-                  'user_id, last_point, last_seen_at, battery_pct, is_moving',
-                )
-                .inFilter('user_id', ids);
+      List<Map<String, dynamic>> statusRows = const [];
+      if (ids.isNotEmpty) {
+        try {
+          statusRows = await _client
+              .from('member_status')
+              .select(
+                'user_id, last_point, last_seen_at, battery_pct, is_moving, speed_mps',
+              )
+              .inFilter('user_id', ids);
+        } catch (_) {
+          statusRows = await _client
+              .from('member_status')
+              .select(
+                'user_id, last_point, last_seen_at, battery_pct, is_moving',
+              )
+              .inFilter('user_id', ids);
+        }
+      }
       final locations = <String, MemberLocation>{};
       for (final r in statusRows) {
         final loc = locationFromRow(r);
@@ -107,6 +117,7 @@ class SupabaseMapRepository implements MapRepository {
       lastSeenAt: seen,
       batteryPct: (r['battery_pct'] as num?)?.toInt(),
       isMoving: r['is_moving'] as bool?,
+      speedMps: (r['speed_mps'] as num?)?.toDouble(),
     );
   }
 

@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show Icons;
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/member_colors.dart';
 import '../../../core/widgets/member_avatar.dart';
 import '../domain/presence.dart';
+import '../domain/vehicle_type.dart';
 import 'map_strings.dart';
 
 /// Ukuran kotak marker; pusat kotak = titik koordinat.
 const double kMarkerBox = 96;
 
 /// Marker anggota: lingkaran berwarna dengan inisial, label nama, ikon
-/// bergerak/diam. Diri sendiri: cincin ganda warna tint dan label "Kamu".
+/// bergerak/diam, serta badge kendaraan (mobil/motor) dan kecepatan jika berkendara.
+/// Diri sendiri: cincin ganda warna tint dan label "Kamu".
 /// Basi: dipudarkan (teks "terakhir terlihat" ada di panel dan Semantics).
 class MemberMarker extends StatelessWidget {
   const MemberMarker({
@@ -21,6 +24,8 @@ class MemberMarker extends StatelessWidget {
     required this.presence,
     required this.isSelf,
     required this.isMoving,
+    this.vehicle = VehicleType.none,
+    this.speedKmh,
     required this.semanticLabel,
     required this.onTap,
   });
@@ -30,6 +35,8 @@ class MemberMarker extends StatelessWidget {
   final PresenceState presence;
   final bool isSelf;
   final bool? isMoving;
+  final VehicleType vehicle;
+  final double? speedKmh;
   final String semanticLabel;
   final VoidCallback onTap;
 
@@ -51,6 +58,15 @@ class MemberMarker extends StatelessWidget {
             alignment: Alignment.center,
             clipBehavior: Clip.none,
             children: [
+              // Badge kendaraan (mobil/motor) & kecepatan di atas marker peta
+              if (vehicle != VehicleType.none && !stale)
+                Positioned(
+                  top: 6,
+                  child: _VehicleMarkerBadge(
+                    vehicle: vehicle,
+                    speedKmh: speedKmh,
+                  ),
+                ),
               // Area sentuh 44x44 pt walau gambar lebih kecil.
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -108,6 +124,70 @@ class MemberMarker extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Lencana kendaraan di atas marker (mobil atau motor) dan angka km/jam.
+class _VehicleMarkerBadge extends StatelessWidget {
+  const _VehicleMarkerBadge({
+    required this.vehicle,
+    this.speedKmh,
+  });
+
+  final VehicleType vehicle;
+  final double? speedKmh;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconData = switch (vehicle) {
+      VehicleType.motorcycle => Icons.two_wheeler,
+      VehicleType.car => CupertinoIcons.car_fill,
+      VehicleType.walking => Icons.directions_walk,
+      VehicleType.none => null,
+    };
+    if (iconData == null) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: BoxDecoration(
+        color: CupertinoColors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color(0x1F000000),
+          width: 0.5,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x26000000),
+            blurRadius: 4,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            iconData,
+            size: 13,
+            color: const Color(0xFF1C1C1E),
+          ),
+          if (speedKmh != null && speedKmh! >= 1.5) ...[
+            const SizedBox(width: 3),
+            Text(
+              '${speedKmh!.round()} km/j',
+              textScaler: TextScaler.noScaling,
+              style: const TextStyle(
+                fontSize: 9.5,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF1C1C1E),
+                letterSpacing: -0.2,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

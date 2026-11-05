@@ -19,6 +19,7 @@ import '../domain/map_circle.dart';
 import '../domain/map_member.dart';
 import '../domain/map_repository.dart';
 import '../domain/presence.dart';
+import '../domain/vehicle_type.dart';
 import 'glass.dart';
 import 'map_strings.dart';
 import 'members_map.dart';
@@ -225,6 +226,7 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
       if (!hasMarker(presence) || loc == null) continue;
       final isSelf = m.userId == snap.selfId;
       final ago = formatRelativeTime(loc.lastSeenAt, now);
+      final isActive = presence == PresenceState.active;
       entries.add(
         MarkerEntry(
           userId: m.userId,
@@ -233,7 +235,9 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
           point: loc.point,
           presence: presence,
           isSelf: isSelf,
-          isMoving: presence == PresenceState.active ? loc.isMoving : null,
+          isMoving: isActive ? loc.isMoving : null,
+          vehicle: isActive ? loc.vehicle : VehicleType.none,
+          speedKmh: isActive ? loc.speedKmh : null,
           semanticLabel: MapStrings.memberLabel(
             m.displayName,
             isSelf: isSelf,
@@ -242,7 +246,7 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
               isMoving: loc.isMoving,
               ago: ago,
             ),
-            updated: presence == PresenceState.active
+            updated: isActive
                 ? MapStrings.updated(ago)
                 : null,
           ),

@@ -122,9 +122,11 @@ MemberLocation locationAt(
   LatLng point = const LatLng(-6.2088, 106.8456),
   int? battery,
   bool? moving,
+  double? speedMps,
 }) => MemberLocation(
   point: point,
   lastSeenAt: lastSeenAt,
   batteryPct: battery,
   isMoving: moving,
+  speedMps: speedMps,
 );

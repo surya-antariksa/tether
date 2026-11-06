@@ -9,6 +9,7 @@ abstract final class DeleteAccountStrings {
       'Akun Anda dinonaktifkan sekarang dan Anda tidak bisa masuk lagi dengan '
       'akun ini.';
   static const whatSection = 'Yang dihapus';
+  static const permanent = 'Permanen';
   static const items = [
     'Riwayat lokasi dan posisi terakhir Anda.',
     'Check-in dan SOS yang pernah Anda kirim.',

@@ -35,16 +35,10 @@ void main() {
       expect(h.location, '/profile/notifications');
       expect(find.text(ProfileStrings.notifArriveLeave), findsOneWidget);
       expect(find.text(ProfileStrings.notifCheckin), findsOneWidget);
-      expect(
-        find.text(ProfileStrings.notifMemberChanges),
-        findsOneWidget,
-      );
+      expect(find.text(ProfileStrings.notifMemberChanges), findsOneWidget);
       expect(sw(value: true), findsNWidgets(2));
       expect(sw(value: false), findsOneWidget);
-      expect(
-        find.text(ProfileStrings.notifSosNote),
-        findsOneWidget,
-      );
+      expect(find.text(ProfileStrings.notifSosNote), findsOneWidget);
     });
 
     testWidgets('menggeser sakelar menyimpan ke server', (tester) async {
@@ -58,7 +52,9 @@ void main() {
       expect(sw(value: false), findsOneWidget);
     });
 
-    testWidgets('gagal simpan: sakelar kembali dan dialog galat', (tester) async {
+    testWidgets('gagal simpan: sakelar kembali dan dialog galat', (
+      tester,
+    ) async {
       final settings = FakeNotificationSettingsRepository()
         ..saveFailure = const NotificationSettingsFailure(
           NotificationSettingsFailureKind.unknown,

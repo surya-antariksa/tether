@@ -37,8 +37,7 @@ final notificationSettingsProvider =
       retry: (_, _) => null, // pengguna memicu ulang lewat tombol
     );
 
-class NotificationSettingsNotifier
-    extends AsyncNotifier<NotificationSettings> {
+class NotificationSettingsNotifier extends AsyncNotifier<NotificationSettings> {
   @override
   Future<NotificationSettings> build() {
     ref.watch(currentUserIdProvider);

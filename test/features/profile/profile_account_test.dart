@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/features/history/presentation/history_page.dart';
 import 'package:tether/features/profile/domain/profile.dart';
 import 'package:tether/features/profile/presentation/delete_account_page.dart';
+import 'package:tether/core/widgets/glass_dialog.dart';
 
 import '../../support/fakes.dart';
 import 'profile_harness.dart';
@@ -71,7 +72,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(
       find.descendant(
-        of: find.byType(CupertinoAlertDialog),
+        of: find.byType(GlassDialog),
         matching: find.text('Keluar'),
       ),
     );
@@ -88,14 +89,23 @@ void main() {
     await pumpProfile(tester, profile: withEmail());
 
     expect(
-      find.bySemanticsLabel('Riwayat lokasi, 48 jam terakhir, bisa dihapus'),
+      find.bySemanticsLabel('Riwayat lokasi, 30 hari terakhir, bisa dihapus'),
       findsOneWidget,
     );
     expect(find.bySemanticsLabel('Hapus akun'), findsOneWidget);
     expect(find.bySemanticsLabel('Akun rina@example.test'), findsOneWidget);
     for (final label in ['Riwayat lokasi', 'Hapus akun']) {
       expect(
-        tester.getSize(find.widgetWithText(CupertinoButton, label)).height,
+        tester
+            .getSize(
+              find
+                  .ancestor(
+                    of: find.text(label),
+                    matching: find.byType(GestureDetector),
+                  )
+                  .first,
+            )
+            .height,
         greaterThanOrEqualTo(44),
       );
     }

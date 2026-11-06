@@ -3,12 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/features/auth/presentation/auth_page.dart';
 import 'package:tether/features/profile/domain/profile_repository.dart';
 import 'package:tether/features/profile/presentation/profile_tab_page.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:tether/core/widgets/glass_dialog.dart';
 
 import '../../support/fakes.dart';
 import '../../support/pump_app.dart';
 
 Finder inDialog(String text) => find.descendant(
-  of: find.byType(CupertinoAlertDialog),
+  of: find.byWidgetPredicate(
+    (w) => w is CupertinoAlertDialog || w is GlassDialog,
+  ),
   matching: find.text(text),
 );
 
@@ -134,7 +138,7 @@ void main() {
     ]);
     expect(profile.profile.color, '#2563EB');
     // Centang berpindah ke Biru (bukan hanya warna).
-    expect(find.byIcon(CupertinoIcons.checkmark_alt), findsOneWidget);
+    expect(find.byIcon(Symbols.check), findsOneWidget);
     expect(
       tester
           .getSemantics(find.bySemanticsLabel('Warna Biru'))
@@ -165,19 +169,16 @@ void main() {
     await tester.tap(find.widgetWithText(CupertinoButton, 'Keluar'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(CupertinoAlertDialog), findsOneWidget);
+    expect(find.byType(GlassDialog), findsOneWidget);
     expect(find.text('Keluar dari Tether?'), findsOneWidget);
     final actions = tester
-        .widgetList<CupertinoDialogAction>(find.byType(CupertinoDialogAction))
+        .widgetList<GlassDialogAction>(find.byType(GlassDialogAction))
         .toList();
     expect(actions, hasLength(2));
-    final cancel = actions.firstWhere((a) => (a.child as Text).data == 'Batal');
-    final confirm = actions.firstWhere(
-      (a) => (a.child as Text).data == 'Keluar',
-    );
-    expect(confirm.isDestructiveAction, isTrue);
-    expect(confirm.isDefaultAction, isFalse);
-    expect(cancel.isDefaultAction, isFalse);
+    final cancel = actions.firstWhere((a) => a.label == 'Batal');
+    final confirm = actions.firstWhere((a) => a.label == 'Keluar');
+    expect(confirm.destructive, isTrue);
+    expect(cancel.destructive, isFalse);
 
     await tester.tap(inDialog('Batal'));
     await tester.pumpAndSettle();
@@ -281,7 +282,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(CupertinoButton, 'Keluar'));
       await tester.pumpAndSettle();
-      expect(find.byType(CupertinoAlertDialog), findsOneWidget);
+      expect(find.byType(GlassDialog), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
   );

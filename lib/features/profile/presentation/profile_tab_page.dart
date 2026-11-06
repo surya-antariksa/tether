@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/routes.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
+import '../../../app/theme/theme_mode_provider.dart';
 import '../../../core/member_colors.dart';
+import '../../../core/widgets/design_widgets.dart';
+import '../../../core/widgets/glass_card.dart';
+import '../../../core/widgets/glass_dialog.dart';
 import '../../../core/widgets/member_avatar.dart';
 import '../../auth/data/auth_providers.dart';
 import '../../auth/domain/auth_validators.dart';
@@ -14,6 +19,7 @@ import '../domain/profile.dart';
 import '../domain/profile_repository.dart';
 import '../profile_routes.dart';
 import 'profile_strings.dart';
+import 'edit_profile_sheet.dart';
 import 'settings_row.dart';
 
 class ProfileTabPage extends ConsumerWidget {
@@ -24,32 +30,58 @@ class ProfileTabPage extends ConsumerWidget {
     final profile = ref.watch(ownProfileProvider);
     return CupertinoPageScaffold(
       backgroundColor: AppColors.groupedBackground,
-      child: CustomScrollView(
-        slivers: [
-          const CupertinoSliverNavigationBar(
-            largeTitle: Text(ProfileStrings.title),
-          ),
-          SliverSafeArea(
-            top: false,
-            sliver: SliverToBoxAdapter(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 560),
-                  child: profile.when(
-                    data: (p) => _ProfileContent(profile: p),
-                    loading: () => const Padding(
-                      padding: EdgeInsets.all(48),
-                      child: Center(child: CupertinoActivityIndicator()),
-                    ),
-                    error: (_, _) => _LoadFailed(
-                      onRetry: () => ref.invalidate(ownProfileProvider),
+      child: AtmosphereBackground(
+        child: SafeArea(
+          bottom: false,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Semantics(
+                        header: true,
+                        child: Text(
+                          ProfileStrings.title,
+                          style: AppTextStyles.largeTitle(
+                            context,
+                            emphasized: true,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        ProfileStrings.subtitle,
+                        style: AppTextStyles.footnote(
+                          context,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 560),
+                    child: profile.when(
+                      data: (p) => _ProfileContent(profile: p),
+                      loading: () => const Padding(
+                        padding: EdgeInsets.all(48),
+                        child: Center(child: CupertinoActivityIndicator()),
+                      ),
+                      error: (_, _) => _LoadFailed(
+                        onRetry: () => ref.invalidate(ownProfileProvider),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -123,50 +155,69 @@ class _ProfileContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final tint = AppColors.tint.resolveFrom(context);
+    final dark = AppColors.isDark(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: MemberAvatar(
-              name: profile.displayName,
-              colorHex: profile.color,
-              size: 88,
-              semanticLabel: ProfileStrings.avatarLabel(profile.displayName),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            profile.displayName,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.title2(context, emphasized: true),
-          ),
-          const SizedBox(height: 24),
-          _Card(
-            child: CupertinoButton(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              minimumSize: const Size.fromHeight(44),
-              alignment: AlignmentDirectional.centerStart,
-              onPressed: () => _rename(context, ref),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      ProfileStrings.editName,
-                      style: AppTextStyles.body(context, color: AppColors.tint),
+          GlassCard(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: tint, width: 3),
+                      boxShadow: dark
+                          ? [
+                              BoxShadow(
+                                color: tint.withValues(alpha: 0.35),
+                                blurRadius: 20,
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: MemberAvatar(
+                      name: profile.displayName,
+                      colorHex: profile.color,
+                      size: 88,
+                      semanticLabel: ProfileStrings.avatarLabel(
+                        profile.displayName,
+                      ),
                     ),
                   ),
-                  Icon(
-                    CupertinoIcons.chevron_forward,
-                    size: 18,
-                    color: CupertinoDynamicColor.resolve(
-                      AppColors.textSecondary,
-                      context,
-                    ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  profile.displayName,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.title2(context, emphasized: true),
+                ),
+                const SizedBox(height: 16),
+                _ActionRow(
+                  icon: Symbols.edit,
+                  title: ProfileStrings.editName,
+                  onPressed: () => _rename(context, ref),
+                ),
+                const SizedBox(height: 8),
+                _ActionRow(
+                  icon: Symbols.tune,
+                  title: 'Ubah Profil Publik Circle',
+                  subtitle: 'Nama tampilan & warna penanda peta',
+                  onPressed: () => showEditProfileSheet(
+                    context,
+                    profile: profile,
+                    onSave: ({displayName, color}) => ref
+                        .read(ownProfileProvider.notifier)
+                        .updateProfile(displayName: displayName, color: color),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 24),
@@ -197,7 +248,7 @@ class _ProfileContent extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
             child: Text(
               ProfileStrings.colorFooter,
               style: AppTextStyles.footnote(
@@ -207,14 +258,20 @@ class _ProfileContent extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
+          _SectionHeader(ProfileStrings.appearanceSection),
+          const _ThemePicker(),
+          const SizedBox(height: 24),
+          _SectionHeader(ProfileStrings.settingsSection),
           SettingsRow(
+            icon: Symbols.history,
             label: ProfileStrings.historyRow,
             subtitle: ProfileStrings.historySubtitle,
             onPressed: () =>
                 context.push('${AppRoutes.profile}/${ProfileRoutes.history}'),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           SettingsRow(
+            icon: Symbols.notifications,
             label: ProfileStrings.notificationRow,
             subtitle: ProfileStrings.notificationSubtitle,
             onPressed: () => context.push(
@@ -228,26 +285,36 @@ class _ProfileContent extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 12,
+                  vertical: 14,
                 ),
                 child: Semantics(
                   label: ProfileStrings.accountLabel(profile.email!),
                   excludeSemantics: true,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(
-                      profile.email!,
-                      style: AppTextStyles.body(context),
-                    ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Symbols.mail,
+                        size: 20,
+                        color: AppColors.textSecondary.resolveFrom(context),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          profile.email!,
+                          style: AppTextStyles.callout(context),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
           ],
           const _SignOutButton(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
           SettingsRow(
+            icon: Symbols.delete,
             label: ProfileStrings.deleteAccount,
             destructive: true,
             onPressed: () => context.push(
@@ -255,7 +322,7 @@ class _ProfileContent extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
             child: Text(
               ProfileStrings.privacyNote,
               style: AppTextStyles.footnote(
@@ -270,6 +337,194 @@ class _ProfileContent extends ConsumerWidget {
   }
 }
 
+/// Pemilih tema: Sistem, Terang, atau Gelap. Berlaku langsung dan disimpan.
+class _ThemePicker extends ConsumerWidget {
+  const _ThemePicker();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeModeProvider);
+    const labels = {
+      AppThemeMode.system: ProfileStrings.themeSystem,
+      AppThemeMode.light: ProfileStrings.themeLight,
+      AppThemeMode.dark: ProfileStrings.themeDark,
+    };
+    const icons = {
+      AppThemeMode.system: Symbols.contrast,
+      AppThemeMode.light: Symbols.light_mode,
+      AppThemeMode.dark: Symbols.dark_mode,
+    };
+    return _Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              ProfileStrings.appearanceTitle,
+              style: AppTextStyles.body(context, emphasized: true),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              ProfileStrings.appearanceHint,
+              style: AppTextStyles.footnote(
+                context,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                for (final m in AppThemeMode.values) ...[
+                  Expanded(
+                    child: Semantics(
+                      button: true,
+                      selected: m == mode,
+                      label: '${ProfileStrings.appearanceTitle}: ${labels[m]}',
+                      excludeSemantics: true,
+                      onTap: () =>
+                          ref.read(themeModeProvider.notifier).select(m),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () =>
+                            ref.read(themeModeProvider.notifier).select(m),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 160),
+                          constraints: const BoxConstraints(minHeight: 64),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: m == mode
+                                ? AppColors.tint
+                                      .resolveFrom(context)
+                                      .withValues(alpha: 0.12)
+                                : AppColors.surfaceHigh.resolveFrom(context),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: m == mode
+                                  ? AppColors.tint.resolveFrom(context)
+                                  : AppColors.separator.resolveFrom(context),
+                              width: m == mode ? 1.5 : 1,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                icons[m],
+                                size: 22,
+                                color: m == mode
+                                    ? AppColors.tint.resolveFrom(context)
+                                    : AppColors.textSecondary.resolveFrom(
+                                        context,
+                                      ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                labels[m]!,
+                                style: AppTextStyles.caption1(
+                                  context,
+                                  emphasized: m == mode,
+                                  color: m == mode
+                                      ? AppColors.tint
+                                      : AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (m != AppThemeMode.values.last) const SizedBox(width: 8),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Baris aksi di dalam kartu identitas: ikon, judul, keterangan, chevron.
+class _ActionRow extends StatelessWidget {
+  const _ActionRow({
+    required this.icon,
+    required this.title,
+    required this.onPressed,
+    this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: subtitle == null ? title : '$title, $subtitle',
+      excludeSemantics: true,
+      onTap: onPressed,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onPressed,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceHigh.resolveFrom(context),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: AppColors.separator.resolveFrom(context),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 20,
+                  color: AppColors.tint.resolveFrom(context),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppTextStyles.callout(context, emphasized: true),
+                      ),
+                      if (subtitle != null)
+                        Text(
+                          subtitle!,
+                          style: AppTextStyles.footnote(
+                            context,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Symbols.chevron_right,
+                  size: 18,
+                  color: AppColors.textSecondary.resolveFrom(context),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _Card extends StatelessWidget {
   const _Card({required this.child});
 
@@ -277,16 +532,7 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: CupertinoDynamicColor.resolve(
-          AppColors.groupedItemBackground,
-          context,
-        ),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: child,
-    );
+    return GlassCard(padding: EdgeInsets.zero, child: child);
   }
 }
 
@@ -298,17 +544,8 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Semantics(
-        header: true,
-        child: Text(
-          text.toUpperCase(),
-          style: AppTextStyles.footnote(
-            context,
-            color: AppColors.textSecondary,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.only(bottom: 8),
+      child: SectionLabel(text),
     );
   }
 }
@@ -349,11 +586,17 @@ class _Swatch extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: MemberColors.toColor(hex),
+                border: selected
+                    ? Border.all(
+                        color: AppColors.textPrimary.resolveFrom(context),
+                        width: 2,
+                      )
+                    : null,
               ),
               // Tanda centang: pilihan tidak hanya lewat warna.
               child: selected
                   ? Icon(
-                      CupertinoIcons.checkmark_alt,
+                      Symbols.check,
                       size: 22,
                       color: MemberColors.onColor(hex),
                     )
@@ -370,21 +613,22 @@ class _SignOutButton extends ConsumerWidget {
   const _SignOutButton();
 
   Future<void> _confirm(BuildContext context, WidgetRef ref) async {
-    final ok = await showCupertinoDialog<bool>(
+    final ok = await showGlassDialog<bool>(
       context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text(ProfileStrings.signOutTitle),
-        content: const Text(ProfileStrings.signOutMessage),
+      builder: (ctx) => GlassDialog(
+        icon: Symbols.logout,
+        title: ProfileStrings.signOutTitle,
+        message: ProfileStrings.signOutMessage,
+        note: ProfileStrings.signOutNote,
         actions: [
-          // Batal bukan tombol bawaan pada alert destruktif.
-          CupertinoDialogAction(
+          GlassDialogAction(
+            label: ProfileStrings.cancel,
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text(ProfileStrings.cancel),
           ),
-          CupertinoDialogAction(
-            isDestructiveAction: true,
+          GlassDialogAction(
+            label: ProfileStrings.signOut,
+            destructive: true,
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text(ProfileStrings.signOut),
           ),
         ],
       ),
@@ -406,11 +650,26 @@ class _SignOutButton extends ConsumerWidget {
     return _Card(
       child: CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        minimumSize: const Size.fromHeight(44),
+        minimumSize: const Size.fromHeight(48),
         onPressed: () => _confirm(context, ref),
-        child: Text(
-          ProfileStrings.signOut,
-          style: AppTextStyles.body(context, color: AppColors.danger),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Symbols.logout,
+              size: 20,
+              color: AppColors.danger.resolveFrom(context),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              ProfileStrings.signOut,
+              style: AppTextStyles.body(
+                context,
+                emphasized: true,
+                color: AppColors.danger,
+              ),
+            ),
+          ],
         ),
       ),
     );

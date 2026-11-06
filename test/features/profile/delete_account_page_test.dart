@@ -7,12 +7,15 @@ import 'package:tether/features/profile/domain/account_repository.dart';
 import 'package:tether/features/profile/domain/profile.dart';
 import 'package:tether/features/profile/presentation/delete_account_page.dart';
 import 'package:tether/features/safety/domain/sos_models.dart';
+import 'package:tether/core/widgets/glass_dialog.dart';
 
 import '../../support/fakes.dart';
 import 'profile_harness.dart';
 
 Finder inDialog(String text) => find.descendant(
-  of: find.byType(CupertinoAlertDialog),
+  of: find.byWidgetPredicate(
+    (w) => w is CupertinoAlertDialog || w is GlassDialog,
+  ),
   matching: find.text(text),
 );
 
@@ -86,8 +89,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(inDialog('Konfirmasi terakhir'), findsOneWidget);
 
-    CupertinoDialogAction action() => tester.widget<CupertinoDialogAction>(
-      find.widgetWithText(CupertinoDialogAction, 'Hapus akun'),
+    GlassDialogAction action() => tester.widget<GlassDialogAction>(
+      find.widgetWithText(GlassDialogAction, 'Hapus akun'),
     );
     expect(action().onPressed, isNull);
 
@@ -192,11 +195,14 @@ void main() {
       ),
       findsOneWidget,
     );
-    final button = tester
-        .widgetList<CupertinoButton>(
-          find.byType(CupertinoButton, skipOffstage: false),
-        )
-        .singleWhere((b) => b.child is CupertinoActivityIndicator);
+    final button = tester.widget<CupertinoButton>(
+      find
+          .ancestor(
+            of: find.byType(CupertinoActivityIndicator, skipOffstage: false),
+            matching: find.byType(CupertinoButton),
+          )
+          .first,
+    );
     expect(button.onPressed, isNull);
     expect(h.auth.calls, isNot(contains('signOut')));
 

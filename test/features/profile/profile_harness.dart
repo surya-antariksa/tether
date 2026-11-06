@@ -43,10 +43,13 @@ class FakeAccountRepository implements AccountRepository {
 
 class FakeNotificationSettingsRepository
     implements NotificationSettingsRepository {
-  FakeNotificationSettingsRepository({this.initial = const NotificationSettings()});
+  FakeNotificationSettingsRepository({
+    this.initial = const NotificationSettings(),
+  });
 
   NotificationSettings initial;
   NotificationSettingsFailure? failure;
+
   /// Galat khusus simpan, agar fetch tetap berhasil ketika diuji alur galat
   /// simpan (fetch dan save tidak menggunakan galat yang sama).
   NotificationSettingsFailure? saveFailure;
@@ -79,7 +82,7 @@ class FakeHistoryRepository implements HistoryRepository {
   int deleteCalls = 0;
 
   @override
-  Future<List<HistoryPoint>> fetchLast48h() async {
+  Future<List<HistoryPoint>> fetchHistory() async {
     fetchCalls++;
     if (gate != null) await gate!.future;
     if (fetchFailure != null) throw fetchFailure!;
@@ -175,7 +178,7 @@ Future<ProfileHarness> pumpProfile(
   bool settle = true,
   double textScale = 1.0,
 }) async {
-  tester.view.physicalSize = const Size(390, 844);
+  tester.view.physicalSize = const Size(390, 1200);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
@@ -184,8 +187,7 @@ Future<ProfileHarness> pumpProfile(
   final authRepo = auth ?? FakeAuthRepository(userId: 'user-1');
   final accountRepo = account ?? FakeAccountRepository();
   final historyRepo = history ?? FakeHistoryRepository();
-  final settingsRepo =
-      settings ?? FakeNotificationSettingsRepository();
+  final settingsRepo = settings ?? FakeNotificationSettingsRepository();
   final tiles = FakeTileProvider();
   final sosStore = InMemorySosQueueStore();
 
@@ -197,9 +199,7 @@ Future<ProfileHarness> pumpProfile(
       ),
       accountRepositoryProvider.overrideWithValue(accountRepo),
       historyRepositoryProvider.overrideWithValue(historyRepo),
-      notificationSettingsRepositoryProvider.overrideWithValue(
-        settingsRepo,
-      ),
+      notificationSettingsRepositoryProvider.overrideWithValue(settingsRepo),
       historyClockProvider.overrideWithValue(() => fixedNow),
       mapTileProviderProvider.overrideWithValue(tiles),
       sosQueueStoreProvider.overrideWith((ref) async => sosStore),

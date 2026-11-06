@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/selected_circle.dart';
 import '../../map/presentation/glass.dart';
@@ -23,7 +27,7 @@ class SafetyActionsButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(sosServiceProvider);
     return GlassIconButton(
-      icon: CupertinoIcons.shield_fill,
+      icon: Symbols.shield,
       label: SafetyStrings.entryLabel,
       onPressed: () => showSafetySheet(context, circleId: circleId),
     );
@@ -50,7 +54,7 @@ class SafetySheet extends ConsumerWidget {
     final checkin = ref.watch(checkinControllerProvider);
     final sending = checkin is CheckinSending;
     final accessible = MediaQuery.accessibleNavigationOf(context);
-    final secondary = CupertinoColors.secondaryLabel.resolveFrom(context);
+    final secondary = AppColors.textSecondary.resolveFrom(context);
 
     final String? status = switch (checkin) {
       CheckinDone(:final kind) => SafetyStrings.checkinDone(kind),
@@ -63,7 +67,7 @@ class SafetySheet extends ConsumerWidget {
     void send(CheckinKind kind) =>
         ref.read(checkinControllerProvider.notifier).send(kind, circleId: id);
 
-    return CupertinoPopupSurface(
+    return _SheetSurface(
       child: SafeArea(
         top: false,
         child: DefaultTextStyle(
@@ -79,19 +83,18 @@ class SafetySheet extends ConsumerWidget {
                   child: Text(
                     SafetyStrings.sheetTitle,
                     textAlign: TextAlign.center,
-                    style: AppTextStyles.headline(context),
+                    style: AppTextStyles.title2(context),
                   ),
                 ),
                 const SizedBox(height: 16),
                 Semantics(
                   header: true,
                   child: Text(
-                    SafetyStrings.checkinHeader,
-                    style: AppTextStyles.subhead(
+                    SafetyStrings.checkinHeader.toUpperCase(),
+                    style: AppTextStyles.labelMd(
                       context,
-                      emphasized: true,
                       color: secondary,
-                    ),
+                    ).copyWith(letterSpacing: 0.8),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -104,12 +107,12 @@ class SafetySheet extends ConsumerWidget {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.secondarySystemGroupedBackground,
+                      AppColors.groupedItemBackground,
                       context,
                     ),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: CupertinoColors.separator.resolveFrom(context),
+                      color: AppColors.separator.resolveFrom(context),
                       width: 0.5,
                     ),
                   ),
@@ -143,7 +146,7 @@ class SafetySheet extends ConsumerWidget {
                       style: AppTextStyles.footnote(
                         context,
                         color: checkin is CheckinFailed
-                            ? CupertinoColors.systemRed.resolveFrom(context)
+                            ? AppColors.danger.resolveFrom(context)
                             : secondary,
                       ),
                     ),
@@ -153,12 +156,11 @@ class SafetySheet extends ConsumerWidget {
                 Semantics(
                   header: true,
                   child: Text(
-                    SafetyStrings.sosHeader,
-                    style: AppTextStyles.subhead(
+                    SafetyStrings.sosHeader.toUpperCase(),
+                    style: AppTextStyles.labelMd(
                       context,
-                      emphasized: true,
-                      color: secondary,
-                    ),
+                      color: AppColors.danger,
+                    ).copyWith(letterSpacing: 0.8),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -209,18 +211,20 @@ class _CheckinButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final icon = kind == CheckinKind.arrived
-        ? CupertinoIcons.checkmark_alt_circle_fill
-        : CupertinoIcons.shield_fill;
+        ? Symbols.check_circle
+        : Symbols.shield;
+    final tint = AppColors.tint.resolveFrom(context);
+    final fg = filled ? AppColors.onTint.resolveFrom(context) : tint;
     final label = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 18),
+        Icon(icon, size: 20, fill: 1, color: fg),
         const SizedBox(width: 8),
         Flexible(
           child: Text(
             SafetyStrings.label(kind),
             textAlign: TextAlign.center,
-            style: AppTextStyles.body(context, emphasized: true),
+            style: AppTextStyles.body(context, emphasized: true, color: fg),
           ),
         ),
       ],
@@ -232,21 +236,62 @@ class _CheckinButton extends StatelessWidget {
       label: SafetyStrings.label(kind),
       excludeSemantics: true,
       onTap: onPressed,
-      child: filled
-          ? CupertinoButton.filled(
-              minimumSize: const Size(44, 48),
-              borderRadius: BorderRadius.circular(12),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              onPressed: onPressed,
-              child: label,
-            )
-          : CupertinoButton.tinted(
-              minimumSize: const Size(44, 48),
-              borderRadius: BorderRadius.circular(12),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              onPressed: onPressed,
-              child: label,
+      child: Opacity(
+        opacity: onPressed == null ? 0.5 : 1,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onPressed,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 48),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: filled ? tint : tint.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(14),
+              border: filled
+                  ? null
+                  : Border.all(color: tint.withValues(alpha: 0.35)),
             ),
+            child: label,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Latar lembar: kaca obsidian di gelap, putih bersih di terang; sudut atas 28.
+class _SheetSurface extends StatelessWidget {
+  const _SheetSurface({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    const radius = BorderRadius.vertical(top: Radius.circular(28));
+    final dark = AppColors.isDark(context);
+    final solid = MediaQuery.highContrastOf(context);
+    final body = DecoratedBox(
+      decoration: BoxDecoration(
+        color: dark
+            ? AppColors.glassFill
+                  .resolveFrom(context)
+                  .withValues(alpha: solid ? 1 : 0.94)
+            : AppColors.background.resolveFrom(context),
+        borderRadius: radius,
+        border: Border(
+          top: BorderSide(color: AppColors.glassBorder.resolveFrom(context)),
+        ),
+      ),
+      child: child,
+    );
+    return ClipRRect(
+      borderRadius: radius,
+      child: dark && !solid
+          ? BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: body,
+            )
+          : body,
     );
   }
 }

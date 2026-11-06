@@ -72,8 +72,18 @@ void main() {
       await pumpSafety(t);
       await openSheet(t);
       for (final f in [
-        find.widgetWithText(CupertinoButton, SafetyStrings.arrived),
-        find.widgetWithText(CupertinoButton, SafetyStrings.safe),
+        find
+            .ancestor(
+              of: find.text(SafetyStrings.arrived),
+              matching: find.byType(GestureDetector),
+            )
+            .first,
+        find
+            .ancestor(
+              of: find.text(SafetyStrings.safe),
+              matching: find.byType(GestureDetector),
+            )
+            .first,
         holdButton,
         find.widgetWithText(CupertinoButton, SafetyStrings.close),
       ]) {

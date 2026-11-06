@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/theme/app_text_styles.dart';
 import '../data/safety_providers.dart';
@@ -85,7 +86,8 @@ class _SosHoldButtonState extends ConsumerState<SosHoldButton>
   @override
   Widget build(BuildContext context) {
     final reduce = MediaQuery.disableAnimationsOf(context);
-    final red = CupertinoColors.systemRed.resolveFrom(context);
+    // Merah SOS tegas di semua mode (putih di atasnya 5,3:1).
+    const red = Color(0xFFD92D20);
     final dark = Color.alphaBlend(const Color(0x40000000), red);
     return Semantics(
       container: true,
@@ -112,7 +114,7 @@ class _SosHoldButtonState extends ConsumerState<SosHoldButton>
               final progress = reduce ? (raw * 3).floor() / 3 : raw;
               final holding = raw > 0;
               return ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(999),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: red,
@@ -150,9 +152,7 @@ class _SosHoldButtonState extends ConsumerState<SosHoldButton>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              holding
-                                  ? CupertinoIcons.exclamationmark_triangle_fill
-                                  : CupertinoIcons.exclamationmark_shield_fill,
+                              holding ? Symbols.warning : Symbols.gpp_maybe,
                               color: CupertinoColors.white,
                               size: 20,
                             ),

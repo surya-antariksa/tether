@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>tether • Peta</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#93000a",
+            "on-primary-container": "#006a70",
+            "on-primary": "#00373a",
+            "primary": "#e0fdff",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary": "#4edea3",
+            "on-surface": "#dfe2ee",
+            "on-tertiary-container": "#00697c",
+            "tertiary-fixed": "#acedff",
+            "on-primary-fixed-variant": "#004f53",
+            "tertiary": "#ecfaff",
+            "surface-variant": "#31353e",
+            "secondary-container": "#00a572",
+            "surface": "#0f131c",
+            "surface-container-highest": "#31353e",
+            "inverse-on-surface": "#2c3039",
+            "surface-tint": "#00dce6",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-surface-variant": "#b9cacb",
+            "primary-fixed-dim": "#00dce6",
+            "surface-container-low": "#181c24",
+            "secondary-fixed": "#6ffbbe",
+            "on-secondary": "#003824",
+            "outline-variant": "#3a494b",
+            "on-tertiary-fixed": "#001f26",
+            "outline": "#849495",
+            "on-secondary-container": "#00311f",
+            "background": "#0f131c",
+            "primary-fixed": "#6ff6ff",
+            "surface-dim": "#0f131c",
+            "inverse-surface": "#dfe2ee",
+            "surface-container-high": "#262a33",
+            "on-error-container": "#ffdad6",
+            "inverse-primary": "#00696f",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-container": "#1c2028",
+            "on-error": "#690005",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "primary-container": "#00f2fe",
+            "on-primary-fixed": "#002022",
+            "tertiary-container": "#91e8ff",
+            "surface-container-lowest": "#0a0e16",
+            "on-background": "#dfe2ee",
+            "surface-bright": "#353942",
+            "on-tertiary": "#003640",
+            "on-secondary-fixed": "#002113",
+            "error": "#ffb4ab"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "caption": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "body-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Inter"],
+            "headline-xl": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.4); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+    .beacon-pulse {
+      animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface antialiased overflow-hidden select-none flex justify-center items-center min-h-screen">
+<!-- Mobile Device Simulation Frame -->
+<div class="relative w-full max-w-md h-screen max-h-[920px] bg-background flex flex-col overflow-hidden shadow-2xl md:rounded-[40px] md:border md:border-outline-variant/30">
+<!-- Top App Bar (Shared Component Anchor) -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-md text-primary-container dark:text-primary-container docked full-width top-0 shadow-sm dark:shadow-none z-40 relative">
+<div class="flex justify-between items-center w-full px-4 h-14 max-w-md mx-auto">
+<button aria-label="Kembali" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/40 dark:hover:bg-surface-variant/40 hover:text-on-surface dark:hover:text-on-surface transition-colors active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="text-headline-md font-headline-md font-bold text-on-surface dark:text-on-surface tracking-tight">tether</span>
+<button aria-label="Menu Opsi" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant/40 dark:hover:bg-surface-variant/40 hover:text-on-surface dark:hover:text-on-surface transition-colors active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Map Canvas Viewport -->
+<main class="relative flex-1 w-full overflow-hidden bg-surface-container-lowest">
+<!-- Interactive Stylized Dark Mode Map Background -->
+<div class="absolute inset-0 z-0 bg-[#070b12] overflow-hidden" data-location="Kediri, Tabanan, Bali" style="">
+<!-- SVG Vector Map Rendering for High-End Futuristic Glass Appearance -->
+<svg class="w-full h-full object-cover opacity-60" preserveaspectratio="xMidYMid slice" viewbox="0 0 400 650" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialgradient cx="50%" cy="45%" id="mapGlow" r="60%">
+<stop offset="0%" stop-color="#00f2fe" stop-opacity="0.08"></stop>
+<stop offset="100%" stop-color="#070b12" stop-opacity="0"></stop>
+</radialgradient>
+<pattern height="30" id="grid" patternunits="userSpaceOnUse" width="30">
+<path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="0.7"></path>
+</pattern>
+</defs>
+<rect fill="#0a0f18" height="100%" width="100%"></rect>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+<rect fill="url(#mapGlow)" height="100%" width="100%"></rect>
+<!-- Topographic river and water arteries -->
+<path d="M -20,240 Q 90,260 160,210 T 260,290 T 360,230 T 420,310" fill="none" stroke="#00dce6" stroke-linecap="round" stroke-opacity="0.25" stroke-width="3"></path>
+<path d="M 120,400 Q 180,360 210,310 T 280,180 T 230,60" fill="none" stroke="#006a70" stroke-dasharray="3,3" stroke-opacity="0.3" stroke-width="2"></path>
+<path d="M 40,550 Q 140,510 240,560 T 390,490" fill="none" stroke="#00373a" stroke-opacity="0.4" stroke-width="1.8"></path>
+<!-- Vector Road Network -->
+<!-- Main Highway 1: Jalan Tanah Lot -->
+<path d="M 60,-20 L 170,170 L 220,320 L 290,470 L 380,620" fill="none" stroke="#1f293d" stroke-linecap="round" stroke-width="7"></path>
+<path d="M 60,-20 L 170,170 L 220,320 L 290,470 L 380,620" fill="none" stroke="#313b52" stroke-linecap="round" stroke-width="3.5"></path>
+<!-- Secondary Arteries: Pandak Bandung & Nyambu -->
+<path d="M -30,130 L 110,140 L 260,110 L 430,150" fill="none" stroke="#263147" stroke-width="4.5"></path>
+<path d="M 10,320 L 140,300 L 270,330 L 410,280" fill="none" stroke="#263147" stroke-width="4"></path>
+<path d="M 80,480 L 190,440 L 320,480 L 440,430" fill="none" stroke="#1d2638" stroke-width="3.5"></path>
+<!-- Local Pathways / Connecting Grid -->
+<path d="M 40,60 L 120,140 L 90,260 L 180,350 L 160,490" fill="none" stroke="#161e2e" stroke-width="2"></path>
+<path d="M 290,80 L 240,200 L 310,290 L 360,420" fill="none" stroke="#161e2e" stroke-width="2"></path>
+<path d="M 150,-10 L 270,90 L 360,60" fill="none" stroke="#161e2e" stroke-width="1.5"></path>
+<!-- Location Landmarks Labels -->
+<text fill="#849495" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" letter-spacing="0.5" x="35" y="195">Kediri</text>
+<text fill="#607274" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="500" x="75" y="195">Pandak Bandung</text>
+<text fill="#849495" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" x="238" y="222">Nyambu</text>
+<text fill="#607274" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="500" x="165" y="445">Kaba-kaba</text>
+<text fill="#465759" font-family="'Inter', sans-serif" font-size="9" transform="rotate(35 90,90)" x="90" y="90">Jalan Tanah Lot</text>
+<text fill="#465759" font-family="'Inter', sans-serif" font-size="8" transform="rotate(-30 180,380)" x="180" y="380">Jalan Raya Kaba-Kaba</text>
+</svg>
+<!-- Dynamic Accuracy Geofence Zone for User -->
+<div class="absolute top-[28%] left-[45%] -translate-x-1/2 -translate-y-1/2 w-44 h-44 rounded-full bg-primary-container/5 border border-primary-container/20 pointer-events-none flex items-center justify-center">
+<div class="w-24 h-24 rounded-full bg-primary-container/10 border border-primary-container/30"></div>
+</div>
+</div>
+<!-- Floating HUD: Top Left - Circle Selector & Status Badge -->
+<div class="absolute top-4 left-4 z-20 flex flex-col gap-space-sm items-start max-w-[70%]">
+<!-- Circle Dropdown Pill -->
+<button class="group flex items-center gap-space-sm px-3.5 py-1.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-xl border border-white/10 shadow-lg hover:border-primary-container/50 active:scale-95 transition-all duration-150" type="button">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#4edea3]"></span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">keluarga</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container transition-colors text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+<!-- Warning / Status Pill: Lokasi tidak tersedia -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface/85 backdrop-blur-md border border-white/5 text-on-surface-variant shadow-md">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span class="text-label-sm font-label-sm tracking-normal">Lokasi tidak tersedia</span>
+</div>
+</div>
+<!-- Floating HUD: Top Right Control Stack -->
+<div class="absolute top-4 right-4 z-20 flex flex-col gap-space-sm items-center">
+<!-- Re-center / Focus HUD Button -->
+<button aria-label="Fullscreen atau Re-center" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-xl border border-white/10 text-on-surface flex items-center justify-center shadow-lg hover:text-primary-container hover:border-primary-container/40 active:scale-90 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="crop_free">crop_free</span>
+</button>
+<!-- GPS Orientation Button -->
+<button aria-label="Arah GPS" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-xl border border-white/10 text-on-surface flex items-center justify-center shadow-lg hover:text-primary-container hover:border-primary-container/40 active:scale-90 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="near_me">near_me</span>
+</button>
+<!-- POI / Layers Marker Button -->
+<button aria-label="Titik Penting" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-xl border border-white/10 text-on-surface flex items-center justify-center shadow-lg hover:text-primary-container hover:border-primary-container/40 active:scale-90 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="location_on">location_on</span>
+</button>
+<!-- Safety / Shield Beacon Button -->
+<button aria-label="Fitur Keamanan" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-xl border border-white/10 text-on-surface flex items-center justify-center shadow-lg hover:text-secondary hover:border-secondary/40 active:scale-90 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="shield">shield</span>
+</button>
+</div>
+<!-- Map Pin Marker 1: suryantariksa (Kamu) -->
+<div class="absolute top-[28%] left-[45%] -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center cursor-pointer group">
+<!-- Emissive Teal Pulse Beacon Ring -->
+<div class="relative flex items-center justify-center">
+<span class="beacon-pulse absolute w-14 h-14 rounded-full bg-primary-container/30"></span>
+<div class="relative w-11 h-11 rounded-full bg-gradient-to-tr from-on-primary-container to-secondary-container p-0.5 shadow-[0_0_16px_rgba(0,242,254,0.5)]">
+<div class="w-full h-full rounded-full bg-surface-container-low flex items-center justify-center border-2 border-primary-container">
+<span class="text-body-md font-body-md font-bold text-primary-container">S</span>
+</div>
+</div>
+</div>
+<!-- Pill Tag: Kamu -->
+<div class="mt-1 px-2.5 py-0.5 rounded-full bg-surface/90 backdrop-blur-md border border-primary-container/50 shadow-md">
+<span class="text-caption font-caption font-semibold text-primary-container">Kamu</span>
+</div>
+</div>
+<!-- Map Pin Marker 2: Gita -->
+<div class="absolute top-[48%] left-[72%] -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center cursor-pointer group">
+<div class="relative w-9 h-9 rounded-full bg-surface-variant/80 border border-white/20 p-0.5 shadow-md flex items-center justify-center">
+<div class="w-full h-full rounded-full bg-surface-container flex items-center justify-center">
+<span class="text-body-sm font-body-sm font-bold text-on-surface-variant">G</span>
+</div>
+</div>
+<!-- Distance / Status Sub-Pill -->
+<div class="mt-1 px-2 py-0.5 rounded-full bg-surface/90 backdrop-blur-md border border-white/10 shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[11px] text-outline" data-icon="battery_3_bar">battery_3_bar</span>
+<span class="text-caption font-caption text-on-surface-variant font-medium">43%</span>
+</div>
+</div>
+<!-- Map Attribution Badge -->
+<div class="absolute bottom-[230px] left-3 z-10">
+<div class="px-2 py-0.5 rounded bg-surface-container-lowest/80 backdrop-blur-md border border-white/5">
+<span class="text-[9px] font-caption text-outline">© OpenStreetMap contributors</span>
+</div>
+</div>
+<!-- Bottom Sheet Drawer (Obsidian Glassmorphism Container) -->
+<section class="absolute bottom-0 left-0 right-0 z-30 bg-surface-container-lowest/90 backdrop-blur-2xl border-t border-white/10 rounded-t-[28px] shadow-[0_-12px_40px_rgba(0,0,0,0.7)] px-4 pt-2 pb-20 transition-all duration-300">
+<!-- Drawer Drag Handle Indicator -->
+<div class="w-full flex justify-center py-1 cursor-grab active:cursor-grabbing">
+<div class="w-10 h-1 rounded-full bg-outline-variant/60"></div>
+</div>
+<!-- Sheet Header Bar -->
+<div class="flex items-center justify-between mt-1 mb-3">
+<div class="flex items-center gap-2">
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">keluarga • 2 anggota</h2>
+</div>
+<!-- Action Button: Jeda -->
+<button class="px-3 py-1 rounded-full text-label-md font-label-md text-primary-container hover:bg-primary-container/10 active:scale-95 transition-all" type="button">
+            Jeda
+          </button>
+</div>
+<!-- Members Bento / Glass Container List -->
+<div class="space-y-2">
+<!-- Member 1: suryantariksa (Kamu) -->
+<div class="group flex items-center justify-between p-3 rounded-2xl bg-surface-container/70 border border-white/5 hover:border-primary-container/30 hover:bg-surface-container transition-all">
+<div class="flex items-center gap-3">
+<!-- Avatar S -->
+<div class="relative w-11 h-11 rounded-full bg-secondary-container/20 border border-secondary/40 flex items-center justify-center shrink-0">
+<span class="text-body-lg font-body-lg font-bold text-secondary">S</span>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-secondary border-2 border-surface-container"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="text-body-md font-body-md font-semibold text-on-surface">suryantariksa</span>
+<span class="text-label-sm font-label-sm text-primary-container font-medium">(Kamu)</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant text-body-sm font-body-sm">
+<span>Diam</span>
+<span>•</span>
+<span>Diperbarui 25 mnt lalu</span>
+</div>
+</div>
+</div>
+<!-- Battery & Stationary Icon -->
+<div class="flex items-center gap-1.5 text-right">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">56%</span>
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="radio_button_checked">radio_button_checked</span>
+</div>
+</div>
+<!-- Member 2: Gita -->
+<div class="group flex items-center justify-between p-3 rounded-2xl bg-surface-container/50 border border-white/5 hover:border-white/10 hover:bg-surface-container transition-all">
+<div class="flex items-center gap-3">
+<!-- Avatar G -->
+<div class="relative w-11 h-11 rounded-full bg-surface-variant/40 border border-white/10 flex items-center justify-center shrink-0">
+<span class="text-body-lg font-body-lg font-semibold text-on-surface-variant">G</span>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-outline border-2 border-surface-container"></span>
+</div>
+<div class="flex flex-col">
+<span class="text-body-md font-body-md font-semibold text-on-surface">Gita</span>
+<span class="text-on-surface-variant text-body-sm font-body-sm">Terakhir terlihat 48 mnt lalu</span>
+</div>
+</div>
+<!-- Battery Percentage -->
+<div class="flex items-center gap-1.5 text-right">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">43%</span>
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="battery_3_bar">battery_3_bar</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Anchor) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest/85 dark:bg-surface-container-lowest/85 backdrop-blur-xl docked full-width bottom-0 shadow-2xl dark:shadow-2xl">
+<!-- Destination 1: Peta (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container drop-shadow-[0_0_8px_rgba(0,242,254,0.4)] active:scale-95 transition-transform duration-150" href="#peta">
+<span class="material-symbols-outlined text-[24px]" data-icon="map">map</span>
+<span class="text-caption font-caption mt-0.5 font-semibold">Peta</span>
+</a>
+<!-- Destination 2: Circle -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95 transition-transform duration-150" href="#circle">
+<span class="material-symbols-outlined text-[24px]" data-icon="group">group</span>
+<span class="text-caption font-caption mt-0.5">Circle</span>
+</a>
+<!-- Destination 3: Aktivitas -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95 transition-transform duration-150" href="#aktivitas">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+<span class="text-caption font-caption mt-0.5">Aktivitas</span>
+</a>
+<!-- Destination 4: Profil -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95 transition-transform duration-150" href="#profil">
+<span class="material-symbols-outlined text-[24px]" data-icon="person">person</span>
+<span class="text-caption font-caption mt-0.5">Profil</span>
+</a>
+</nav>
+</div>
+</body></html>

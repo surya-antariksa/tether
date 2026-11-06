@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Konfirmasi Hapus Riwayat Lokasi - Tether</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#3a494b",
+            "on-secondary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#00dce6",
+            "outline": "#849495",
+            "on-secondary": "#003824",
+            "background": "#0f131c",
+            "inverse-on-surface": "#2c3039",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed": "#001f26",
+            "on-primary": "#00373a",
+            "surface-container-high": "#262a33",
+            "on-primary-fixed": "#002022",
+            "surface-variant": "#31353e",
+            "on-error": "#690005",
+            "tertiary": "#ecfaff",
+            "inverse-surface": "#dfe2ee",
+            "on-primary-fixed-variant": "#004f53",
+            "surface": "#0f131c",
+            "surface-container": "#1c2028",
+            "error": "#ffb4ab",
+            "primary-fixed": "#6ff6ff",
+            "on-secondary-container": "#00311f",
+            "on-error-container": "#ffdad6",
+            "on-surface": "#dfe2ee",
+            "on-tertiary-container": "#00697c",
+            "inverse-primary": "#00696f",
+            "primary-container": "#00f2fe",
+            "surface-container-highest": "#31353e",
+            "secondary": "#4edea3",
+            "error-container": "#93000a",
+            "surface-container-low": "#181c24",
+            "surface-bright": "#353942",
+            "tertiary-fixed": "#acedff",
+            "on-surface-variant": "#b9cacb",
+            "surface-dim": "#0f131c",
+            "on-primary-container": "#006a70",
+            "secondary-fixed": "#6ffbbe",
+            "on-background": "#dfe2ee",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface-container-lowest": "#0a0e16",
+            "primary": "#e0fdff",
+            "secondary-container": "#00a572",
+            "on-secondary-fixed": "#002113",
+            "tertiary-container": "#91e8ff",
+            "surface-tint": "#00dce6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem",
+            "gutter": "1rem",
+            "space-lg": "1.25rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "caption": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "body-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface antialiased min-h-screen flex items-center justify-center p-0 select-none overflow-hidden font-body-md">
+<!-- Mobile Viewport Wrapper (Max 430px representing realistic flagship phone) -->
+<div class="relative w-full max-w-[430px] h-[884px] max-h-[932px] overflow-hidden bg-surface flex flex-col shadow-2xl">
+<!-- ========================================================================= -->
+<!-- BACKGROUND: Dimmed Screen showing Riwayat Lokasi under translucent scrim -->
+<!-- ========================================================================= -->
+<div class="absolute inset-0 flex flex-col pointer-events-none filter blur-[4px] brightness-[0.38] scale-[0.99] transition-all duration-300">
+<!-- App Header Mock in background -->
+<div class="flex justify-between items-center w-full px-4 h-14 bg-surface/80">
+<div class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-[22px]">arrow_back</span>
+<span class="font-headline-md text-headline-md">Riwayat Lokasi</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="material-symbols-outlined text-[20px]">delete_sweep</span>
+</div>
+</div>
+<!-- Time frame bar -->
+<div class="px-4 py-2 border-b border-outline-variant/20 flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Rentang 48 Jam Terakhir</span>
+<span class="font-label-sm text-label-sm text-primary-container bg-surface-container-highest px-2 py-0.5 rounded-full">5 Titik Terdeteksi</span>
+</div>
+<!-- Mock Timeline Items in background -->
+<div class="p-4 space-y-3">
+<!-- Item 1 -->
+<div class="p-3 rounded-xl bg-surface-container/70 border border-outline-variant/30 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">home_pin</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<span class="font-label-md text-label-md text-on-surface truncate">Rumah (Pondok Indah)</span>
+<span class="font-caption text-caption text-on-surface-variant">08:15 WIB</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Jl. Metro Kencana IV No. 12</p>
+<span class="font-caption text-caption text-secondary">Akurasi GPS: 4m (Sangat Baik)</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-3 rounded-xl bg-surface-container/70 border border-outline-variant/30 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">directions_car</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<span class="font-label-md text-label-md text-on-surface truncate">Perjalanan: Tol JORR W2</span>
+<span class="font-caption text-caption text-on-surface-variant">09:02 WIB</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Kecepatan rata-rata 58 km/jam</p>
+<span class="font-caption text-caption text-on-surface-variant">Durasi: 34 menit</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-3 rounded-xl bg-surface-container/70 border border-outline-variant/30 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">work</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<span class="font-label-md text-label-md text-on-surface truncate">Kantor SCBD Tower 3</span>
+<span class="font-caption text-caption text-on-surface-variant">09:45 WIB</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Kebayoran Baru, Jakarta Selatan</p>
+<span class="font-caption text-caption text-secondary">Tiba tepat waktu</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="p-3 rounded-xl bg-surface-container/70 border border-outline-variant/30 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">local_cafe</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<span class="font-label-md text-label-md text-on-surface truncate">Senopati Coffee &amp; Eatery</span>
+<span class="font-caption text-caption text-on-surface-variant">Kemarin 18:20</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Berhenti selama 1j 15m</p>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="p-3 rounded-xl bg-surface-container/70 border border-outline-variant/30 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary-container shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">fitness_center</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<span class="font-label-md text-label-md text-on-surface truncate">Fitness Studio Cilandak</span>
+<span class="font-caption text-caption text-on-surface-variant">Kemarin 06:30</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Radius aman circle keluarga</p>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- FROSTED GLASS SCRIM / BACKDROP (Dark Glass Obsidian Aesthetic) -->
+<!-- ========================================================================= -->
+<div class="absolute inset-0 bg-[#070a0f]/80 backdrop-blur-xl z-20 flex items-center justify-center p-4">
+<!-- ========================================================================= -->
+<!-- MODAL DIALOG: 'Konfirmasi Hapus Riwayat Lokasi' (Destructive Confirmation) -->
+<!-- ========================================================================= -->
+<div aria-describedby="dialogDesc" aria-labelledby="dialogTitle" aria-modal="true" class="w-full max-w-[370px] relative rounded-3xl bg-[#111827]/90 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.85)] p-6 backdrop-blur-2xl flex flex-col items-center text-center transform transition-all duration-300 animate-in fade-in zoom-in-95" id="dialogModal" role="dialog">
+<!-- Subtle Top Hairline Highlight -->
+<div class="absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-red-500/40 to-transparent"></div>
+<!-- Ambient Red Glow in Background of Modal -->
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 w-44 h-44 bg-error-container/25 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- TOP ICON: Red warning icon badge with subtle glow -->
+<div class="relative mb-5 mt-1">
+<!-- Pulse halo -->
+<div class="absolute inset-0 rounded-2xl bg-error/20 blur-md animate-pulse"></div>
+<!-- Outer border badge container -->
+<div class="relative w-16 h-16 rounded-2xl bg-surface-container-lowest/90 border border-red-500/40 flex items-center justify-center shadow-[0_0_20px_rgba(255,80,80,0.25)]">
+<!-- Inner badge glow -->
+<div class="w-12 h-12 rounded-xl bg-error-container/50 flex items-center justify-center text-error border border-error/30">
+<span class="material-symbols-outlined text-[30px]" style="font-variation-settings: 'FILL' 1;">
+                delete_forever
+              </span>
+</div>
+</div>
+</div>
+<!-- TITLE: 'Hapus Riwayat Lokasi?' in bold white headline -->
+<h2 class="font-headline-lg text-headline-lg text-white font-bold tracking-tight mb-2" id="dialogTitle">
+          Hapus Riwayat Lokasi?
+        </h2>
+<!-- DESCRIPTION PARAGRAPH -->
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-5 px-1 text-slate-300" id="dialogDesc">
+          Tindakan ini akan menghapus permanen <span class="text-white font-semibold">5 titik lokasi</span> dalam <span class="text-white font-semibold">48 jam terakhir</span> dari server Tether. Riwayat yang sudah dihapus tidak dapat dipulihkan kembali.
+        </p>
+<!-- WARNING NOTICE BOX (Light red glass border & notice) -->
+<div class="w-full bg-red-950/20 border border-red-500/30 rounded-xl p-3 mb-6 text-left flex items-start gap-2.5 backdrop-blur-sm">
+<span class="material-symbols-outlined text-red-400 text-[18px] shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">
+            shield_with_heart
+          </span>
+<p class="font-body-sm text-body-sm text-red-200/90 leading-snug">
+            Data penanda terakhir pada Circle tetap aktif kecuali Anda mengaktifkan <span class="font-semibold underline decoration-red-400/50">Jeda Berbagi Lokasi</span>.
+          </p>
+</div>
+<!-- ACTION BUTTONS STACK -->
+<div class="w-full flex flex-col gap-2.5">
+<!-- DANGER BUTTON: Vivid red crimson glass button -->
+<button class="w-full h-12 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white font-label-md text-label-md flex items-center justify-center gap-2 border border-red-400/40 shadow-[0_0_24px_rgba(239,68,68,0.35)] hover:shadow-[0_0_32px_rgba(239,68,68,0.55)] active:scale-[0.98] transition-all duration-150 cursor-pointer" id="btnDeleteConfirm" type="button">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">
+              delete
+            </span>
+<span>Hapus Riwayat Sekarang</span>
+</button>
+<!-- CANCEL BUTTON: Neutral dark surface glass button -->
+<button class="w-full h-12 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] border border-white/10 text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-150 active:scale-[0.98] cursor-pointer" id="btnCancelDialog" type="button">
+<span>Batal (Simpan Riwayat)</span>
+</button>
+</div>
+<!-- Micro Info Footer -->
+<div class="mt-4 flex items-center gap-1.5 text-on-surface-variant/70 font-caption text-caption">
+<span class="material-symbols-outlined text-[13px]">lock</span>
+<span>Dilindungi enkripsi end-to-end Tether Vault</span>
+</div>
+</div>
+</div>
+<!-- Notification Toast (Hidden by default, triggered on interactive action) -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-surface-container-high/95 border border-white/15 text-white font-label-sm text-label-sm shadow-2xl flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none translate-y-4" id="statusToast">
+<span class="material-symbols-outlined text-[18px] text-primary-container" id="toastIcon">check_circle</span>
+<span id="toastMessage">Riwayat berhasil dipertahankan</span>
+</div>
+</div>
+<!-- Inline Vanilla Script for Micro-Interactions -->
+<script>
+    const btnDelete = document.getElementById('btnDeleteConfirm');
+    const btnCancel = document.getElementById('btnCancelDialog');
+    const toast = document.getElementById('statusToast');
+    const toastMsg = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
+    const modal = document.getElementById('dialogModal');
+
+    function showToast(message, isDanger = false) {
+      toastMsg.textContent = message;
+      if (isDanger) {
+        toastIcon.textContent = 'delete';
+        toastIcon.className = 'material-symbols-outlined text-[18px] text-red-400';
+      } else {
+        toastIcon.textContent = 'check_circle';
+        toastIcon.className = 'material-symbols-outlined text-[18px] text-primary-container';
+      }
+      
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2600);
+    }
+
+    btnDelete.addEventListener('click', () => {
+      // Visual feedback button animation
+      btnDelete.disabled = true;
+      btnDelete.innerHTML = `
+        <span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
+        <span>Menghapus Riwayat...</span>
+      `;
+      
+      setTimeout(() => {
+        showToast('5 titik riwayat lokasi berhasil dihapus permanen', true);
+        btnDelete.innerHTML = `
+          <span class="material-symbols-outlined text-[18px]">check</span>
+          <span>Terhapus</span>
+        `;
+        setTimeout(() => {
+          btnDelete.disabled = false;
+          btnDelete.innerHTML = `
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">delete</span>
+            <span>Hapus Riwayat Sekarang</span>
+          `;
+        }, 2000);
+      }, 900);
+    });
+
+    btnCancel.addEventListener('click', () => {
+      // Haptic bounce effect
+      modal.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.remove('scale-95');
+        showToast('Penghapusan dibatalkan. Riwayat tetap disimpan.');
+      }, 150);
+    });
+  </script>
+</body></html>

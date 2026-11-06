@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Hitung Mundur SOS Darurat - Tether</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#3a494b",
+            "on-secondary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#00dce6",
+            "outline": "#849495",
+            "on-secondary": "#003824",
+            "background": "#0f131c",
+            "inverse-on-surface": "#2c3039",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed": "#001f26",
+            "on-primary": "#00373a",
+            "surface-container-high": "#262a33",
+            "on-primary-fixed": "#002022",
+            "surface-variant": "#31353e",
+            "on-error": "#690005",
+            "tertiary": "#ecfaff",
+            "inverse-surface": "#dfe2ee",
+            "on-primary-fixed-variant": "#004f53",
+            "surface": "#0f131c",
+            "surface-container": "#1c2028",
+            "error": "#ffb4ab",
+            "primary-fixed": "#6ff6ff",
+            "on-secondary-container": "#00311f",
+            "on-error-container": "#ffdad6",
+            "on-surface": "#dfe2ee",
+            "on-tertiary-container": "#00697c",
+            "inverse-primary": "#00696f",
+            "primary-container": "#00f2fe",
+            "surface-container-highest": "#31353e",
+            "secondary": "#4edea3",
+            "error-container": "#93000a",
+            "surface-container-low": "#181c24",
+            "surface-bright": "#353942",
+            "tertiary-fixed": "#acedff",
+            "on-surface-variant": "#b9cacb",
+            "surface-dim": "#0f131c",
+            "on-primary-container": "#006a70",
+            "secondary-fixed": "#6ffbbe",
+            "on-background": "#dfe2ee",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface-container-lowest": "#0a0e16",
+            "primary": "#e0fdff",
+            "secondary-container": "#00a572",
+            "on-secondary-fixed": "#002113",
+            "tertiary-container": "#91e8ff",
+            "surface-tint": "#00dce6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem",
+            "gutter": "1rem",
+            "space-lg": "1.25rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "caption": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "body-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    @keyframes alert-vignette {
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50% { opacity: 0.98; transform: scale(1.02); }
+    }
+    @keyframes siren-pulse {
+      0%, 100% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.2); }
+      50% { box-shadow: 0 0 50px rgba(255, 51, 75, 0.85), inset 0 0 30px rgba(255, 51, 75, 0.5); }
+    }
+    @keyframes ring-dash {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 565; }
+    }
+    .animate-siren {
+      animation: siren-pulse 1.2s infinite ease-in-out;
+    }
+    .animate-vignette {
+      animation: alert-vignette 2s infinite ease-in-out;
+    }
+    .circle-progress {
+      stroke-dasharray: 565;
+      stroke-dashoffset: 113;
+      transition: stroke-dashoffset 1s linear;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased select-none min-h-screen flex items-center justify-center p-0 overflow-x-hidden font-body-md">
+<!-- Mobile Screen Container -->
+<main class="relative w-full max-w-md min-h-screen bg-surface-container-lowest overflow-hidden flex flex-col justify-between shadow-2xl">
+<!-- Ambient Dark Map Canvas Underlay -->
+<div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+<!-- Dark Satellite Vector Map Texture -->
+<div class="absolute inset-0 bg-[#070b12] opacity-90">
+<!-- SVG Map Geometry Simulation -->
+<svg class="w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="48" id="grid" patternunits="userSpaceOnUse" width="48">
+<path d="M 48 0 L 0 0 0 48" fill="none" stroke="#3a494b" stroke-opacity="0.3" stroke-width="0.75"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+<path d="M-50,220 Q120,290 280,180 T600,420" fill="none" stroke="#00f2fe" stroke-opacity="0.25" stroke-width="3"></path>
+<path d="M50,720 Q200,600 350,680 T500,850" fill="none" stroke="#ff334b" stroke-opacity="0.35" stroke-width="2.5"></path>
+<circle cx="215" cy="460" fill="none" r="120" stroke="#00dce6" stroke-dasharray="6,6" stroke-opacity="0.15" stroke-width="1.5"></circle>
+</svg>
+</div>
+<!-- Map Radar Position Ring (Current Location of SOS) -->
+<div class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-[#ff334b]/30 bg-[#ff334b]/5 animate-ping"></div>
+<div class="absolute top-[48%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-error-container/80 border-2 border-error flex items-center justify-center shadow-[0_0_20px_#ff334b]">
+<span class="material-symbols-outlined text-primary-fixed text-lg" data-icon="my_location" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</div>
+<!-- Crimson Alert Vignette & Deep Obsidian Gradient -->
+<div class="absolute inset-0 animate-vignette bg-[radial-gradient(ellipse_at_center,rgba(147,0,10,0.45)_0%,rgba(15,19,28,0.92)_65%,rgba(7,10,15,0.98)_100%)]"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-surface-container-lowest/80"></div>
+</div>
+<!-- Top Status Bar & Emergency Header (Suppressed standard shell due to critical linear modal protocol) -->
+<header class="relative z-10 w-full px-5 pt-4 pb-2 flex items-center justify-between">
+<!-- Circle HUD Indicator -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high/70 backdrop-blur-xl border border-outline-variant/30 text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse shadow-[0_0_8px_#00f2fe]"></span>
+<span class="font-label-sm text-label-sm text-on-surface tracking-wide">Circle: <span class="font-bold text-white">keluarga</span></span>
+</div>
+<!-- Live GPS & Battery Telemetry -->
+<div class="flex items-center gap-3 text-on-surface-variant font-label-sm text-label-sm bg-surface-container-high/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-outline-variant/20">
+<div class="flex items-center gap-1 text-primary-fixed-dim">
+<span class="material-symbols-outlined text-sm" data-icon="satellite_alt">satellite_alt</span>
+<span>±4m</span>
+</div>
+<div class="h-3 w-px bg-outline-variant/40"></div>
+<div class="flex items-center gap-1 text-secondary-fixed">
+<span class="material-symbols-outlined text-sm" data-icon="battery_5_bar">battery_5_bar</span>
+<span>84%</span>
+</div>
+</div>
+</header>
+<!-- CENTER MODAL CONTAINER (Hitung Mundur SOS Darurat) -->
+<section class="relative z-20 mx-4 my-auto flex flex-col items-center">
+<!-- Obsidian Glass Modal Card -->
+<div class="w-full rounded-[28px] bg-[#0c121e]/85 backdrop-blur-2xl border border-error-container/60 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.8),0_0_40px_rgba(255,51,75,0.2)] p-6 flex flex-col items-center text-center relative overflow-hidden">
+<!-- Glowing Top Rim Highlight -->
+<div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#ff334b] to-transparent"></div>
+<!-- 1. Alert Badge Pill -->
+<div class="mb-5 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-error-container/40 border border-error/50 shadow-[0_0_16px_rgba(255,51,75,0.45)]">
+<span class="material-symbols-outlined text-error text-base animate-bounce" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label-sm text-label-sm text-on-error-container font-bold tracking-wider uppercase">
+            PROTOKOL DARURAT DIAKTIFKAN
+          </span>
+</div>
+<!-- 2. Circular Countdown Timer Widget -->
+<div class="relative w-48 h-48 my-2 flex items-center justify-center">
+<!-- Outer Pulsing Glow Aura -->
+<div class="absolute inset-0 rounded-full bg-error/10 animate-siren"></div>
+<!-- SVG Radial Progress Ring -->
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 200 200">
+<!-- Background Track -->
+<circle cx="100" cy="100" fill="rgba(15, 19, 28, 0.75)" r="90" stroke="#261014" stroke-width="10"></circle>
+<!-- Glowing Red Animated Ring -->
+<circle class="circle-progress drop-shadow-[0_0_12px_rgba(255,51,75,0.9)]" cx="100" cy="100" fill="transparent" id="countdown-ring" r="90" stroke="#ff334b" stroke-linecap="round" stroke-width="10"></circle>
+</svg>
+<!-- Inside Center Number HUD -->
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="text-6xl font-headline-xl font-extrabold text-white tracking-tighter drop-shadow-[0_0_15px_rgba(255,51,75,0.8)] leading-none" id="countdown-number">
+              5
+            </span>
+<span class="font-label-md text-label-md text-error font-semibold uppercase tracking-widest mt-1">
+              Detik
+            </span>
+</div>
+</div>
+<!-- 3. Headline & Description -->
+<div class="mt-4 px-1">
+<h1 class="font-headline-lg text-headline-lg text-white font-extrabold tracking-tight flex items-center justify-center gap-2">
+<span>Mengirim Sinyal SOS...</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 leading-relaxed">
+            Lokasi presisi real-time dan telemetri baterai Anda akan segera disiarkan ke seluruh 2 anggota Circle <span class="text-primary-container font-semibold">"keluarga"</span> serta kontak darurat.
+          </p>
+</div>
+<!-- 4. Recipient Preview Pill -->
+<div class="w-full mt-5 p-2.5 rounded-2xl bg-surface-container-high/40 border border-outline-variant/25 flex items-center justify-between backdrop-blur-md">
+<div class="flex items-center gap-2.5">
+<!-- Overlapping Avatars -->
+<div class="flex -space-x-2 overflow-hidden">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-600 to-teal-400 border-2 border-surface flex items-center justify-center font-bold text-xs text-on-primary">
+                G
+              </div>
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-400 border-2 border-surface flex items-center justify-center font-bold text-xs text-white">
+                R
+              </div>
+<div class="w-8 h-8 rounded-full bg-error-container border-2 border-surface flex items-center justify-center text-on-error-container text-xs font-bold">
+<span class="material-symbols-outlined text-xs" data-icon="phone" style="font-variation-settings: 'FILL' 1;">phone</span>
+</div>
+</div>
+<!-- Recipient labels -->
+<div class="text-left">
+<div class="font-label-md text-label-md text-white font-semibold flex items-center gap-1.5">
+<span>Penerima: Gita, Rudi, &amp; 112</span>
+</div>
+<div class="font-caption text-caption text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Jalur darurat siaga tinggi</span>
+</div>
+</div>
+</div>
+<!-- Signal Icon -->
+<div class="w-7 h-7 rounded-full bg-primary-container/10 border border-primary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-sm animate-pulse" data-icon="sensors">sensors</span>
+</div>
+</div>
+<!-- 5. Large High-Contrast Cancellation Button -->
+<button class="w-full mt-6 py-4 px-6 rounded-2xl bg-gradient-to-b from-surface-bright/90 to-surface-container-high/90 hover:from-surface-bright hover:to-surface-variant active:scale-[0.98] transition-all duration-200 border-2 border-outline-variant/40 hover:border-primary-container/50 shadow-[0_8px_24px_rgba(0,0,0,0.5)] flex items-center justify-center gap-3 group cursor-pointer" id="btn-cancel" type="button">
+<div class="w-8 h-8 rounded-full bg-secondary-container/20 text-secondary border border-secondary/40 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-lg" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div class="text-left">
+<div class="font-headline-md text-headline-md text-white font-bold tracking-tight">
+              Batalkan SOS (Saya Aman)
+            </div>
+<div class="font-caption text-caption text-on-surface-variant">
+              Ketuk untuk menghentikan hitung mundur
+            </div>
+</div>
+</button>
+</div>
+<!-- Quick Emergency Call Option / Fallback Note -->
+<div class="mt-4 px-4 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant/90 leading-tight">
+          Jika waktu habis, alarm sirine akan berbunyi dan tautan darurat dikirim otomatis. Layanan <a class="text-primary-container underline font-semibold hover:text-white" href="tel:112">112 tersedia</a> langsung.
+        </p>
+</div>
+</section>
+<!-- Bottom Secondary Action HUD -->
+<footer class="relative z-20 w-full px-5 pb-6 pt-2 flex items-center justify-between gap-3">
+<!-- Direct 112 Call Button -->
+<a class="flex-1 py-3 px-4 rounded-xl bg-error-container/30 border border-error/40 hover:bg-error-container/50 active:scale-95 transition-all flex items-center justify-center gap-2 text-error font-label-md text-label-md font-bold backdrop-blur-md" href="tel:112">
+<span class="material-symbols-outlined text-base" data-icon="emergency" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span>Panggil 112 Langsung</span>
+</a>
+<!-- Silent Audio Toggle Pill -->
+<button class="py-3 px-4 rounded-xl bg-surface-container-high/60 border border-outline-variant/30 hover:bg-surface-container-high active:scale-95 transition-all flex items-center justify-center gap-1.5 text-on-surface-variant font-label-md text-label-md backdrop-blur-md" type="button">
+<span class="material-symbols-outlined text-base text-primary-container" data-icon="volume_up">volume_up</span>
+<span>Sirine: Aktif</span>
+</button>
+</footer>
+</main>
+<!-- Interactive Logic for Countdown & UI Feedback -->
+<script>
+    (function() {
+      let timeLeft = 5;
+      const totalTime = 5;
+      const totalCircumference = 565; // 2 * PI * 90 ≈ 565.48
+      const countdownElement = document.getElementById('countdown-number');
+      const ringElement = document.getElementById('countdown-ring');
+      const cancelBtn = document.getElementById('btn-cancel');
+
+      const interval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft >= 0) {
+          countdownElement.textContent = timeLeft;
+          // Calculate remaining stroke offset
+          const progress = timeLeft / totalTime;
+          const offset = totalCircumference * (1 - progress);
+          ringElement.style.strokeDashoffset = offset;
+        }
+
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          countdownElement.textContent = "0";
+          ringElement.style.strokeDashoffset = totalCircumference;
+          countdownElement.classList.add('text-error');
+          // Simulated dispatch notification
+          const title = document.querySelector('h1 span');
+          if (title) {
+            title.textContent = "🚨 SOS Disiarkan!";
+          }
+        }
+      }, 1000);
+
+      // Cancel button interaction
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+          clearInterval(interval);
+          countdownElement.textContent = "✓";
+          countdownElement.classList.remove('text-white');
+          countdownElement.classList.add('text-secondary');
+          ringElement.style.stroke = "#4edea3";
+          
+          const alertBadge = document.querySelector('.bg-error-container\\/40');
+          if (alertBadge) {
+            alertBadge.className = "mb-5 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-secondary-container/30 border border-secondary/40";
+            alertBadge.innerHTML = '<span class="material-symbols-outlined text-secondary text-base" data-icon="check_circle" style="font-variation-settings: \'FILL\' 1;">check_circle</span><span class="font-label-sm text-label-sm text-secondary-fixed font-bold tracking-wider uppercase">STATUS AMAN TERCATAT</span>';
+          }
+
+          const h1 = document.querySelector('h1 span');
+          if (h1) {
+            h1.textContent = "Sinyal SOS Dibatalkan";
+          }
+          
+          cancelBtn.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg" data-icon="done">done</span>
+            </div>
+            <div class="text-left">
+              <div class="font-headline-md text-headline-md text-secondary font-bold">Anda Telah Mengonfirmasi Aman</div>
+              <div class="font-caption text-caption text-on-surface-variant">Kembali ke peta navigasi keluarga...</div>
+            </div>
+          `;
+          cancelBtn.classList.add('pointer-events-none');
+        });
+      }
+    })();
+  </script>
+</body></html>

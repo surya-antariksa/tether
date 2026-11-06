@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Buat Kata Sandi Baru</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Plus Jakarta Sans & Inter Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-container": "#00311f",
+            "on-primary-fixed-variant": "#004f53",
+            "on-secondary-fixed": "#002113",
+            "surface-container-lowest": "#0a0e16",
+            "surface-bright": "#353942",
+            "on-tertiary-container": "#00697c",
+            "on-tertiary-fixed": "#001f26",
+            "secondary-fixed": "#6ffbbe",
+            "surface-container-highest": "#31353e",
+            "tertiary": "#ecfaff",
+            "primary-container": "#00f2fe",
+            "inverse-primary": "#00696f",
+            "secondary-container": "#00a572",
+            "on-error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-secondary-fixed-variant": "#005236",
+            "on-tertiary": "#003640",
+            "surface": "#0f131c",
+            "surface-dim": "#0f131c",
+            "surface-tint": "#00dce6",
+            "secondary-fixed-dim": "#4edea3",
+            "on-primary-container": "#006a70",
+            "on-background": "#dfe2ee",
+            "on-secondary": "#003824",
+            "error-container": "#93000a",
+            "secondary": "#4edea3",
+            "inverse-on-surface": "#2c3039",
+            "on-primary": "#00373a",
+            "error": "#ffb4ab",
+            "primary-fixed": "#6ff6ff",
+            "primary-fixed-dim": "#00dce6",
+            "on-primary-fixed": "#002022",
+            "background": "#0f131c",
+            "outline-variant": "#3a494b",
+            "tertiary-fixed": "#acedff",
+            "surface-container-high": "#262a33",
+            "surface-container": "#1c2028",
+            "on-surface": "#dfe2ee",
+            "outline": "#849495",
+            "inverse-surface": "#dfe2ee",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface-container-low": "#181c24",
+            "primary": "#e0fdff",
+            "on-error": "#690005",
+            "surface-variant": "#31353e",
+            "on-surface-variant": "#b9cacb",
+            "tertiary-container": "#91e8ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem",
+            "space-md": "0.75rem",
+            "space-lg": "1.25rem",
+            "margin": "1rem",
+            "space-xl": "1.75rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Inter"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "caption": ["Inter"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex items-center justify-center p-0 md:p-6 overflow-x-hidden selection:bg-primary-container selection:text-on-secondary-container">
+<!-- Ambient Obsidian Background Effects -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden">
+<div class="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary-container/10 rounded-full blur-[110px]"></div>
+<div class="absolute top-1/3 -right-24 w-80 h-80 bg-secondary-container/10 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-0 left-0 w-full h-80 bg-surface-container-lowest/90 pointer-events-none"></div>
+</div>
+<!-- Mobile Viewport Shell (Max Width: 390px, Responsive Container) -->
+<div class="relative w-full max-w-md mx-auto min-h-screen md:min-h-[844px] md:h-auto bg-surface-container-lowest/80 backdrop-blur-2xl border-0 md:border md:border-outline-variant/30 md:rounded-3xl shadow-2xl flex flex-col justify-between overflow-hidden">
+<!-- Header / Top Navigation (Suppressed BottomNavBar because this is a focused task-oriented subflow) -->
+<header class="sticky top-0 z-30 flex items-center justify-between px-4 h-14 w-full bg-surface/80 backdrop-blur-md">
+<!-- Back Button with subtle glass tactile feel -->
+<button aria-label="Kembali" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-variant/40 hover:bg-surface-variant/70 text-on-surface transition-all duration-150 active:scale-95 border border-white/5" type="button">
+<span class="material-symbols-outlined text-body-lg" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Brand Micro Anchor -->
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_8px_#00f2fe]"></span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">tether</span>
+</div>
+<!-- Security Status Badge -->
+<div class="flex items-center gap-1.5 py-1 px-2.5 rounded-full bg-surface-container-high/80 border border-outline-variant/30 text-primary-container shadow-sm">
+<span class="material-symbols-outlined text-body-sm" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label-sm text-caption tracking-normal text-on-surface">E2E Aman</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-4 py-3 flex flex-col justify-start relative z-10">
+<!-- Hero Visual & Title Block -->
+<div class="flex flex-col items-center text-center mt-2 mb-5">
+<!-- Glowing Beacon Icon Container -->
+<div class="relative mb-3 flex items-center justify-center">
+<div class="absolute inset-0 rounded-full bg-primary-container/20 blur-xl scale-125 animate-pulse"></div>
+<div class="relative w-16 h-16 rounded-full bg-gradient-to-b from-surface-container-high to-surface-container-low border border-white/10 flex items-center justify-center shadow-[0_0_24px_-2px_rgba(0,242,254,0.35)]">
+<span class="material-symbols-outlined text-headline-xl text-primary-container" data-icon="lock_reset">lock_reset</span>
+</div>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mb-1">
+          Buat Kata Sandi Baru
+        </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-[310px] leading-relaxed">
+          Pastikan kata sandi baru Anda kuat dan belum pernah digunakan untuk melindungi keamanan Circle keluarga.
+        </p>
+</div>
+<!-- Main Form Glass Card -->
+<form class="space-y-4 bg-surface-container-low/70 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl" id="reset-password-form">
+<!-- Input 1: Kata Sandi Baru -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface" for="new-password">Kata Sandi Baru</label>
+<span class="font-label-sm text-label-sm text-primary-container" id="strength-label">Kuat</span>
+</div>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 material-symbols-outlined text-body-lg text-outline" data-icon="lock">lock</span>
+<input class="w-full h-12 pl-10 pr-12 rounded-xl bg-surface-container-lowest/90 border border-outline-variant/40 focus:border-primary-container focus:ring-1 focus:ring-primary-container text-on-surface font-body-md text-body-md placeholder:text-outline/60 transition-all outline-none" id="new-password" placeholder="Minimal 8 karakter" type="password" value="KeluargaAman#2024"/>
+<button aria-label="Tampilkan atau sembunyikan kata sandi" class="absolute right-3 text-outline hover:text-on-surface active:scale-95 transition-all p-1" id="toggle-new-password" type="button">
+<span class="material-symbols-outlined text-body-lg" data-icon="visibility">visibility</span>
+</button>
+</div>
+<!-- Password Strength Meter (4 Segments) -->
+<div class="pt-1.5 pb-0.5 space-y-1">
+<div class="grid grid-cols-4 gap-1.5 h-1.5">
+<div class="h-full rounded-full bg-secondary-fixed shadow-[0_0_6px_rgba(111,251,190,0.5)] transition-all"></div>
+<div class="h-full rounded-full bg-secondary-fixed shadow-[0_0_6px_rgba(111,251,190,0.5)] transition-all"></div>
+<div class="h-full rounded-full bg-primary-container shadow-[0_0_8px_rgba(0,242,254,0.6)] transition-all"></div>
+<div class="h-full rounded-full bg-surface-container-highest transition-all"></div>
+</div>
+<div class="flex justify-between items-center text-[10px] text-outline font-label-sm">
+<span>Lemah</span>
+<span>Sedang</span>
+<span class="text-primary-container font-semibold">Kuat</span>
+<span>Sangat Kuat</span>
+</div>
+</div>
+<!-- Real-Time Interactive Criteria Checklist -->
+<div class="bg-surface-container/50 border border-white/5 rounded-xl p-3 space-y-2 mt-2">
+<p class="font-label-sm text-caption text-on-surface-variant font-medium uppercase tracking-wider">Kriteria Keamanan</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+<!-- Requirement 1 -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-body-md text-secondary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Minimal 8 karakter</span>
+</div>
+<!-- Requirement 2 -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-body-md text-secondary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Huruf besar &amp; kecil</span>
+</div>
+<!-- Requirement 3 -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-body-md text-secondary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Mengandung angka (0-9)</span>
+</div>
+<!-- Requirement 4 -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-body-md text-secondary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Simbol khusus (!@#$)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Input 2: Konfirmasi Kata Sandi Baru -->
+<div class="space-y-1.5 pt-1">
+<label class="font-label-md text-label-md text-on-surface" for="confirm-password">Konfirmasi Kata Sandi Baru</label>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 material-symbols-outlined text-body-lg text-outline" data-icon="lock_open">lock_open</span>
+<input class="w-full h-12 pl-10 pr-12 rounded-xl bg-surface-container-lowest/90 border border-secondary/50 focus:border-secondary focus:ring-1 focus:ring-secondary text-on-surface font-body-md text-body-md placeholder:text-outline/60 transition-all outline-none" id="confirm-password" placeholder="Ulangi kata sandi baru" type="password" value="KeluargaAman#2024"/>
+<button aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi" class="absolute right-3 text-outline hover:text-on-surface active:scale-95 transition-all p-1" id="toggle-confirm-password" type="button">
+<span class="material-symbols-outlined text-body-lg" data-icon="visibility">visibility</span>
+</button>
+</div>
+<!-- Matching Badge Status -->
+<div class="flex items-center gap-1.5 pt-0.5 text-secondary">
+<span class="material-symbols-outlined text-body-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm font-medium">Kata sandi cocok</span>
+</div>
+</div>
+<!-- CTAs: Primary & Secondary -->
+<div class="pt-2 space-y-2.5">
+<!-- Primary Pill Submit Button -->
+<button class="w-full h-12 rounded-full bg-gradient-to-r from-primary-container to-surface-tint text-on-primary-container font-headline-md text-body-md font-bold flex items-center justify-center gap-2 shadow-[0_0_24px_-2px_rgba(0,242,254,0.45)] hover:shadow-[0_0_30px_rgba(0,242,254,0.6)] active:scale-95 transition-all duration-150" type="submit">
+<span>Simpan &amp; Masuk</span>
+<span class="material-symbols-outlined text-body-lg" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Secondary Return Link -->
+<a class="w-full py-2 flex items-center justify-center text-center font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-150 active:scale-95" href="#">
+            Batal dan Kembali ke Masuk
+          </a>
+</div>
+</form>
+<!-- Security Tip Frosted Footer Banner -->
+<div class="mt-4 mb-2 flex items-start gap-3 p-3 rounded-xl bg-surface-container-high/40 border border-white/5 backdrop-blur-md">
+<span class="material-symbols-outlined text-primary-container text-body-lg mt-0.5 shrink-0" data-icon="shield">shield</span>
+<div class="space-y-0.5">
+<p class="font-label-md text-caption text-on-surface font-semibold">Perlindungan Akun Otomatis</p>
+<p class="font-body-sm text-caption text-on-surface-variant leading-relaxed">
+            Setelah kata sandi diperbarui, semua sesi di perangkat lain akan diminta masuk ulang demi keamanan Circle keluarga Anda.
+          </p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Safe Area Accent (Docked bottom aesthetic) -->
+<div class="w-full h-4 flex items-center justify-center pb-2">
+<div class="w-32 h-1 rounded-full bg-outline-variant/30"></div>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle Password Visibility
+      const setupToggle = (btnId, inputId) => {
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+
+        btn.addEventListener('click', () => {
+          const isPassword = input.getAttribute('type') === 'password';
+          input.setAttribute('type', isPassword ? 'text' : 'password');
+          
+          const iconSpan = btn.querySelector('.material-symbols-outlined');
+          if (iconSpan) {
+            iconSpan.textContent = isPassword ? 'visibility_off' : 'visibility';
+          }
+        });
+      };
+
+      setupToggle('toggle-new-password', 'new-password');
+      setupToggle('toggle-confirm-password', 'confirm-password');
+
+      // Form Submit Feedback
+      const form = document.getElementById('reset-password-form');
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const submitBtn = form.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.classList.add('opacity-90', 'scale-95');
+            submitBtn.innerHTML = `
+              <span class="material-symbols-outlined animate-spin text-body-lg" data-icon="sync">sync</span>
+              <span>Menyimpan...</span>
+            `;
+            setTimeout(() => {
+              submitBtn.innerHTML = `
+                <span class="material-symbols-outlined text-body-lg" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+                <span>Berhasil Diperbarui</span>
+              `;
+              submitBtn.classList.remove('opacity-90', 'scale-95');
+            }, 1000);
+          }
+        });
+      }
+    });
+  </script>
+</body></html>

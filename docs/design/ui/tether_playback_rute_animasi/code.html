@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Playback Rute</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#ffdad6",
+            "on-primary-fixed": "#002022",
+            "inverse-primary": "#00696f",
+            "surface-container-high": "#262a33",
+            "surface-container-lowest": "#0a0e16",
+            "surface-container-highest": "#31353e",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "surface-variant": "#31353e",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-container": "#00697c",
+            "primary-container": "#00f2fe",
+            "on-surface-variant": "#b9cacb",
+            "on-surface": "#dfe2ee",
+            "on-secondary": "#003824",
+            "error-container": "#93000a",
+            "surface-bright": "#353942",
+            "surface-dim": "#0f131c",
+            "on-primary-fixed-variant": "#004f53",
+            "inverse-surface": "#dfe2ee",
+            "primary-fixed": "#6ff6ff",
+            "background": "#0f131c",
+            "secondary-fixed": "#6ffbbe",
+            "surface-container-low": "#181c24",
+            "surface-tint": "#00dce6",
+            "tertiary-container": "#91e8ff",
+            "on-primary-container": "#006a70",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary-fixed": "#acedff",
+            "inverse-on-surface": "#2c3039",
+            "outline": "#849495",
+            "tertiary": "#ecfaff",
+            "secondary": "#4edea3",
+            "on-primary": "#00373a",
+            "surface": "#0f131c",
+            "on-secondary-container": "#00311f",
+            "surface-container": "#1c2028",
+            "on-secondary-fixed": "#002113",
+            "on-error": "#690005",
+            "on-background": "#dfe2ee",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "primary-fixed-dim": "#00dce6",
+            "error": "#ffb4ab",
+            "outline-variant": "#3a494b",
+            "secondary-container": "#00a572",
+            "on-tertiary-fixed": "#001f26",
+            "primary": "#e0fdff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "gutter": "1rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-xl": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "caption": ["Inter"]
+          },
+          "fontSize": {
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Custom Glow & Animation Effects */
+    @keyframes pulse-halo {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.6);
+        opacity: 0.15;
+      }
+    }
+    .beacon-pulse {
+      animation: pulse-halo 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -40;
+      }
+    }
+    .neon-track {
+      stroke-dasharray: 6 3;
+      animation: dash 3s linear infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex justify-center selection:bg-primary-container selection:text-on-primary-fixed">
+<!-- Mobile Canvas Frame (390px responsive container) -->
+<div class="relative w-full max-w-md bg-surface-dim min-h-screen flex flex-col pb-28 shadow-2xl overflow-x-hidden border-x border-outline-variant/20">
+<!-- 1. Top App Bar -->
+<header class="sticky top-0 z-40 bg-surface/80 backdrop-blur-md px-4 h-14 flex items-center justify-between border-b border-outline-variant/20">
+<div class="flex items-center gap-3">
+<button aria-label="Kembali" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-headline-md font-headline-md text-on-surface font-bold tracking-tight">Playback Rute</h1>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-caption font-caption bg-primary-container/15 text-primary-container border border-primary-container/30 drop-shadow-[0_0_8px_rgba(0,242,254,0.35)]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span>
+              Playback Aktif
+            </span>
+</div>
+<p class="text-caption font-caption text-on-surface-variant/80 tracking-wider">TETHER RADAR • SIMULASI LIVE</p>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Pengaturan Playback" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+<button aria-label="Opsi Lainnya" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Main Content Flow -->
+<main class="flex-1 flex flex-col px-4 pt-3 gap-space-lg">
+<!-- 2. Obsidian Map Viewport & Route HUD -->
+<section aria-label="Visualisasi Peta Obsidian Rute" class="relative w-full h-72 rounded-xl overflow-hidden bg-surface-container-lowest border border-outline-variant/30 shadow-inner flex flex-col justify-between p-3">
+<!-- SVG Interactive Obsidian Map Grid & Neon Route Polyline -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Cyan Glow Filter -->
+<filter height="140%" id="neon-glow" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="coloredBlur" stddeviation="4"></fegaussianblur>
+<femerge>
+<femergenode in="coloredBlur"></femergenode>
+<femergenode in="coloredBlur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+<!-- Map Grid Pattern -->
+<pattern height="30" id="dark-grid" patternunits="userSpaceOnUse" width="30">
+<path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1"></path>
+</pattern>
+<!-- Secondary Road Map Lines -->
+<pattern height="90" id="road-grid" patternunits="userSpaceOnUse" width="90">
+<path d="M 0 45 L 90 45 M 45 0 L 45 90" fill="none" stroke="rgba(58, 73, 75, 0.22)" stroke-width="1.5"></path>
+</pattern>
+</defs>
+<!-- Ambient Basemap layers -->
+<rect fill="#0a0e16" height="100%" width="100%"></rect>
+<rect fill="url(#dark-grid)" height="100%" width="100%"></rect>
+<rect fill="url(#road-grid)" height="100%" width="100%"></rect>
+<!-- Realistic Obsidian Map Road Network Background -->
+<path d="M -20 180 C 80 170, 160 210, 240 180 S 340 110, 420 130" fill="none" stroke="#1c2028" stroke-width="6"></path>
+<path d="M 120 -10 C 140 80, 110 170, 160 290" fill="none" stroke="#181c24" stroke-width="4"></path>
+<path d="M 280 20 C 260 110, 310 220, 330 300" fill="none" stroke="#181c24" stroke-width="4"></path>
+<!-- Full Route Planned Trajectory (Underlay) -->
+<path d="M 46 226 L 118 192 L 188 138 L 264 122 L 340 68" fill="none" stroke="#1c2028" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"></path>
+<path d="M 46 226 L 118 192 L 188 138 L 264 122 L 340 68" fill="none" stroke="rgba(0, 242, 254, 0.2)" stroke-dasharray="4 4" stroke-linecap="round" stroke-width="4"></path>
+<!-- Completed Trajectory Line (Up to Step 3 - Active Position) -->
+<path d="M 46 226 L 118 192 L 188 138" fill="none" filter="url(#neon-glow)" stroke="#00f2fe" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.5"></path>
+<!-- Active Animated Pulse Line leading forward -->
+<path class="neon-track" d="M 188 138 L 264 122 L 340 68" fill="none" stroke="#4edea3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<!-- Origin Waypoint (Jl. Teuku Umar Barat) -->
+<circle cx="46" cy="226" fill="#0f131c" r="6" stroke="#00f2fe" stroke-width="3"></circle>
+<circle cx="46" cy="226" fill="#e0fdff" r="2.5"></circle>
+<!-- Waypoint 2 (Passed) -->
+<circle cx="118" cy="192" fill="#00f2fe" opacity="0.8" r="4"></circle>
+<!-- Active Beacon Location: Jl. Kebo Iwa Selatan (Step 3) -->
+<g transform="translate(188, 138)">
+<!-- Outer Pulsing Halo -->
+<circle class="beacon-pulse" cx="0" cy="0" fill="none" r="18" stroke="#00f2fe" stroke-width="2"></circle>
+<circle cx="0" cy="0" fill="rgba(0, 242, 254, 0.25)" r="10"></circle>
+<circle cx="0" cy="0" fill="#00f2fe" filter="url(#neon-glow)" r="6.5"></circle>
+<!-- Bearing Heading Arrow Direction (Bearing 42 deg) -->
+<path d="M 0 -13 L 4 -7 L 0 -8 L -4 -7 Z" fill="#00f2fe" transform="rotate(45)"></path>
+</g>
+<!-- Waypoint 4 (Upcoming) -->
+<circle cx="264" cy="122" fill="#3a494b" r="4"></circle>
+<!-- Destination Waypoint (Jl. Raya Dalung No. 42) -->
+<g transform="translate(340, 68)">
+<circle cx="0" cy="0" fill="#0f131c" r="7" stroke="#4edea3" stroke-width="2.5"></circle>
+<circle cx="0" cy="0" fill="#4edea3" r="2.5"></circle>
+</g>
+</svg>
+<!-- Floating HUD: Top Origin/Destination Pills -->
+<div class="relative z-10 flex items-start justify-between gap-2">
+<!-- Waypoint Origin / Destination HUD Chips -->
+<div class="flex flex-col gap-1.5 max-w-[210px]">
+<div class="bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/30 rounded-lg px-2.5 py-1 flex items-center gap-2 shadow-lg">
+<span class="w-2 h-2 rounded-full bg-primary-container drop-shadow-[0_0_6px_#00f2fe]"></span>
+<div class="truncate">
+<p class="text-caption font-caption text-on-surface-variant font-medium">Mulai (22.49)</p>
+<p class="text-body-sm font-body-sm text-on-surface font-semibold truncate">Jl. Teuku Umar Barat</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/30 rounded-lg px-2.5 py-1 flex items-center gap-2 shadow-lg">
+<span class="w-2 h-2 rounded-full bg-secondary drop-shadow-[0_0_6px_#4edea3]"></span>
+<div class="truncate">
+<p class="text-caption font-caption text-on-surface-variant font-medium">Tujuan (23.11)</p>
+<p class="text-body-sm font-body-sm text-on-surface font-semibold truncate">Jl. Raya Dalung No. 42</p>
+</div>
+</div>
+</div>
+<!-- Live Speed HUD Badge Floating -->
+<div class="bg-surface-container-lowest/85 backdrop-blur-md border border-primary-container/40 rounded-xl px-2.5 py-1.5 flex flex-col items-end shadow-xl drop-shadow-[0_0_12px_rgba(0,242,254,0.15)]">
+<span class="text-caption font-caption text-primary-container font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="speed">speed</span>
+              Instan
+            </span>
+<span class="text-label-md font-label-md text-on-surface font-bold">34 km/jam</span>
+</div>
+</div>
+<!-- Floating HUD: Bottom Map Quick Action Controls -->
+<div class="relative z-10 flex items-end justify-between">
+<div class="bg-surface-container-lowest/85 backdrop-blur-md border border-outline-variant/30 rounded-lg px-2.5 py-1 flex items-center gap-1.5 text-caption font-caption text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary-container" data-icon="navigation">navigation</span>
+<span>Menghadap Utara-Timur</span>
+</div>
+<!-- Map Navigation Floating Cluster -->
+<div class="flex flex-col gap-1.5">
+<button aria-label="Pusatkan Marker" class="w-8 h-8 rounded-lg bg-surface-container-lowest/85 backdrop-blur-md border border-outline-variant/30 text-primary-container flex items-center justify-center hover:bg-surface-container-high active:scale-90 transition-all shadow-md" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="my_location">my_location</span>
+</button>
+<div class="flex flex-col rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container-lowest/85 backdrop-blur-md shadow-md">
+<button aria-label="Perbesar Peta" class="w-8 h-8 text-on-surface-variant hover:text-on-surface flex items-center justify-center border-b border-outline-variant/20 active:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+</button>
+<button aria-label="Perkecil Peta" class="w-8 h-8 text-on-surface-variant hover:text-on-surface flex items-center justify-center active:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="remove">remove</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Panel Kontrol Playback Pemutar (Playback Controller Card) -->
+<section aria-label="Kontrol Pemutar Rute" class="rounded-xl bg-surface-container/70 backdrop-blur-xl border border-white/[0.08] p-4 shadow-xl flex flex-col gap-3.5">
+<!-- Progress Scrubber Slider -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-caption font-caption">
+<span class="text-on-surface font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+              23.03 <span class="text-on-surface-variant font-normal">(Posisi Playback)</span>
+</span>
+<span class="text-primary-container font-mono font-medium">14:15 / 22:00 mnt (65%)</span>
+</div>
+<!-- Dynamic Progress Bar Scrubber with Draggable Thumb Simulator -->
+<div class="relative w-full h-3 flex items-center cursor-pointer group">
+<!-- Background Rail -->
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary-container/80 to-primary-container rounded-full" style="width: 65%;"></div>
+</div>
+<!-- Glow Scrubber Thumb -->
+<div class="absolute left-[65%] -translate-x-1/2 w-4 h-4 rounded-full bg-on-surface border-2 border-primary-container shadow-[0_0_10px_#00f2fe] group-hover:scale-125 transition-transform"></div>
+</div>
+<!-- Timeline Key Time Boundary Labels -->
+<div class="flex justify-between text-caption font-caption text-on-surface-variant font-medium">
+<span>22.49 (Awal)</span>
+<span class="text-outline">Step 3 dari 5</span>
+<span>23.11 (Tiba)</span>
+</div>
+</div>
+<!-- Controller Action Buttons Row -->
+<div class="flex items-center justify-between pt-1">
+<!-- Loop Toggle -->
+<button aria-label="Ulangi Rute Otomatis" class="w-9 h-9 rounded-full bg-surface-variant/30 hover:bg-surface-variant/60 text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-all active:scale-95 border border-white/[0.04]" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="repeat">repeat</span>
+</button>
+<!-- Multimedia Primary Playback Cluster -->
+<div class="flex items-center gap-3">
+<!-- Skip Previous -->
+<button aria-label="Lompat ke Langkah Sebelumnya" class="w-10 h-10 rounded-full bg-surface-variant/40 hover:bg-surface-variant/80 text-on-surface flex items-center justify-center transition-all active:scale-90 border border-white/[0.05]" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="skip_previous">skip_previous</span>
+</button>
+<!-- Main Play/Pause Beacon Button -->
+<button aria-label="Jeda Putar" class="w-13 h-13 px-4 py-2.5 rounded-full bg-primary-container text-on-primary-fixed hover:brightness-110 flex items-center justify-center drop-shadow-[0_0_16px_rgba(0,242,254,0.45)] active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[26px]" data-icon="pause" style="font-variation-settings: 'FILL' 1;">pause</span>
+</button>
+<!-- Skip Next -->
+<button aria-label="Lompat ke Langkah Berikutnya" class="w-10 h-10 rounded-full bg-surface-variant/40 hover:bg-surface-variant/80 text-on-surface flex items-center justify-center transition-all active:scale-90 border border-white/[0.05]" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="skip_next">skip_next</span>
+</button>
+</div>
+<!-- Speed Multiplier Toggle Chips -->
+<div class="flex items-center bg-surface-container-lowest/80 p-0.5 rounded-full border border-white/[0.06]">
+<button class="px-2 py-0.5 rounded-full text-caption font-caption text-on-surface-variant hover:text-on-surface transition-colors" type="button">1x</button>
+<button class="px-2.5 py-0.5 rounded-full text-caption font-caption bg-primary-container text-on-primary-fixed font-bold shadow-sm" type="button">2x</button>
+<button class="px-2 py-0.5 rounded-full text-caption font-caption text-on-surface-variant hover:text-on-surface transition-colors" type="button">4x</button>
+</div>
+</div>
+</section>
+<!-- 4. Kartu Status Titik Saat Ini (Current Step Telemetry Bento Card) -->
+<section aria-label="Telemetri Posisi Saat Ini" class="rounded-xl bg-surface-container/70 backdrop-blur-xl border border-white/[0.08] p-4 shadow-lg flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]" data-icon="sensors">sensors</span>
+<span class="text-caption font-caption text-primary-container font-semibold tracking-wider">LANGKAH 3 DARI 5 • TERSEDIA TELEMETRI</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant text-caption font-caption">
+            Status: Bergerak
+          </span>
+</div>
+<div class="flex flex-col">
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">Jl. Kebo Iwa Selatan</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Titik transit ke arah Dalung • Tercatat pukul 23.03:14 WITA</p>
+</div>
+<!-- Telemetry 4-Column Bento Metric Badges -->
+<div class="grid grid-cols-4 gap-2 pt-1">
+<!-- Metrik 1: Kecepatan -->
+<div class="rounded-lg bg-surface-container-lowest/70 border border-white/[0.05] p-2 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary-container text-[16px] mb-0.5" data-icon="speed">speed</span>
+<span class="text-caption font-caption text-on-surface-variant">Kecepatan</span>
+<span class="text-label-md font-label-md font-bold text-on-surface mt-0.5">34 <span class="text-[10px] font-normal text-on-surface-variant">km/j</span></span>
+</div>
+<!-- Metrik 2: Baterai -->
+<div class="rounded-lg bg-surface-container-lowest/70 border border-white/[0.05] p-2 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-secondary text-[16px] mb-0.5" data-icon="battery_5_bar">battery_5_bar</span>
+<span class="text-caption font-caption text-on-surface-variant">Baterai</span>
+<span class="text-label-md font-label-md font-bold text-on-surface mt-0.5">86%</span>
+</div>
+<!-- Metrik 3: Jaringan -->
+<div class="rounded-lg bg-surface-container-lowest/70 border border-white/[0.05] p-2 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px] mb-0.5" data-icon="signal_cellular_4_bar">signal_cellular_4_bar</span>
+<span class="text-caption font-caption text-on-surface-variant">Sinyal</span>
+<span class="text-label-md font-label-md font-bold text-on-surface mt-0.5 truncate w-full">4G Prima</span>
+</div>
+<!-- Metrik 4: Estimasi Tiba -->
+<div class="rounded-lg bg-surface-container-lowest/70 border border-white/[0.05] p-2 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary text-[16px] mb-0.5" data-icon="schedule">schedule</span>
+<span class="text-caption font-caption text-on-surface-variant">Est. Tiba</span>
+<span class="text-label-md font-label-md font-bold text-on-surface mt-0.5">±8 mnt</span>
+</div>
+</div>
+</section>
+<!-- 5. Daftar Langkah demi Langkah (Step-by-Step Waypoints Timeline) -->
+<section aria-label="Timeline Langkah demi Langkah" class="rounded-xl bg-surface-container/70 backdrop-blur-xl border border-white/[0.08] p-4 shadow-lg flex flex-col gap-3">
+<div class="flex items-center justify-between pb-1 border-b border-white/[0.06]">
+<h3 class="text-headline-md font-headline-md font-semibold text-on-surface">Jalur &amp; Perhentian</h3>
+<span class="text-caption font-caption text-on-surface-variant">5 Titik GPS</span>
+</div>
+<div class="relative flex flex-col gap-0">
+<!-- Step 1 (Selesai) -->
+<div class="relative flex items-start gap-3 pb-5 group">
+<!-- Continuous Line -->
+<div class="absolute left-3.5 top-6 bottom-0 w-0.5 bg-primary-container/40"></div>
+<!-- Node Icon -->
+<div class="relative z-10 w-7 h-7 rounded-full bg-primary-container/20 border border-primary-container text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]" data-icon="check">check</span>
+</div>
+<!-- Details -->
+<div class="flex-1 flex justify-between items-baseline pt-0.5">
+<div>
+<p class="text-body-sm font-body-sm font-semibold text-on-surface">Berangkat dari Jl. Teuku Umar Barat</p>
+<p class="text-caption font-caption text-on-surface-variant">Titik Awal • Parkir Toko Utama</p>
+</div>
+<span class="text-caption font-caption text-on-surface-variant font-mono">22.49</span>
+</div>
+</div>
+<!-- Step 2 (Selesai) -->
+<div class="relative flex items-start gap-3 pb-5 group">
+<!-- Continuous Line -->
+<div class="absolute left-3.5 top-6 bottom-0 w-0.5 bg-primary-container/40"></div>
+<!-- Node Icon -->
+<div class="relative z-10 w-7 h-7 rounded-full bg-primary-container/20 border border-primary-container text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]" data-icon="check">check</span>
+</div>
+<!-- Details -->
+<div class="flex-1 flex justify-between items-baseline pt-0.5">
+<div>
+<p class="text-body-sm font-body-sm font-semibold text-on-surface">Simpang Gatot Subroto Barat</p>
+<p class="text-caption font-caption text-on-surface-variant">Kelancaran baik • 28 km/jam</p>
+</div>
+<span class="text-caption font-caption text-on-surface-variant font-mono">22.56</span>
+</div>
+</div>
+<!-- Step 3 (Aktif Saat Ini - Highlight Obsidian Cyan Glass) -->
+<div class="relative flex items-start gap-3 pb-5 group">
+<!-- Continuous Line (Dashed to upcoming) -->
+<div class="absolute left-3.5 top-6 bottom-0 w-0.5 bg-outline-variant/40 border-l border-dashed border-outline-variant"></div>
+<!-- Active Pulsing Node Icon -->
+<div class="relative z-10 w-7 h-7 rounded-full bg-primary-container text-on-primary-fixed flex items-center justify-center shadow-[0_0_12px_#00f2fe]">
+<span class="material-symbols-outlined text-[16px] animate-pulse" data-icon="location_on">location_on</span>
+</div>
+<!-- Details Active Card -->
+<div class="flex-1 bg-primary-container/10 border border-primary-container/30 rounded-lg p-2.5 flex justify-between items-start">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-primary-container text-on-primary-fixed uppercase tracking-wider">Sedang Diputar</span>
+<p class="text-body-sm font-body-sm font-bold text-primary">Jl. Kebo Iwa Selatan</p>
+</div>
+<p class="text-caption font-caption text-on-surface-variant mt-0.5">Sedang melaju normal • 34 km/jam</p>
+</div>
+<span class="text-caption font-caption text-primary-container font-mono font-bold">23.03</span>
+</div>
+</div>
+<!-- Step 4 (Mendatang) -->
+<div class="relative flex items-start gap-3 pb-5 group opacity-75">
+<!-- Continuous Line -->
+<div class="absolute left-3.5 top-6 bottom-0 w-0.5 bg-outline-variant/30"></div>
+<!-- Pending Node Icon -->
+<div class="relative z-10 w-7 h-7 rounded-full bg-surface-variant/40 border border-outline-variant/40 text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[13px]" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</div>
+<!-- Details -->
+<div class="flex-1 flex justify-between items-baseline pt-0.5">
+<div>
+<p class="text-body-sm font-body-sm text-on-surface">Memasuki Area Dalung Permai</p>
+<p class="text-caption font-caption text-on-surface-variant">Langkah berikutnya</p>
+</div>
+<span class="text-caption font-caption text-on-surface-variant font-mono">23.08</span>
+</div>
+</div>
+<!-- Step 5 (Tujuan Akhir) -->
+<div class="relative flex items-start gap-3 group opacity-70">
+<!-- Node Icon Destination Flag -->
+<div class="relative z-10 w-7 h-7 rounded-full bg-surface-variant/40 border border-secondary/40 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]" data-icon="flag">flag</span>
+</div>
+<!-- Details -->
+<div class="flex-1 flex justify-between items-baseline pt-0.5">
+<div>
+<p class="text-body-sm font-body-sm text-on-surface">Jl. Raya Dalung No. 42</p>
+<p class="text-caption font-caption text-on-surface-variant">Tujuan akhir • Rumah Utama</p>
+</div>
+<span class="text-caption font-caption text-on-surface-variant font-mono">23.11</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. Aksi Cepat / Bottom Workflow Buttons -->
+<section aria-label="Aksi Playback Rute" class="flex flex-col gap-2.5 pt-1">
+<button class="w-full h-12 rounded-full bg-gradient-to-r from-[#00F2FE] to-[#06B6D4] text-on-primary-fixed font-label-md font-bold flex items-center justify-center gap-2 drop-shadow-[0_0_18px_rgba(0,242,254,0.35)] active:scale-98 transition-all hover:brightness-105" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="ios_share">ios_share</span>
+<span>Bagikan Jejak Playback</span>
+</button>
+<button class="w-full h-11 rounded-full bg-error-container/10 border border-error/25 text-error font-label-md font-medium flex items-center justify-center gap-1.5 hover:bg-error-container/20 active:scale-98 transition-all" type="button">
+<span class="material-symbols-outlined text-[17px]" data-icon="close">close</span>
+<span>Keluar dari Mode Playback</span>
+</button>
+</section>
+</main>
+<!-- BottomNavBar (Shared Component from JSON Blueprint - Active Destination: 'Peta') -->
+<nav aria-label="Navigasi Utama" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest/85 backdrop-blur-xl border-t border-outline-variant/30 shadow-2xl">
+<div class="max-w-md w-full mx-auto flex justify-around items-center">
+<!-- Tab 1: Peta (ACTIVE matching current screen playback) -->
+<a class="flex flex-col items-center justify-center text-primary-container drop-shadow-[0_0_8px_rgba(0,242,254,0.4)] active:scale-95 transition-transform duration-150 py-1" href="#peta">
+<span class="material-symbols-outlined" data-icon="map" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="text-caption font-caption mt-0.5">Peta</span>
+</a>
+<!-- Tab 2: Circle (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200 active:scale-95 py-1" href="#circle">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-caption font-caption mt-0.5">Circle</span>
+</a>
+<!-- Tab 3: Aktivitas (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200 active:scale-95 py-1" href="#aktivitas">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="text-caption font-caption mt-0.5">Aktivitas</span>
+</a>
+<!-- Tab 4: Profil (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200 active:scale-95 py-1" href="#profil">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-caption font-caption mt-0.5">Profil</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

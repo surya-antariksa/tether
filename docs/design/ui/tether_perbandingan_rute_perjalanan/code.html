@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Perbandingan Rute Perjalanan</title>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#181c24",
+            "background": "#0f131c",
+            "on-tertiary-container": "#00697c",
+            "on-secondary": "#003824",
+            "on-primary-fixed-variant": "#004f53",
+            "surface-bright": "#353942",
+            "on-primary": "#00373a",
+            "on-error-container": "#ffdad6",
+            "outline-variant": "#3a494b",
+            "on-primary-container": "#006a70",
+            "error": "#ffb4ab",
+            "surface-dim": "#0f131c",
+            "on-tertiary": "#003640",
+            "primary-fixed": "#6ff6ff",
+            "on-surface": "#dfe2ee",
+            "inverse-primary": "#00696f",
+            "on-tertiary-fixed": "#001f26",
+            "tertiary-fixed": "#acedff",
+            "on-error": "#690005",
+            "primary-container": "#00f2fe",
+            "surface-container": "#1c2028",
+            "primary-fixed-dim": "#00dce6",
+            "error-container": "#93000a",
+            "inverse-on-surface": "#2c3039",
+            "secondary-fixed": "#6ffbbe",
+            "on-secondary-container": "#00311f",
+            "primary": "#e0fdff",
+            "on-primary-fixed": "#002022",
+            "secondary-container": "#00a572",
+            "surface": "#0f131c",
+            "surface-container-lowest": "#0a0e16",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "tertiary-container": "#91e8ff",
+            "secondary-fixed-dim": "#4edea3",
+            "surface-container-high": "#262a33",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-background": "#dfe2ee",
+            "surface-variant": "#31353e",
+            "surface-tint": "#00dce6",
+            "on-surface-variant": "#b9cacb",
+            "surface-container-highest": "#31353e",
+            "on-secondary-fixed": "#002113",
+            "outline": "#849495",
+            "secondary": "#4edea3",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary": "#ecfaff",
+            "inverse-surface": "#dfe2ee"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-lg": "1.25rem",
+            "margin": "1rem",
+            "gutter": "1rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem"
+          },
+          "fontFamily": {
+            "body-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "body-sm": [
+              "Plus Jakarta Sans"
+            ],
+            "body-md": [
+              "Plus Jakarta Sans"
+            ],
+            "caption": [
+              "Inter"
+            ],
+            "label-md": [
+              "Inter"
+            ],
+            "headline-md": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-lg": [
+              "Plus Jakarta Sans"
+            ],
+            "headline-xl": [
+              "Plus Jakarta Sans"
+            ],
+            "label-sm": [
+              "Inter"
+            ]
+          },
+          "fontSize": {
+            "body-lg": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "fontWeight": "400"
+              }
+            ],
+            "body-sm": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "fontWeight": "400"
+              }
+            ],
+            "body-md": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "400"
+              }
+            ],
+            "caption": [
+              "10px",
+              {
+                "lineHeight": "12px",
+                "fontWeight": "500"
+              }
+            ],
+            "label-md": [
+              "13px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-md": [
+              "18px",
+              {
+                "lineHeight": "24px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-lg": [
+              "22px",
+              {
+                "lineHeight": "28px",
+                "letterSpacing": "-0.015em",
+                "fontWeight": "700"
+              }
+            ],
+            "headline-xl": [
+              "28px",
+              {
+                "lineHeight": "34px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "700"
+              }
+            ],
+            "label-sm": [
+              "11px",
+              {
+                "lineHeight": "14px",
+                "letterSpacing": "0.04em",
+                "fontWeight": "500"
+              }
+            ]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Subtle pulsing glow for live marker */
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.7), 0 0 20px 4px rgba(0, 242, 254, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(0, 242, 254, 0), 0 0 30px 8px rgba(0, 242, 254, 0.5);
+      }
+    }
+    .beacon-pulse {
+      animation: pulseGlow 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    /* Ambient noise & grid lines on map */
+    .map-grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased selection:bg-primary-container selection:text-background min-h-screen pb-24 overflow-x-hidden font-body-md">
+<!-- TOP APP BAR (Shared Component Anchor) -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-md shadow-sm dark:shadow-none border-b border-outline-variant/20 dark:border-outline-variant/20">
+<div class="flex justify-between items-center w-full px-4 h-14 max-w-md mx-auto">
+<button aria-label="Kembali" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/40 hover:text-on-surface transition-colors active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight leading-tight">
+          Perbandingan Rute
+        </h1>
+<span class="text-caption font-caption text-primary-container tracking-widest flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-ping"></span>
+          TETHER RADAR • RIWAYAT
+        </span>
+</div>
+<button aria-label="Menu" class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/40 hover:text-on-surface transition-colors active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTAINER -->
+<main class="w-full max-w-md mx-auto pt-16 px-4 flex flex-col gap-space-lg">
+<!-- 1. PETA RUTE INTERAKTIF (Dark Map HUD) -->
+<section class="relative w-full rounded-2xl overflow-hidden border border-white/[0.08] bg-surface-container-lowest shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)]">
+<!-- Obsidian Map Graphic Representation -->
+<div class="relative w-full h-72 bg-[#090D15] overflow-hidden map-grid-pattern flex items-center justify-center select-none">
+<!-- Stylized Map Road Grid SVG -->
+<svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="roadGlow" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#3a494b" stop-opacity="0.4"></stop>
+<stop offset="100%" stop-color="#181c24" stop-opacity="0.2"></stop>
+</lineargradient>
+<lineargradient id="routeCyanGlow" x1="0%" x2="100%" y1="100%" y2="0%">
+<stop offset="0%" stop-color="#4edea3" stop-opacity="0.8"></stop>
+<stop offset="50%" stop-color="#00f2fe" stop-opacity="1"></stop>
+<stop offset="100%" stop-color="#6ff6ff" stop-opacity="1"></stop>
+</lineargradient>
+<filter height="140%" id="neonFilter" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3.5"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+</defs>
+<!-- Minor background roads -->
+<path d="M-10,40 Q100,60 180,30 T380,80" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"></path>
+<path d="M60,260 Q120,180 200,190 T420,160" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2"></path>
+<path d="M120,-10 Q140,120 160,280" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="3"></path>
+<path d="M280,290 L260,110 L350,-10" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"></path>
+<!-- Realized glowing polyline for journey (Titik A -> Titik B) -->
+<!-- Ambient shadow glow for path -->
+<path d="M85,215 C130,205 150,145 190,135 C230,125 240,85 305,65" fill="none" filter="url(#neonFilter)" opacity="0.35" stroke="#00f2fe" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"></path>
+<!-- Main laser path -->
+<path d="M85,215 C130,205 150,145 190,135 C230,125 240,85 305,65" fill="none" stroke="url(#routeCyanGlow)" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"></path>
+<!-- Intermediate directional arrow or pulses along route -->
+<circle cx="165" cy="155" fill="#e0fdff" opacity="0.8" r="2.5"></circle>
+<circle cx="235" cy="115" fill="#e0fdff" opacity="0.8" r="2.5"></circle>
+</svg>
+<!-- Titik A: Asal (22.49 WIB) -->
+<div class="absolute left-[70px] top-[198px] flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center shadow-lg">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+</div>
+<div class="mt-1 px-2 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md border border-white/[0.08] text-caption font-caption text-on-surface-variant flex items-center gap-1 shadow-sm whitespace-nowrap">
+<span class="text-white/60">A</span>
+<span>22.49</span>
+</div>
+</div>
+<!-- Titik B: Terkini (23.11 WIB) -->
+<div class="absolute right-[75px] top-[48px] flex flex-col items-center">
+<div class="relative w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center beacon-pulse">
+<div class="w-5 h-5 rounded-full bg-primary-container flex items-center justify-center text-surface-dim font-bold text-caption shadow-[0_0_12px_#00f2fe]">
+<span class="material-symbols-outlined text-[14px]" data-icon="navigation" data-weight="fill" style="font-variation-settings: 'FILL' 1;">navigation</span>
+</div>
+</div>
+<div class="mt-1 px-2.5 py-0.5 rounded-full bg-surface-container-lowest/95 backdrop-blur-md border border-primary-container/40 text-caption font-caption text-primary flex items-center gap-1.5 shadow-[0_0_12px_rgba(0,242,254,0.3)] whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="font-bold text-on-surface">23.11</span>
+<span class="text-[9px] text-primary-container font-semibold uppercase">Terkini</span>
+</div>
+</div>
+<!-- Mode Transport Badge Indicator (On Map Overlay) -->
+<div class="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-surface-container-low/85 backdrop-blur-md border border-white/[0.08] flex items-center gap-2 shadow-lg">
+<div class="w-6 h-6 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[15px]" data-icon="directions_car">directions_car</span>
+</div>
+<div class="flex flex-col">
+<span class="text-caption font-caption text-on-surface-variant text-[9px] uppercase tracking-wider">Mode Gerak</span>
+<span class="text-label-sm font-label-sm font-semibold text-on-surface">Berkendara ~24 km/jam</span>
+</div>
+</div>
+<!-- Map Layer & Center Controls HUD -->
+<div class="absolute right-3 top-3 flex flex-col gap-space-sm">
+<button aria-label="Layers" class="w-8 h-8 rounded-lg bg-surface-container-low/85 backdrop-blur-md border border-white/[0.08] flex items-center justify-center text-on-surface hover:text-primary-container transition-colors shadow-md" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="layers">layers</span>
+</button>
+<button aria-label="Fokus Lokasi" class="w-8 h-8 rounded-lg bg-surface-container-low/85 backdrop-blur-md border border-white/[0.08] flex items-center justify-center text-on-surface hover:text-primary-container transition-colors shadow-md" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="my_location">my_location</span>
+</button>
+</div>
+<!-- Attributions Anchor -->
+<div class="absolute bottom-1 right-2 text-[9px] text-outline font-caption opacity-70">
+          © OpenStreetMap contributors
+        </div>
+</div>
+<!-- Quick Metrics Ribbon below map canvas -->
+<div class="p-3 bg-surface-container-low/90 backdrop-blur-xl border-t border-white/[0.06] flex items-center justify-between text-caption font-caption">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-primary-container text-[16px]" data-icon="straighten">straighten</span>
+<span class="font-semibold">3.8 km</span>
+<span class="text-on-surface-variant">Jarak</span>
+</div>
+<span class="text-outline-variant">•</span>
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-primary-container text-[16px]" data-icon="schedule">schedule</span>
+<span class="font-semibold">22 mnt</span>
+<span class="text-on-surface-variant">Durasi</span>
+</div>
+<span class="text-outline-variant">•</span>
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-[15px]" data-icon="gps_fixed">gps_fixed</span>
+<span class="font-medium">Akurasi ±14m</span>
+</div>
+</div>
+<!-- Playback Interactive Bar -->
+<div class="px-4 py-2.5 bg-surface-container-lowest/90 border-t border-white/[0.04] flex items-center justify-between gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-container/10 border border-primary-container/30 text-primary-container hover:bg-primary-container/20 text-label-sm font-label-sm transition-all active:scale-95" id="playback-btn" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span>Simulasi Rute</span>
+</button>
+<!-- Scrubbing mini-timeline tracker -->
+<div class="flex-1 flex items-center gap-2">
+<span class="text-caption font-caption text-on-surface-variant text-[10px]">22.49</span>
+<div class="relative flex-1 h-1.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary-container to-primary-container w-3/4 rounded-full shadow-[0_0_8px_#00f2fe]"></div>
+</div>
+<span class="text-caption font-caption text-primary font-semibold text-[10px]">23.11</span>
+</div>
+</div>
+</section>
+<!-- 2. KARTU PERBANDINGAN LANGSUNG (Head-to-head Comparison Card) -->
+<section class="rounded-2xl p-4 bg-surface-container-low/75 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_32px_-4px_rgba(0,0,0,0.4)]">
+<!-- Section Header -->
+<div class="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]" data-icon="compare_arrows">compare_arrows</span>
+<h2 class="text-label-md font-label-md text-on-surface uppercase tracking-wider">Perbandingan Langsung Titik</h2>
+</div>
+<span class="text-caption font-caption text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">
+          Selisih 22 Menit
+        </span>
+</div>
+<!-- Side-by-Side 2-Column Matrix -->
+<div class="grid grid-cols-2 gap-3 relative">
+<!-- Center Divider Glow Indicator -->
+<div class="absolute left-1/2 top-2 bottom-2 w-[1px] bg-gradient-to-b from-white/[0.08] via-primary-container/30 to-white/[0.08] -translate-x-1/2"></div>
+<!-- Kolom Kiri: Titik Sebelumnya -->
+<div class="flex flex-col gap-3 pr-2">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<div>
+<span class="text-caption font-caption text-outline text-[10px] block uppercase">Sebelumnya</span>
+<span class="text-headline-md font-headline-md text-on-surface font-bold leading-none">22.49 <span class="text-caption font-caption text-outline font-normal">WIB</span></span>
+</div>
+</div>
+<!-- Lokasi Item -->
+<div class="p-2.5 rounded-xl bg-surface-container/60 border border-white/[0.04]">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="pin_drop">pin_drop</span>
+              Lokasi Asal
+            </span>
+<p class="text-body-sm font-body-sm font-semibold text-on-surface leading-snug">
+              Jl. Teuku Umar Barat
+            </p>
+<span class="text-caption font-caption text-outline text-[11px] block mt-0.5">Denpasar Barat</span>
+</div>
+<!-- Status Keberadaan -->
+<div class="p-2.5 rounded-xl bg-surface-container/60 border border-white/[0.04]">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="history_toggle_off">history_toggle_off</span>
+              Aktivitas
+            </span>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Berhenti 15 mnt</span>
+</div>
+</div>
+<!-- Telemetri Device (Baterai & Sinyal) -->
+<div class="p-2.5 rounded-xl bg-surface-container/60 border border-white/[0.04] flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="battery_5_bar">battery_5_bar</span>
+                Baterai
+              </span>
+<span class="font-medium text-on-surface">88%</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+                Jaringan
+              </span>
+<span class="font-medium text-on-surface">4G LTE</span>
+</div>
+</div>
+</div>
+<!-- Kolom Kanan: Titik Terkini (Target) -->
+<div class="flex flex-col gap-3 pl-2">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container shadow-[0_0_6px_#00f2fe]"></span>
+<div>
+<span class="text-caption font-caption text-primary-container text-[10px] block uppercase font-semibold">Terkini</span>
+<span class="text-headline-md font-headline-md text-primary-fixed font-bold leading-none">23.11 <span class="text-caption font-caption text-primary-container font-normal">WIB</span></span>
+</div>
+</div>
+<!-- Lokasi Item -->
+<div class="p-2.5 rounded-xl bg-primary-container/[0.04] border border-primary-container/20 shadow-[0_0_12px_rgba(0,242,254,0.06)]">
+<span class="text-caption font-caption text-primary-container flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="location_on" data-weight="fill" style="font-variation-settings: 'FILL' 1;">location_on</span>
+              Lokasi Tiba
+            </span>
+<p class="text-body-sm font-body-sm font-semibold text-on-surface leading-snug">
+              Jl. Raya Dalung No. 42
+            </p>
+<span class="text-caption font-caption text-primary-container/80 text-[11px] block mt-0.5 font-medium">Rumah Utama</span>
+</div>
+<!-- Status Keberadaan -->
+<div class="p-2.5 rounded-xl bg-surface-container/60 border border-white/[0.04]">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1 mb-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="home_pin">home_pin</span>
+              Aktivitas
+            </span>
+<div class="flex items-center gap-1.5 text-body-sm font-body-sm text-secondary font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+<span>Diam (Stationary)</span>
+</div>
+</div>
+<!-- Telemetri Device (Baterai & Sinyal) -->
+<div class="p-2.5 rounded-xl bg-surface-container/60 border border-white/[0.04] flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary text-[13px]" data-icon="battery_charging_80">battery_charging_80</span>
+                Baterai
+              </span>
+<span class="font-medium text-secondary flex items-center gap-1">
+                84%
+                <span class="material-symbols-outlined text-[11px]" data-icon="bolt">bolt</span>
+</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-primary-container text-[13px]" data-icon="wifi">wifi</span>
+                Jaringan
+              </span>
+<span class="font-medium text-on-surface">Wi-Fi Rumah</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. RINGKASAN ANALISIS PERJALANAN (Trip Insights Card) -->
+<section class="rounded-2xl p-4 bg-surface-container-low/75 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_32px_-4px_rgba(0,0,0,0.4)] flex flex-col gap-3.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]" data-icon="analytics">analytics</span>
+<h2 class="text-label-md font-label-md text-on-surface uppercase tracking-wider">Analisis Perjalanan</h2>
+</div>
+<span class="text-caption font-caption text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          Tersinkronisasi
+        </span>
+</div>
+<!-- Bento Grid Metric Tiles -->
+<div class="grid grid-cols-2 gap-2.5">
+<div class="p-3 rounded-xl bg-surface-container/70 border border-white/[0.04] flex flex-col justify-between">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="speed">speed</span>
+            Kecepatan Rata-rata
+          </span>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="text-headline-lg font-headline-lg font-bold text-on-surface">21</span>
+<span class="text-caption font-caption text-outline">km/jam</span>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-surface-container/70 border border-white/[0.04] flex flex-col justify-between">
+<span class="text-caption font-caption text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+            Kecepatan Maksimum
+          </span>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="text-headline-lg font-headline-lg font-bold text-primary-container">42</span>
+<span class="text-caption font-caption text-outline">km/jam</span>
+</div>
+</div>
+</div>
+<!-- SafeNet E2E Security & Integrity Badge -->
+<div class="p-3 rounded-xl bg-secondary-container/10 border border-secondary-container/25 flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-secondary-container/20 flex items-center justify-center shrink-0 text-secondary mt-0.5">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified_user">verified_user</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm font-semibold text-secondary">Rute Wajar &amp; Terverifikasi</span>
+<span class="text-[9px] px-1.5 py-0.2 rounded bg-secondary-container/20 text-secondary font-mono">SafeNet E2E</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant text-[12px] mt-0.5 leading-relaxed">
+            Tidak terdeteksi pengereman mendadak, insiden, atau deviasi rute tak lazim selama 22 menit pemantauan.
+          </p>
+</div>
+</div>
+</section>
+<!-- 4. TOMBOL AKSI UTAMA (Action Buttons) -->
+<section class="flex flex-col gap-2.5 pt-1 pb-4">
+<!-- Primary Pill: Full-glow cyan button -->
+<button class="w-full h-12 rounded-full bg-gradient-to-r from-primary-container to-[#06B6D4] text-[#0B0F17] font-bold text-label-md flex items-center justify-center gap-2 shadow-[0_0_24px_-2px_rgba(0,242,254,0.4)] active:scale-[0.98] transition-all duration-150 hover:brightness-105" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="map">map</span>
+<span>Buka Navigasi Rute Lengkap</span>
+</button>
+<!-- Secondary Ghost Action Pill -->
+<button class="w-full h-11 rounded-full bg-surface-container/60 hover:bg-surface-container-high border border-white/[0.08] text-on-surface font-semibold text-label-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary-container" data-icon="share">share</span>
+<span>Bagikan Ringkasan ke Circle</span>
+</button>
+</section>
+</main>
+<!-- BOTTOM NAVIGATION BAR (Shared Component Anchor) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest/85 dark:bg-surface-container-lowest/85 backdrop-blur-xl border-t border-outline-variant/30 dark:border-outline-variant/30 shadow-2xl dark:shadow-2xl">
+<!-- Tab 1: Peta (ACTIVE TAB per page intent: map route comparison) -->
+<a class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container drop-shadow-[0_0_8px_rgba(0,242,254,0.4)] active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="map" data-weight="fill" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="text-caption font-caption font-semibold mt-0.5">Peta</span>
+</a>
+<!-- Tab 2: Circle (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-caption font-caption mt-0.5">Circle</span>
+</a>
+<!-- Tab 3: Aktivitas (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="text-caption font-caption mt-0.5">Aktivitas</span>
+</a>
+<!-- Tab 4: Profil (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-caption font-caption mt-0.5">Profil</span>
+</a>
+</nav>
+<!-- Interactive script for simulation toggle button -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('playback-btn');
+      let isPlaying = false;
+      if (btn) {
+        btn.addEventListener('click', () => {
+          isPlaying = !isPlaying;
+          const icon = btn.querySelector('.material-symbols-outlined');
+          const span = btn.querySelector('span:last-child');
+          if (isPlaying) {
+            icon.textContent = 'pause';
+            span.textContent = 'Jeda Simulasi';
+            btn.classList.add('bg-primary-container/20', 'border-primary-container');
+          } else {
+            icon.textContent = 'play_arrow';
+            span.textContent = 'Simulasi Rute';
+            btn.classList.remove('bg-primary-container/20', 'border-primary-container');
+          }
+        });
+      }
+    });
+  </script>
+</body></html>

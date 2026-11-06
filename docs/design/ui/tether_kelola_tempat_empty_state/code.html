@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Tempat Penting</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            obsidian: {
+              950: '#07090e',
+              900: '#0b0f17',
+              850: '#111723',
+              800: '#171f2f',
+            },
+            cyanGlow: {
+              DEFAULT: '#00f2fe',
+              bright: '#38effe',
+              dark: '#0284c7',
+            }
+          },
+          boxShadow: {
+            'neon-cyan': '0 0 25px -4px rgba(0, 242, 254, 0.45)',
+            'neon-cyan-sm': '0 0 14px -2px rgba(0, 242, 254, 0.35)',
+            'glass-inner': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles: Glassmorphism and Ambience -->
+<style data-purpose="custom-ambience">
+    body {
+      background-color: #07090e;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    .glass-surface {
+      background: rgba(17, 23, 35, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-card {
+      background: rgba(23, 31, 47, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    
+    .glass-card:hover {
+      border-color: rgba(0, 242, 254, 0.3);
+      background: rgba(23, 31, 47, 0.7);
+    }
+
+    .subtle-grid {
+      background-size: 32px 32px;
+      background-image: 
+        radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
+
+    /* Pulse wave for map beacon */
+    @keyframes pulseRing {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.8;
+      }
+      50% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: scale(1.6);
+        opacity: 0;
+      }
+    }
+
+    .pulse-halo {
+      animation: pulseRing 3.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen bg-slate-950 p-0 sm:p-4">
+<!-- BEGIN: MobileContainer -->
+<!-- Target device container: iPhone viewport scale with modern proportions -->
+<div class="relative w-full max-w-[420px] h-[100dvh] sm:h-[890px] bg-obsidian-950 sm:rounded-[44px] overflow-hidden flex flex-col justify-between border border-slate-800/80 shadow-2xl subtle-grid" data-purpose="mobile-frame">
+<!-- Ambient Cyan Radial Background Glows -->
+<div class="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+<div class="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 w-72 h-72 bg-cyanGlow/8 rounded-full blur-[90px]"></div>
+<!-- BEGIN: TopBar -->
+<header class="relative z-20 pt-12 pb-3 px-5 flex items-center justify-between glass-surface border-b border-white/5">
+<!-- Back Navigation Button -->
+<button aria-label="Kembali" class="w-10 h-10 rounded-2xl glass-card flex items-center justify-center text-slate-300 hover:text-cyanGlow transition-colors duration-200" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Screen Title -->
+<h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
+<span>Tempat</span>
+<span class="w-1.5 h-1.5 rounded-full bg-cyanGlow shadow-neon-cyan-sm"></span>
+</h1>
+<!-- Top Right Action: Tambah Button -->
+<button class="group px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide text-cyanGlow border border-cyanGlow/30 hover:border-cyanGlow/60 hover:bg-cyanGlow/10 transition-all duration-200 flex items-center gap-1" type="button">
+<svg class="w-3.5 h-3.5 transition-transform group-hover:rotate-90 duration-300" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Tambah</span>
+</button>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContent -->
+<main class="relative z-10 flex-1 overflow-y-auto px-5 py-6 flex flex-col justify-between scrollbar-none">
+<!-- Top Section: 3D Obsidian Holographic Pin Icon & Hero Text -->
+<div class="flex flex-col items-center text-center mt-2" data-purpose="empty-hero">
+<!-- Modern Neon Pin Visual Assembly -->
+<div class="relative w-36 h-36 flex items-center justify-center mb-6">
+<!-- Outer Pulsing Halo Waves -->
+<div class="absolute inset-0 rounded-full border border-cyanGlow/30 pulse-halo pointer-events-none"></div>
+<div class="absolute inset-2 rounded-full border border-cyanGlow/20 pulse-halo pointer-events-none" style="animation-delay: 1s;"></div>
+<!-- Obsidian Glass Sphere Base -->
+<div class="relative w-24 h-24 rounded-3xl glass-surface flex items-center justify-center shadow-neon-cyan border border-cyanGlow/30 rotate-12 transition-transform hover:rotate-0 duration-500">
+<!-- Inner Glow Disc -->
+<div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-600/30 via-cyanGlow/20 to-transparent flex items-center justify-center -rotate-12">
+<!-- Obsidian Pin Symbol -->
+<svg class="w-9 h-9 text-cyanGlow drop-shadow-[0_0_12px_rgba(0,242,254,0.8)]" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<!-- Glass Corner Specular Reflection -->
+<div class="absolute top-1.5 left-2.5 w-4 h-2 rounded-full bg-white/30 blur-[0.5px]"></div>
+</div>
+<!-- Floating Status Chip -->
+<div class="absolute -bottom-1 bg-obsidian-900/90 border border-white/10 px-3 py-1 rounded-full text-[11px] font-medium text-slate-300 flex items-center gap-1.5 shadow-lg backdrop-blur-md">
+<span class="w-1.5 h-1.5 rounded-full bg-cyanGlow"></span>
+            0 Tempat Disimpan
+          </div>
+</div>
+<!-- Typography Headlines -->
+<h2 class="text-2xl font-bold tracking-tight text-white mb-2.5">
+          Belum ada tempat
+        </h2>
+<p class="text-sm font-normal text-slate-400 max-w-[290px] leading-relaxed mb-6">
+          Tandai tempat penting seperti rumah atau sekolah. Anggota Circle mendapat kabar saat ada yang tiba atau pergi.
+        </p>
+<!-- Primary Call To Action Button -->
+<button class="w-full max-w-[280px] py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-obsidian-950 font-bold text-sm tracking-wide shadow-neon-cyan hover:shadow-cyan-400/50 hover:brightness-110 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2" type="button">
+<svg class="w-5 h-5 text-obsidian-950" fill="none" stroke="currentColor" stroke-width="2.4" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Tambah tempat</span>
+</button>
+</div>
+<!-- Bottom Interactive Section: Quick Place Presets & Info Tag -->
+<div class="mt-8 mb-2" data-purpose="quick-suggestions-section">
+<div class="flex items-center justify-between mb-3 px-1">
+<span class="text-xs font-semibold tracking-wider uppercase text-slate-400">Rekomendasi Cepat</span>
+<span class="text-[11px] text-cyanGlow/80 font-medium cursor-pointer hover:underline">Sentuh untuk set</span>
+</div>
+<!-- Suggestion Cards Row -->
+<div class="grid grid-cols-3 gap-2.5">
+<!-- Preset: Rumah -->
+<button class="glass-card p-3 rounded-2xl flex flex-col items-center text-center transition-all duration-200 group active:scale-95" type="button">
+<div class="w-9 h-9 rounded-xl bg-obsidian-850 flex items-center justify-center text-slate-300 group-hover:text-cyanGlow border border-white/5 mb-2 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-xs font-semibold text-slate-200">Rumah</span>
+<span class="text-[10px] text-slate-500 mt-0.5">Lokasi Utama</span>
+</button>
+<!-- Preset: Kantor/Sekolah -->
+<button class="glass-card p-3 rounded-2xl flex flex-col items-center text-center transition-all duration-200 group active:scale-95" type="button">
+<div class="w-9 h-9 rounded-xl bg-obsidian-850 flex items-center justify-center text-slate-300 group-hover:text-cyanGlow border border-white/5 mb-2 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-xs font-semibold text-slate-200">Sekolah</span>
+<span class="text-[10px] text-slate-500 mt-0.5">Rute Rutin</span>
+</button>
+<!-- Preset: Favorit -->
+<button class="glass-card p-3 rounded-2xl flex flex-col items-center text-center transition-all duration-200 group active:scale-95" type="button">
+<div class="w-9 h-9 rounded-xl bg-obsidian-850 flex items-center justify-center text-slate-300 group-hover:text-cyanGlow border border-white/5 mb-2 transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-xs font-semibold text-slate-200">Favorit</span>
+<span class="text-[10px] text-slate-500 mt-0.5">Kustom</span>
+</button>
+</div>
+<!-- Privacy & Security Guarantee Banner -->
+<div class="mt-4 py-2 px-3 rounded-xl bg-obsidian-900/60 border border-white/5 flex items-center justify-center gap-2">
+<svg class="w-3.5 h-3.5 text-cyanGlow/80 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10.5px] text-slate-400 font-medium tracking-tight">Geofence Otomatis • Terenkripsi End-to-End</span>
+</div>
+</div>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomNavigation -->
+<nav class="relative z-20 pb-7 pt-3 px-6 glass-surface border-t border-white/10 flex items-center justify-between" data-purpose="bottom-navbar">
+<!-- Nav Item 1: Peta -->
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition-colors duration-150 group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-cyanGlow transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 6.75V15m6-6v8.25m.53 3.28l-5.73-2.866a1.5 1.5 0 00-1.34 0L3.53 19.53A.75.75 0 012.5 18.86V5.14a.75.75 0 01.47-.7l5.73-2.864a1.5 1.5 0 011.34 0l5.73 2.865a1.5 1.5 0 001.34 0l4.42-2.21a.75.75 0 011.07.67v13.72a.75.75 0 01-.47.7l-5.73 2.865a1.5 1.5 0 01-1.34 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[11px] font-medium">Peta</span>
+</a>
+<!-- Nav Item 2: Circle (Active/Contextual State for Tempat) -->
+<a class="flex flex-col items-center gap-1 text-cyanGlow transition-colors duration-150" href="#">
+<div class="relative">
+<svg class="w-5 h-5 text-cyanGlow drop-shadow-[0_0_8px_rgba(0,242,254,0.7)]" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15a5 5 0 110-10 5 5 0 010 10z"></path>
+</svg>
+<span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-obsidian-950"></span>
+</div>
+<span class="text-[11px] font-bold text-cyanGlow">Circle</span>
+</a>
+<!-- Nav Item 3: Aktivitas -->
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition-colors duration-150 group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-cyanGlow transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[11px] font-medium">Aktivitas</span>
+</a>
+<!-- Nav Item 4: Profil -->
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition-colors duration-150 group" href="#">
+<svg class="w-5 h-5 text-slate-400 group-hover:text-cyanGlow transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[11px] font-medium">Profil</span>
+</a>
+</nav>
+<!-- END: BottomNavigation -->
+<!-- Home Indicator (iOS Bar) -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full pointer-events-none z-30"></div>
+</div>
+<!-- END: MobileContainer -->
+</body></html>

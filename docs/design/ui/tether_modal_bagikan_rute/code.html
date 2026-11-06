@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Bagikan Jejak &amp; Rute Perjalanan</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#3a494b",
+            "on-secondary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#00dce6",
+            "outline": "#849495",
+            "on-secondary": "#003824",
+            "background": "#0f131c",
+            "inverse-on-surface": "#2c3039",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed": "#001f26",
+            "on-primary": "#00373a",
+            "surface-container-high": "#262a33",
+            "on-primary-fixed": "#002022",
+            "surface-variant": "#31353e",
+            "on-error": "#690005",
+            "tertiary": "#ecfaff",
+            "inverse-surface": "#dfe2ee",
+            "on-primary-fixed-variant": "#004f53",
+            "surface": "#0f131c",
+            "surface-container": "#1c2028",
+            "error": "#ffb4ab",
+            "primary-fixed": "#6ff6ff",
+            "on-secondary-container": "#00311f",
+            "on-error-container": "#ffdad6",
+            "on-surface": "#dfe2ee",
+            "on-tertiary-container": "#00697c",
+            "inverse-primary": "#00696f",
+            "primary-container": "#00f2fe",
+            "surface-container-highest": "#31353e",
+            "secondary": "#4edea3",
+            "error-container": "#93000a",
+            "surface-container-low": "#181c24",
+            "surface-bright": "#353942",
+            "tertiary-fixed": "#acedff",
+            "on-surface-variant": "#b9cacb",
+            "surface-dim": "#0f131c",
+            "on-primary-container": "#006a70",
+            "secondary-fixed": "#6ffbbe",
+            "on-background": "#dfe2ee",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface-container-lowest": "#0a0e16",
+            "primary": "#e0fdff",
+            "secondary-container": "#00a572",
+            "on-secondary-fixed": "#002113",
+            "tertiary-container": "#91e8ff",
+            "surface-tint": "#00dce6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem",
+            "gutter": "1rem",
+            "space-lg": "1.25rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "caption": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "body-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Ambient Glow Effects */
+    .glow-cyan-card {
+      box-shadow: 0 0 28px -4px rgba(0, 242, 254, 0.22);
+    }
+    .glow-cyan-button {
+      box-shadow: 0 4px 20px 0 rgba(0, 242, 254, 0.4);
+    }
+    .sheet-shadow {
+      box-shadow: 0 -10px 40px -8px rgba(0, 0, 0, 0.85);
+    }
+    /* Hairline border accents */
+    .hairline-border {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .hairline-top {
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased overflow-x-hidden min-h-screen flex items-center justify-center p-0 md:p-6 selection:bg-primary-container selection:text-on-primary-container">
+<!-- Mobile Frame Container (Max-w-md mimicking modern handheld screen) -->
+<div class="relative w-full max-w-md h-[884px] md:h-[915px] bg-surface-container-lowest overflow-hidden md:rounded-3xl border border-outline-variant/30 flex flex-col justify-end shadow-2xl">
+<!-- BACKDROP CANVAS: Dimmed Route Playback / Comparison Map Screen with Frosted Blur -->
+<div class="absolute inset-0 pointer-events-none z-0">
+<!-- Dark Stylized Route Map Background -->
+<div class="w-full h-full bg-cover bg-center filter brightness-[0.38] contrast-125 saturate-75 scale-105" data-alt="A dark mode satellite GPS navigation map displaying dark obsidian nocturnal streets, illuminated vector travel lines glowing in soft cyan and emerald, high-contrast dark futuristic user interface background, top-down isometric road rendering in deep night atmosphere." data-location="Bali, Indonesia" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSmTx1jV0P4V9rPU8WtCQ0drNag5wYcfSN_NRFjeVtzLyQEC77dVXoz-Hmta8ea45fQHjT7ffGeywoPsDJ12X1KOdD0W9oYw14Eo16y1m0fVZVTOkHT_1FkWXDkTMo_RKOGIFmGEJMYKE2Ky_MQDm7f_BJi8qEMP0HokCAbKO58ZCxBLROjqAad7fJJWMnBv4u9M2RSNDHd0TcaWbMNiYJL258CRo-HHsCdAyAU4dT');">
+</div>
+<!-- Atmospheric Ambient Glows & Glassmorphism Blur Layers -->
+<div class="absolute inset-0 bg-gradient-to-b from-surface/60 via-surface-container-lowest/80 to-surface-container-lowest backdrop-blur-md"></div>
+<!-- Vector GPS Path Overlay (Visualizing active route telemetry behind modal) -->
+<svg class="absolute inset-0 w-full h-full opacity-60" fill="none" viewbox="0 0 400 800" xmlns="http://www.w3.org/2000/svg">
+<path d="M 80 180 Q 140 230 210 210 T 320 320" stroke="#00dce6" stroke-dasharray="8 6" stroke-linecap="round" stroke-width="4"></path>
+<circle class="animate-pulse" cx="80" cy="180" fill="#4edea3" r="8"></circle>
+<circle cx="320" cy="320" fill="#00f2fe" r="10"></circle>
+<circle cx="320" cy="320" r="22" stroke="#00f2fe" stroke-opacity="0.5" stroke-width="1.5"></circle>
+</svg>
+<!-- Simulated Floating HUD Behind the Sheet (Provides realistic context) -->
+<div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10 pointer-events-auto">
+<!-- Back Navigation Pill -->
+<button class="w-10 h-10 rounded-full bg-surface-container/80 backdrop-blur-xl hairline-border flex items-center justify-center text-on-surface hover:text-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Circle Status Badge -->
+<div class="px-3.5 py-1.5 rounded-full bg-surface-container/80 backdrop-blur-xl hairline-border flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-primary tracking-wide">Keluarga Pratama (3 Aktif)</span>
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Telemetry Layer Icon -->
+<button class="w-10 h-10 rounded-full bg-surface-container/80 backdrop-blur-xl hairline-border flex items-center justify-center text-on-surface hover:text-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="layers">layers</span>
+</button>
+</div>
+</div>
+<!-- MODAL BOTTOM SHEET OVERLAY (Active Context) -->
+<div class="relative z-20 w-full max-h-[92%] flex flex-col bg-surface-container-low/95 backdrop-blur-2xl rounded-t-[28px] hairline-top sheet-shadow overflow-hidden">
+<!-- Drag Handle Pill -->
+<div class="w-full flex items-center justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
+<div class="w-12 h-1.5 rounded-full bg-outline-variant/60"></div>
+</div>
+<!-- Sheet Header -->
+<div class="px-margin pt-1 pb-3 flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2 mb-0.5">
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight">Bagikan Rute Perjalanan</h2>
+<span class="px-1.5 py-0.5 rounded bg-primary-container/15 text-primary-container font-caption text-caption font-semibold">LIVE</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-primary-fixed-dim" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+            Tether Radar • Riwayat Terverifikasi
+          </p>
+</div>
+<!-- Close dismiss action -->
+<button aria-label="Tutup" class="w-8 h-8 rounded-full bg-surface-variant/40 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+<!-- Scrollable Sheet Content -->
+<div class="overflow-y-auto px-margin pb-6 space-y-space-lg max-h-[calc(90dvh-120px)] scrollbar-none">
+<!-- ROUTE SUMMARY PILL CARD -->
+<div class="w-full rounded-2xl bg-surface-container/70 backdrop-blur-xl hairline-border p-3.5 glow-cyan-card relative overflow-hidden group">
+<!-- Subtle corner accent glow -->
+<div class="absolute -right-8 -top-8 w-24 h-24 bg-primary-container/10 rounded-full blur-xl pointer-events-none"></div>
+<!-- Trip Points -->
+<div class="flex items-center gap-2 mb-2.5">
+<div class="flex items-center justify-center w-6 h-6 rounded-full bg-primary-container/20 text-primary-container shrink-0">
+<span class="material-symbols-outlined text-[14px]" data-icon="near_me">near_me</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface overflow-hidden">
+<span class="truncate">Jl. Teuku Umar Barat</span>
+<span class="text-primary-container shrink-0 font-bold">➔</span>
+<span class="truncate text-primary">Jl. Raya Dalung No. 42</span>
+</div>
+</div>
+<!-- Route Badges & Metrics Row -->
+<div class="flex items-center flex-wrap gap-2 pt-2 border-t border-outline-variant/30 text-on-surface-variant">
+<!-- Distance -->
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-high/60 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[15px] text-tertiary-fixed-dim" data-icon="straighten">straighten</span>
+<span class="font-medium">3.8 km</span>
+</div>
+<!-- Duration -->
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-high/60 font-body-sm text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-[15px] text-secondary-fixed-dim" data-icon="schedule">schedule</span>
+<span class="font-medium">22 menit</span>
+</div>
+<!-- Status Safe Indicator -->
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-secondary-container/25 text-secondary-fixed font-body-sm text-body-sm ml-auto">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+<span class="font-semibold text-secondary-fixed">Aman</span>
+</div>
+</div>
+</div>
+<!-- SECTION 1: BAGIKAN KE CIRCLE (Quick Circle Share) -->
+<div class="space-y-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-label-md text-label-md text-on-surface-variant tracking-wider uppercase">Bagikan ke Circle</h3>
+<span class="font-caption text-caption text-primary-fixed-dim">Lingkar Inti</span>
+</div>
+<!-- Horizontal List of Circle Members -->
+<div class="flex items-center gap-3 overflow-x-auto pb-1 pt-1 scrollbar-none">
+<!-- Member 1: Gita -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 group cursor-pointer">
+<div class="relative">
+<div class="w-14 h-14 rounded-full bg-surface-container-high hairline-border p-0.5 flex items-center justify-center group-hover:border-primary-container transition-all">
+<div class="w-full h-full rounded-full bg-gradient-to-tr from-surface-variant to-surface-bright flex items-center justify-center font-headline-md text-headline-md text-primary font-bold">
+                    G
+                  </div>
+</div>
+<!-- Battery Indicator Badge -->
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest px-1 py-0.5 rounded-full hairline-border flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px] text-secondary" data-icon="battery_charging_full">battery_charging_full</span>
+<span class="font-caption text-caption text-secondary">88%</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Gita</span>
+<button class="px-3 py-1 rounded-full bg-surface-container-high/80 text-primary hover:bg-primary-container hover:text-on-primary-container font-caption text-caption font-semibold active:scale-95 transition-all">
+                Kirim
+              </button>
+</div>
+<!-- Member 2: Ibu -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 group cursor-pointer">
+<div class="relative">
+<div class="w-14 h-14 rounded-full bg-surface-container-high hairline-border p-0.5 flex items-center justify-center group-hover:border-primary-container transition-all">
+<div class="w-full h-full rounded-full bg-gradient-to-tr from-surface-variant to-surface-bright flex items-center justify-center font-headline-md text-headline-md text-tertiary-fixed-dim font-bold">
+                    I
+                  </div>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest px-1 py-0.5 rounded-full hairline-border flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px] text-secondary" data-icon="battery_6_bar">battery_6_bar</span>
+<span class="font-caption text-caption text-secondary">74%</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Ibu</span>
+<button class="px-3 py-1 rounded-full bg-surface-container-high/80 text-primary hover:bg-primary-container hover:text-on-primary-container font-caption text-caption font-semibold active:scale-95 transition-all">
+                Kirim
+              </button>
+</div>
+<!-- Member 3: Ayah -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 group cursor-pointer">
+<div class="relative">
+<div class="w-14 h-14 rounded-full bg-surface-container-high hairline-border p-0.5 flex items-center justify-center group-hover:border-primary-container transition-all">
+<div class="w-full h-full rounded-full bg-gradient-to-tr from-surface-variant to-surface-bright flex items-center justify-center font-headline-md text-headline-md text-secondary-fixed-dim font-bold">
+                    A
+                  </div>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-surface-container-lowest px-1 py-0.5 rounded-full hairline-border flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[11px] text-primary-container" data-icon="battery_full">battery_full</span>
+<span class="font-caption text-caption text-on-surface">95%</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Ayah</span>
+<button class="px-3 py-1 rounded-full bg-surface-container-high/80 text-primary hover:bg-primary-container hover:text-on-primary-container font-caption text-caption font-semibold active:scale-95 transition-all">
+                Kirim
+              </button>
+</div>
+<!-- Quick Action: Send to All Members -->
+<div class="flex flex-col items-center justify-center gap-1.5 shrink-0 pl-1 cursor-pointer">
+<button class="w-14 h-14 rounded-full bg-primary-container/10 border border-primary-container/40 flex items-center justify-center text-primary-container hover:bg-primary-container/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[24px]" data-icon="send_and_archive">send_and_archive</span>
+</button>
+<span class="font-label-sm text-label-sm text-primary-fixed-dim">Kirim Semua</span>
+<span class="text-caption font-caption text-outline">1 Ketukan</span>
+</div>
+</div>
+</div>
+<!-- SECTION 2: APLIKASI EKSTERNAL (Share Channels Grid) -->
+<div class="space-y-space-sm">
+<h3 class="font-label-md text-label-md text-on-surface-variant tracking-wider uppercase">Aplikasi Eksternal</h3>
+<div class="grid grid-cols-4 gap-2.5">
+<!-- Target 1: WhatsApp -->
+<button class="flex flex-col items-center p-3 rounded-2xl bg-surface-container/60 hover:bg-surface-container hairline-border active:scale-95 transition-all group">
+<div class="w-11 h-11 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[22px]" data-icon="chat">chat</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">WhatsApp</span>
+</button>
+<!-- Target 2: Telegram -->
+<button class="flex flex-col items-center p-3 rounded-2xl bg-surface-container/60 hover:bg-surface-container hairline-border active:scale-95 transition-all group">
+<div class="w-11 h-11 rounded-full bg-primary-container/15 flex items-center justify-center text-primary-container mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[22px]" data-icon="send">send</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Telegram</span>
+</button>
+<!-- Target 3: Salin Tautan (Copy Link) -->
+<button class="flex flex-col items-center p-3 rounded-2xl bg-surface-container/60 hover:bg-surface-container hairline-border active:scale-95 transition-all group">
+<div class="w-11 h-11 rounded-full bg-surface-variant/80 flex items-center justify-center text-primary mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[22px]" data-icon="link">link</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Salin Tautan</span>
+</button>
+<!-- Target 4: SMS Darurat (Emergency Broadcast) -->
+<button class="flex flex-col items-center p-3 rounded-2xl bg-error-container/20 hover:bg-error-container/30 border border-error/25 active:scale-95 transition-all group">
+<div class="w-11 h-11 rounded-full bg-error-container/40 flex items-center justify-center text-error mb-1.5 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[22px]" data-icon="sos">sos</span>
+</div>
+<span class="font-label-sm text-label-sm text-error font-semibold">SMS SOS</span>
+</button>
+</div>
+</div>
+<!-- SECTION 3: TEMPORARY LIVE LINK DURATION & ENCRYPTION BADGE -->
+<div class="p-3.5 rounded-2xl bg-surface-container/60 backdrop-blur-md hairline-border space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[18px]" data-icon="timer">timer</span>
+<span class="font-label-md text-label-md text-on-surface">Tautan berlaku selama</span>
+</div>
+<span class="font-caption text-caption text-on-surface-variant">Kedaluwarsa otomatis</span>
+</div>
+<!-- Segmented Duration Control -->
+<div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-surface-container-lowest/80 hairline-border">
+<!-- 1 Jam -->
+<button class="py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors text-center">
+              1 Jam
+            </button>
+<!-- 6 Jam (Selected State) -->
+<button class="py-2 rounded-lg font-label-md text-label-md bg-surface-variant text-primary-container font-semibold shadow-inner hairline-border text-center">
+              6 Jam
+            </button>
+<!-- 24 Jam -->
+<button class="py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors text-center">
+              24 Jam
+            </button>
+</div>
+<!-- End-to-End Encryption Passkey Security Banner -->
+<div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container-high/40 hairline-border text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant tracking-normal">
+              🔒 Tautan Terenkripsi PIN/Passkey • Hanya perangkat terotentikasi
+            </span>
+</div>
+</div>
+<!-- PRIMARY SUBMIT CTA BUTTON: Salin Tautan Ringkasan -->
+<div class="pt-1">
+<button class="w-full h-12 rounded-full bg-gradient-to-r from-primary-container to-surface-tint text-surface-container-lowest font-headline-md text-headline-md font-bold tracking-tight flex items-center justify-center gap-2 glow-cyan-button active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="content_copy">content_copy</span>
+<span>Salin Tautan Ringkasan</span>
+</button>
+<p class="text-center font-caption text-caption text-outline mt-2">
+            Penerima dapat melihat progres live secara aman tanpa install aplikasi.
+          </p>
+</div>
+</div>
+</div>
+<!-- DOCKED BOTTOM NAVIGATION BAR (Shared Component Anchor) -->
+<!-- Destination count: 4 | Active Tab: Peta (Closest semantic fit for Map/Radar background) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest/85 dark:bg-surface-container-lowest/85 backdrop-blur-xl border-t border-outline-variant/30 dark:border-outline-variant/30 shadow-2xl dark:shadow-2xl">
+<!-- Tab 1: Peta (ACTIVE) -->
+<button aria-label="Peta" class="flex flex-col items-center justify-center text-primary-container dark:text-primary-container drop-shadow-[0_0_8px_rgba(0,242,254,0.4)] active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined text-[24px]" data-icon="map" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-caption text-caption">Peta</span>
+</button>
+<!-- Tab 2: Circle (Inactive) -->
+<button aria-label="Circle" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined text-[24px]" data-icon="group">group</span>
+<span class="font-caption text-caption">Circle</span>
+</button>
+<!-- Tab 3: Aktivitas (Inactive) -->
+<button aria-label="Aktivitas" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+<span class="font-caption text-caption">Aktivitas</span>
+</button>
+<!-- Tab 4: Profil (Inactive) -->
+<button aria-label="Profil" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary dark:hover:text-primary transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined text-[24px]" data-icon="person">person</span>
+<span class="font-caption text-caption">Profil</span>
+</button>
+</nav>
+</div>
+<!-- Inline Micro-Interactions Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Duration switcher micro-interaction
+      const durationButtons = document.querySelectorAll('.grid-cols-3 button');
+      durationButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          durationButtons.forEach(b => {
+            b.className = 'py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors text-center';
+          });
+          btn.className = 'py-2 rounded-lg font-label-md text-label-md bg-surface-variant text-primary-container font-semibold shadow-inner hairline-border text-center';
+        });
+      });
+
+      // Quick feedback toast on copy button
+      const copyButton = document.querySelector('.glow-cyan-button');
+      if (copyButton) {
+        copyButton.addEventListener('click', () => {
+          const originalText = copyButton.innerHTML;
+          copyButton.innerHTML = `
+            <span class="material-symbols-outlined text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            <span>Tautan Disalin ke Clipboard!</span>
+          `;
+          setTimeout(() => {
+            copyButton.innerHTML = originalText;
+          }, 2200);
+        });
+      }
+    });
+  </script>
+</body></html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Profil</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#93000a",
+            "on-primary-container": "#006a70",
+            "on-primary": "#00373a",
+            "primary": "#e0fdff",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary": "#4edea3",
+            "on-surface": "#dfe2ee",
+            "on-tertiary-container": "#00697c",
+            "tertiary-fixed": "#acedff",
+            "on-primary-fixed-variant": "#004f53",
+            "tertiary": "#ecfaff",
+            "surface-variant": "#31353e",
+            "secondary-container": "#00a572",
+            "surface": "#0f131c",
+            "surface-container-highest": "#31353e",
+            "inverse-on-surface": "#2c3039",
+            "surface-tint": "#00dce6",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-surface-variant": "#b9cacb",
+            "primary-fixed-dim": "#00dce6",
+            "surface-container-low": "#181c24",
+            "secondary-fixed": "#6ffbbe",
+            "on-secondary": "#003824",
+            "outline-variant": "#3a494b",
+            "on-tertiary-fixed": "#001f26",
+            "outline": "#849495",
+            "on-secondary-container": "#00311f",
+            "background": "#0f131c",
+            "primary-fixed": "#6ff6ff",
+            "surface-dim": "#0f131c",
+            "inverse-surface": "#dfe2ee",
+            "surface-container-high": "#262a33",
+            "on-error-container": "#ffdad6",
+            "inverse-primary": "#00696f",
+            "on-secondary-fixed-variant": "#005236",
+            "surface-container": "#1c2028",
+            "on-error": "#690005",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "primary-container": "#00f2fe",
+            "on-primary-fixed": "#002022",
+            "tertiary-container": "#91e8ff",
+            "surface-container-lowest": "#0a0e16",
+            "on-background": "#dfe2ee",
+            "surface-bright": "#353942",
+            "on-tertiary": "#003640",
+            "on-secondary-fixed": "#002113",
+            "error": "#ffb4ab"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "caption": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "body-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Inter"],
+            "headline-xl": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "caption": ["10px", {"lineHeight": "12px", "fontWeight": "500"}],
+            "headline-md": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "headline-lg": ["22px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "label-md": ["13px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+            "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+            "headline-xl": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      display: inline-block;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    /* Subtle ambient dark glass gradient */
+    .bg-obsidian-glow {
+      background: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.08) 0%, rgba(15, 19, 28, 0) 65%), #0a0e16;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-obsidian-glow text-on-surface antialiased min-h-screen selection:bg-primary-container selection:text-surface-container-lowest pb-28">
+<!-- Desktop Header / Shell Top Bar Container -->
+<header class="sticky top-0 z-40 w-full bg-surface/80 backdrop-blur-md border-b border-outline-variant/20 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-4 h-14 max-w-md mx-auto">
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">tether</span>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Settings" class="p-2 rounded-full hover:bg-surface-variant/40 hover:text-on-surface transition-colors active:scale-95 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+</button>
+<button aria-label="More" class="p-2 rounded-full hover:bg-surface-variant/40 hover:text-on-surface transition-colors active:scale-95 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Profile Screen Container -->
+<main class="w-full max-w-md mx-auto px-4 pt-3 flex flex-col gap-6">
+<!-- Page Title & Reassurance Indicator -->
+<div class="flex items-center justify-between">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight">Profil</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Kelola visibilitas, warna penanda, dan privasi akun Anda</p>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high/60 border border-outline-variant/30 backdrop-blur-md">
+<span class="h-2 w-2 rounded-full bg-primary-container animate-pulse shadow-[0_0_8px_rgba(0,242,254,0.6)]"></span>
+<span class="font-caption text-caption text-primary-fixed-dim uppercase tracking-wider font-semibold">Terkoneksi</span>
+</div>
+</div>
+<!-- Profile Identity Hero Card (Glassmorphic Bento Card) -->
+<section class="relative overflow-hidden rounded-2xl bg-surface-container/70 backdrop-blur-xl border border-outline-variant/30 p-5 shadow-lg">
+<div class="absolute -top-16 -right-16 w-36 h-36 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex flex-col items-center text-center">
+<!-- Interactive Avatar with glowing cyan beacon ring -->
+<div class="relative group cursor-pointer mb-3">
+<div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-primary-container via-surface-tint to-secondary-fixed-dim shadow-[0_0_24px_-2px_rgba(0,242,254,0.35)] transition-transform duration-300 group-hover:scale-105">
+<div class="w-full h-full rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/40">
+<span class="font-headline-xl text-headline-xl text-primary font-bold">S</span>
+</div>
+</div>
+<!-- Edit Avatar Icon Badge -->
+<div class="absolute bottom-0 right-0 p-1.5 bg-primary-container text-surface-container-lowest rounded-full shadow-md flex items-center justify-center border-2 border-surface-container">
+<span class="material-symbols-outlined text-[15px] font-bold" data-icon="photo_camera">photo_camera</span>
+</div>
+</div>
+<!-- Name & Status -->
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">suryantariksa</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary-container/15 text-primary-container font-caption text-caption font-semibold border border-primary-container/20">
+<span class="material-symbols-outlined text-[12px]" data-icon="shield">shield</span>
+            Admin Circle
+          </span>
+<span class="font-caption text-caption text-on-surface-variant">• Aktif sekarang</span>
+</div>
+<!-- Quick Action: Ubah Nama -->
+<button class="w-full mt-4 flex items-center justify-between px-4 py-3 rounded-xl bg-surface-variant/40 hover:bg-surface-variant/60 border border-outline-variant/20 transition-all duration-200 active:scale-[0.99] group">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary-container text-[18px]" data-icon="edit">edit</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Ubah nama</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-0.5 transition-transform text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Marker Color Selection Card (WARNA PENANDA) -->
+<section class="rounded-2xl bg-surface-container/70 backdrop-blur-xl border border-outline-variant/30 p-5 flex flex-col gap-3.5 shadow-md">
+<div class="flex items-center justify-between">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold tracking-wider text-xs">WARNA PENANDA</h3>
+<span class="font-caption text-caption text-primary-fixed-dim bg-surface-container-highest/60 px-2 py-0.5 rounded-md border border-outline-variant/30">Dipilih: Cyan</span>
+</div>
+<!-- Color Swatches Grid (Tactile Pills) -->
+<div class="grid grid-cols-4 sm:grid-cols-8 gap-3 pt-1">
+<!-- Teal / Cyan Active Swatch -->
+<button aria-label="Teal beacon color" class="relative h-11 rounded-full bg-teal-500 flex items-center justify-center ring-2 ring-primary-container ring-offset-2 ring-offset-surface shadow-[0_0_12px_rgba(0,242,254,0.5)] transition-transform active:scale-95">
+<span class="material-symbols-outlined text-on-surface font-bold text-[18px]" data-icon="check">check</span>
+</button>
+<!-- Blue Swatch -->
+<button aria-label="Blue beacon color" class="h-11 rounded-full bg-blue-600 hover:ring-2 hover:ring-blue-400 hover:ring-offset-1 hover:ring-offset-surface transition-all active:scale-95"></button>
+<!-- Orange Swatch -->
+<button aria-label="Orange beacon color" class="h-11 rounded-full bg-orange-600 hover:ring-2 hover:ring-orange-400 hover:ring-offset-1 hover:ring-offset-surface transition-all active:scale-95"></button>
+<!-- Pink Swatch -->
+<button aria-label="Pink beacon color" class="h-11 rounded-full bg-pink-600 hover:ring-2 hover:ring-pink-400 hover:ring-offset-1 hover:ring-offset-surface transition-all active:scale-95"></button>
+<!-- Purple Swatch -->
+<button aria-label="Purple beacon color" class="h-11 rounded-full bg-purple-600 hover:ring-2 hover:ring-purple-400 hover:ring-offset-1 hover:ring-offset-surface transition-all active:scale-95"></button>
+<!-- Green Swatch -->
+<button aria-label="Green beacon color" class="h-11 rounded-full bg-emerald-600 hover:ring-2 hover:ring-emerald-400 hover:ring-offset-1 hover:ring-offset-surface transition-all active:scale-95"></button>
+<!-- Amber Swatch -->
+<button aria-label="Amber beacon color" class="h-11 rounded-full bg-amber-700 hover:ring-2 hover:ring-amber-400 hover:ring-offset-1 hover:ring-offset-surface transition-all active:scale-95"></button>
+<!-- Slate Swatch -->
+<button aria-label="Slate beacon color" class="h-11 rounded-full bg-slate-600 hover:ring-2 hover:ring-slate-400 hover:ring-offset-1 hover:ring-offset-surface transition-all active:scale-95"></button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 pt-1">
+<span class="material-symbols-outlined text-[15px] text-primary-container" data-icon="info">info</span>
+        Warna ini menandai Anda di peta keluarga secara real-time.
+      </p>
+</section>
+<!-- Preferences & Privacy Grouped List Card -->
+<section class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant text-xs tracking-wider px-1">PENGATURAN &amp; RIWAYAT</span>
+<div class="rounded-2xl bg-surface-container/70 backdrop-blur-xl border border-outline-variant/30 overflow-hidden divide-y divide-outline-variant/20 shadow-md">
+<!-- Riwayat Lokasi Row -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant/30 text-left transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-variant/60 flex items-center justify-center text-primary-container group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">Riwayat lokasi</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">48 jam terakhir, bisa dihapus kapan saja</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-0.5 transition-transform text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+<!-- Notifikasi Row -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant/30 text-left transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-variant/60 flex items-center justify-center text-primary-container group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">Notifikasi</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Pemberitahuan event keluarga &amp; status baterai</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-0.5 transition-transform text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+<!-- Tempat Favorit (Geofence Alerts) -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-surface-variant/30 text-left transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-surface-variant/60 flex items-center justify-center text-primary-container group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="home_pin">home_pin</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">Tempat Tersimpan</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Rumah, Kantor, Sekolah (Radius aman)</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-0.5 transition-transform text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Account Details Section -->
+<section class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant text-xs tracking-wider px-1">AKUN</span>
+<!-- Current Connected Email Pill -->
+<div class="rounded-xl bg-surface-container/70 backdrop-blur-xl border border-outline-variant/30 px-4 py-3.5 flex items-center justify-between">
+<div class="flex items-center gap-2.5 overflow-hidden">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="mail">mail</span>
+<span class="font-body-md text-body-md text-on-surface truncate">suryayasaantariksa@gmail.com</span>
+</div>
+<span class="px-2 py-0.5 rounded text-caption font-caption bg-surface-variant text-on-surface-variant">Terverifikasi</span>
+</div>
+<!-- Keluar (Logout) Glass Button -->
+<button class="w-full py-3.5 px-4 rounded-xl bg-surface-container/70 hover:bg-surface-container-high/80 border border-outline-variant/30 font-label-md text-label-md text-error font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.99] shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="logout">logout</span>
+        Keluar
+      </button>
+<!-- Hapus Akun (Destructive Action Card) -->
+<button class="w-full py-3.5 px-4 rounded-xl bg-error-container/15 hover:bg-error-container/25 border border-error/20 font-label-md text-label-md text-error font-semibold flex items-center justify-between transition-all active:scale-[0.99]">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px]" data-icon="delete_forever">delete_forever</span>
+<span>Hapus akun</span>
+</div>
+<span class="material-symbols-outlined text-error/80 text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+<!-- Privacy Retention Policy Microcopy -->
+<p class="font-body-sm text-body-sm text-on-surface-variant/80 px-1 leading-relaxed">
+        Titik lokasi disimpan 48 jam lalu dihapus otomatis. Bila akun dihapus, data Anda dibuang tuntas dalam 30 hari.
+      </p>
+</section>
+</main>
+<!-- Docked Bottom Navigation Bar (Conforms to JSON Specification) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container-lowest/85 backdrop-blur-xl border-t border-outline-variant/30 shadow-2xl">
+<!-- Tab 1: Peta -->
+<a aria-label="Peta" class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="map">map</span>
+<span class="font-caption text-caption mt-0.5">Peta</span>
+</a>
+<!-- Tab 2: Circle -->
+<a aria-label="Circle" class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="group">group</span>
+<span class="font-caption text-caption mt-0.5">Circle</span>
+</a>
+<!-- Tab 3: Aktivitas -->
+<a aria-label="Aktivitas" class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 hover:text-primary transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+<span class="font-caption text-caption mt-0.5">Aktivitas</span>
+</a>
+<!-- Tab 4: Profil (Active Tab Matching Screen Intent) -->
+<a aria-current="page" aria-label="Profil" class="flex flex-col items-center justify-center text-primary-container drop-shadow-[0_0_8px_rgba(0,242,254,0.4)] active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="person" data-weight="fill" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-caption text-caption mt-0.5 font-bold">Profil</span>
+</a>
+</nav>
+</body></html>

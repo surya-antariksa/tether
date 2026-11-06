@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Ubah Nama & Warna Penanda</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#3a494b",
+            "on-secondary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#00dce6",
+            "outline": "#849495",
+            "on-secondary": "#003824",
+            "background": "#0f131c",
+            "inverse-on-surface": "#2c3039",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "secondary-fixed-dim": "#4edea3",
+            "on-tertiary-fixed": "#001f26",
+            "on-primary": "#00373a",
+            "surface-container-high": "#262a33",
+            "on-primary-fixed": "#002022",
+            "surface-variant": "#31353e",
+            "on-error": "#690005",
+            "tertiary": "#ecfaff",
+            "inverse-surface": "#dfe2ee",
+            "on-primary-fixed-variant": "#004f53",
+            "surface": "#0f131c",
+            "surface-container": "#1c2028",
+            "error": "#ffb4ab",
+            "primary-fixed": "#6ff6ff",
+            "on-secondary-container": "#00311f",
+            "on-error-container": "#ffdad6",
+            "on-surface": "#dfe2ee",
+            "on-tertiary-container": "#00697c",
+            "inverse-primary": "#00696f",
+            "primary-container": "#00f2fe",
+            "surface-container-highest": "#31353e",
+            "secondary": "#4edea3",
+            "error-container": "#93000a",
+            "surface-container-low": "#181c24",
+            "surface-bright": "#353942",
+            "tertiary-fixed": "#acedff",
+            "on-surface-variant": "#b9cacb",
+            "surface-dim": "#0f131c",
+            "on-primary-container": "#006a70",
+            "secondary-fixed": "#6ffbbe",
+            "on-background": "#dfe2ee",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface-container-lowest": "#0a0e16",
+            "primary": "#e0fdff",
+            "secondary-container": "#00a572",
+            "on-secondary-fixed": "#002113",
+            "tertiary-container": "#91e8ff",
+            "surface-tint": "#00dce6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.75rem",
+            "gutter": "1rem",
+            "space-lg": "1.25rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "caption": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "body-sm": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased font-body-md select-none min-h-screen flex justify-center items-end sm:items-center overflow-hidden">
+<!-- ========================================== -->
+<!-- BACKGROUND: Dimmed & Blurred Profil Screen -->
+<!-- ========================================== -->
+<div class="fixed inset-0 w-full h-full max-w-md mx-auto bg-surface-container-lowest overflow-hidden pointer-events-none filter blur-[3px] opacity-40 scale-[0.98] transition-transform duration-300">
+<!-- Mock TopAppBar in background -->
+<header class="flex justify-between items-center w-full px-4 h-14 border-b border-outline-variant/20 bg-surface/80 backdrop-blur-md">
+<span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+<h1 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">Profil</h1>
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</header>
+<!-- Mock Profile Content Canvas -->
+<div class="p-4 space-y-4">
+<div class="flex flex-col items-center justify-center py-6 bg-surface-container/60 rounded-xl border border-outline-variant/20">
+<div class="w-20 h-20 rounded-full bg-surface-container-high border-2 border-primary-container/40 flex items-center justify-center text-primary-container text-headline-xl font-headline-xl font-bold">
+          S
+        </div>
+<h2 class="mt-3 text-headline-md font-headline-md text-on-surface font-semibold">suryantariksa</h2>
+<span class="text-caption font-caption text-secondary">Circle Admin • Terhubung</span>
+</div>
+<div class="bg-surface-container/40 rounded-xl p-4 border border-outline-variant/15 space-y-3">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Nomor Telepon</span>
+<span class="text-body-sm font-body-sm text-on-surface">+62 812-3456-7890</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Circle Aktif</span>
+<span class="text-body-sm font-body-sm text-primary-container">Keluarga Sutomo</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-body-sm font-body-sm text-on-surface-variant">Berbagi Lokasi</span>
+<span class="text-body-sm font-body-sm text-secondary font-medium">Selalu Aktif</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Deep Obsidian Modal Scrim / Backdrop -->
+<div class="fixed inset-0 bg-surface-container-lowest/80 backdrop-blur-md z-40 transition-opacity"></div>
+<!-- ========================================== -->
+<!-- MODAL BOTTOM SHEET: Ubah Profil Publik Circle -->
+<!-- ========================================== -->
+<aside aria-label="Ubah Nama dan Warna Penanda Circle" class="fixed bottom-0 sm:bottom-auto w-full max-w-md z-50 bg-surface-container-low/95 backdrop-blur-2xl rounded-t-[28px] sm:rounded-[28px] border-t sm:border border-outline-variant/30 shadow-[0_-12px_40px_rgba(0,0,0,0.8)] sm:shadow-[0_20px_50px_rgba(0,0,0,0.9)] max-h-[813px] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom duration-300">
+<!-- Drag Handle / Grab Notch -->
+<div class="w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing">
+<div class="w-12 h-1.5 rounded-full bg-outline-variant/60 hover:bg-outline-variant transition-colors"></div>
+</div>
+<!-- Header Section -->
+<div class="flex items-center justify-between px-margin py-space-sm border-b border-outline-variant/20">
+<div>
+<h2 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">Ubah Profil Publik Circle</h2>
+<p class="text-caption font-caption text-on-surface-variant">Pengaturan identitas visual Anda di keluarga</p>
+</div>
+<button aria-label="Tutup modal" class="w-9 h-9 rounded-full bg-surface-container-high/60 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Scrollable Modal Content Canvas -->
+<div class="px-margin py-space-lg overflow-y-auto custom-scrollbar space-y-space-xl">
+<!-- Live Avatar Map Pin HUD Preview Bento -->
+<section class="flex flex-col items-center justify-center p-space-lg rounded-xl bg-surface-container/70 border border-outline-variant/25 relative overflow-hidden">
+<!-- Subtle Map Grid Texture Emulation -->
+<div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#3a494b_1px,transparent_1px)] [background-size:16px_16px]"></div>
+<!-- Radar / Beacon Ambient Circles -->
+<div class="relative flex items-center justify-center my-2">
+<!-- Outer Pulsing Halo Ring (Sync with current selected color) -->
+<div class="absolute w-28 h-28 rounded-full bg-primary-container/15 animate-ping duration-1000 opacity-70" id="halo-pulse"></div>
+<!-- Mid Glow Aura -->
+<div class="absolute w-24 h-24 rounded-full bg-primary-container/25 blur-md transition-all duration-300" id="marker-aura"></div>
+<!-- Solid Floating Avatar Pin -->
+<div class="relative w-16 h-16 rounded-full bg-surface-container-lowest border-2 border-primary-container shadow-[0_0_20px_rgba(0,242,254,0.5)] flex items-center justify-center z-10 transition-all duration-300" id="avatar-pin">
+<span class="text-headline-xl font-headline-xl font-extrabold text-on-surface">S</span>
+<!-- Contextual Real-time GPS Indicator -->
+<span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-surface-container-lowest border border-outline-variant/40 flex items-center justify-center" title="GPS Akurat">
+<span class="material-symbols-outlined text-secondary text-[13px]" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</span>
+</div>
+</div>
+<div class="mt-3 text-center z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-variant/80 border border-outline-variant/40 text-caption font-caption text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+            Pratinjau tampilan Anda di peta
+          </span>
+<p class="text-caption font-caption text-on-surface-variant mt-1">Muncul di radar peta semua anggota Circle real-time</p>
+</div>
+</section>
+<!-- Input Field: Nama Tampilan -->
+<section class="space-y-space-xs">
+<div class="flex justify-between items-center px-0.5">
+<label class="text-label-md font-label-md text-on-surface" for="display-name">Nama Tampilan</label>
+<span class="text-caption font-caption text-on-surface-variant tracking-wider" id="char-counter">13/24</span>
+</div>
+<div class="relative flex items-center">
+<div class="absolute left-3.5 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<input class="w-full h-12 pl-11 pr-11 bg-surface-container-high/50 hover:bg-surface-container-high/70 focus:bg-surface-container-high text-on-surface text-body-md font-body-md rounded-xl border border-outline-variant/40 focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline" id="display-name" maxlength="24" name="display-name" placeholder="Ketik nama Anda di Circle" type="text" value="suryantariksa"/>
+<button aria-label="Hapus nama" class="absolute right-3 w-6 h-6 rounded-full bg-surface-variant hover:bg-outline-variant/60 text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" id="btn-clear-name" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<div class="flex items-start gap-1.5 px-1 pt-1">
+<span class="material-symbols-outlined text-outline text-[15px] mt-0.5">info</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            Nama ini dilihat oleh semua anggota dalam Circle keluarga.
+          </p>
+</div>
+</section>
+<!-- Marker Color Picker Section -->
+<section class="space-y-space-sm">
+<div class="flex justify-between items-center px-0.5">
+<label class="text-label-md font-label-md text-on-surface">Pilih Warna Penanda di Peta</label>
+<span class="text-label-sm font-label-sm text-primary-container font-semibold" id="selected-color-name">Teal Cyan</span>
+</div>
+<!-- Horizontal Scrollable Color Chips Palette -->
+<div aria-label="Warna penanda di peta" class="flex items-center gap-3 overflow-x-auto py-2 px-1 custom-scrollbar" id="color-palette-container" role="radiogroup">
+<!-- 1. Teal / Cyan (Active Selected Default) -->
+<button aria-checked="true" class="color-chip group relative w-9 h-9 rounded-full bg-primary-container flex items-center justify-center shrink-0 ring-2 ring-primary ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#00f2fe" data-color-name="Teal Cyan" data-ring-class="border-primary-container shadow-[0_0_12px_rgba(0,242,254,0.6)]" role="radio" type="button">
+<span class="check-icon material-symbols-outlined text-on-primary-container text-[18px] font-bold">check</span>
+</button>
+<!-- 2. Electric Blue -->
+<button aria-checked="false" class="color-chip group relative w-9 h-9 rounded-full bg-tertiary-fixed-dim flex items-center justify-center shrink-0 ring-0 ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#4cd7f6" data-color-name="Electric Blue" data-ring-class="border-tertiary-fixed-dim shadow-[0_0_12px_rgba(76,215,246,0.6)]" role="radio" type="button">
+<span class="check-icon hidden material-symbols-outlined text-on-tertiary text-[18px] font-bold">check</span>
+</button>
+<!-- 3. Neon Emerald Green -->
+<button aria-checked="false" class="color-chip group relative w-9 h-9 rounded-full bg-secondary flex items-center justify-center shrink-0 ring-0 ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#4edea3" data-color-name="Neon Green" data-ring-class="border-secondary shadow-[0_0_12px_rgba(78,222,163,0.6)]" role="radio" type="button">
+<span class="check-icon hidden material-symbols-outlined text-on-secondary text-[18px] font-bold">check</span>
+</button>
+<!-- 4. Electric Neon Orange -->
+<button aria-checked="false" class="color-chip group relative w-9 h-9 rounded-full bg-[#ff8d5c] flex items-center justify-center shrink-0 ring-0 ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#ff8d5c" data-color-name="Neon Orange" data-ring-class="border-error-container shadow-[0_0_12px_rgba(255,141,92,0.6)]" role="radio" type="button">
+<span class="check-icon hidden material-symbols-outlined text-surface-container-lowest text-[18px] font-bold">check</span>
+</button>
+<!-- 5. Vivid Magenta -->
+<button aria-checked="false" class="color-chip group relative w-9 h-9 rounded-full bg-[#f43f5e] flex items-center justify-center shrink-0 ring-0 ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#f43f5e" data-color-name="Vivid Magenta" data-ring-class="border-error shadow-[0_0_12px_rgba(244,63,94,0.6)]" role="radio" type="button">
+<span class="check-icon hidden material-symbols-outlined text-surface-container-lowest text-[18px] font-bold">check</span>
+</button>
+<!-- 6. Violet Purple -->
+<button aria-checked="false" class="color-chip group relative w-9 h-9 rounded-full bg-[#a855f7] flex items-center justify-center shrink-0 ring-0 ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#a855f7" data-color-name="Violet Purple" data-ring-class="border-tertiary-fixed shadow-[0_0_12px_rgba(168,85,247,0.6)]" role="radio" type="button">
+<span class="check-icon hidden material-symbols-outlined text-surface-container-lowest text-[18px] font-bold">check</span>
+</button>
+<!-- 7. Dark Amber Gold -->
+<button aria-checked="false" class="color-chip group relative w-9 h-9 rounded-full bg-[#fbbf24] flex items-center justify-center shrink-0 ring-0 ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#fbbf24" data-color-name="Amber Gold" data-ring-class="border-secondary-fixed shadow-[0_0_12px_rgba(251,191,36,0.6)]" role="radio" type="button">
+<span class="check-icon hidden material-symbols-outlined text-surface-container-lowest text-[18px] font-bold">check</span>
+</button>
+<!-- 8. Slate Blue -->
+<button aria-checked="false" class="color-chip group relative w-9 h-9 rounded-full bg-[#64748b] flex items-center justify-center shrink-0 ring-0 ring-offset-2 ring-offset-surface-container-low transition-transform active:scale-90" data-color-hex="#64748b" data-color-name="Slate Blue" data-ring-class="border-outline shadow-[0_0_12px_rgba(100,116,139,0.6)]" role="radio" type="button">
+<span class="check-icon hidden material-symbols-outlined text-surface-container-lowest text-[18px] font-bold">check</span>
+</button>
+</div>
+</section>
+<!-- Privacy & Realtime Sync Notice Microcopy -->
+<div class="flex items-start gap-2 p-3 rounded-lg bg-surface-container/40 border border-outline-variant/15">
+<span class="material-symbols-outlined text-primary-container text-[18px] shrink-0 mt-0.5">sync</span>
+<p class="text-caption font-caption text-on-surface-variant leading-relaxed">
+          Perubahan nama dan warna akan langsung terupdate ke semua layar peta Circle.
+        </p>
+</div>
+</div>
+<!-- Bottom Action Footer Buttons -->
+<div class="px-margin pt-space-sm pb-space-lg bg-surface-container-low/90 border-t border-outline-variant/20 flex flex-col gap-2.5">
+<!-- Primary Save Action Button -->
+<button class="w-full h-12 rounded-full bg-primary-container text-on-primary-container font-headline-md text-headline-md font-bold flex items-center justify-center gap-2 shadow-[0_0_24px_-2px_rgba(0,242,254,0.4)] hover:shadow-[0_0_28px_rgba(0,242,254,0.6)] active:scale-95 transition-all" id="btn-save" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+        Simpan Perubahan
+      </button>
+<!-- Secondary Cancel Button -->
+<button class="w-full h-11 rounded-full bg-surface-variant/40 hover:bg-surface-variant/70 text-on-surface text-body-md font-body-md font-medium flex items-center justify-center transition-colors active:scale-95" id="btn-cancel" type="button">
+        Batal
+      </button>
+</div>
+</aside>
+<!-- Lightweight Inline Micro-Interactions Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameInput = document.getElementById('display-name');
+      const clearBtn = document.getElementById('btn-clear-name');
+      const charCounter = document.getElementById('char-counter');
+      const avatarPin = document.getElementById('avatar-pin');
+      const avatarAura = document.getElementById('marker-aura');
+      const haloPulse = document.getElementById('halo-pulse');
+      const selectedColorLabel = document.getElementById('selected-color-name');
+      const colorChips = document.querySelectorAll('.color-chip');
+
+      // Update Character Counter and Clear Button visibility
+      function handleNameChange() {
+        const length = nameInput.value.length;
+        charCounter.textContent = `${length}/24`;
+        if (length === 0) {
+          clearBtn.style.opacity = '0.3';
+          clearBtn.style.pointerEvents = 'none';
+        } else {
+          clearBtn.style.opacity = '1';
+          clearBtn.style.pointerEvents = 'auto';
+        }
+      }
+
+      nameInput.addEventListener('input', handleNameChange);
+      
+      clearBtn.addEventListener('click', () => {
+        nameInput.value = '';
+        handleNameChange();
+        nameInput.focus();
+      });
+
+      // Handle Color Picker Interaction
+      colorChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          // Deselect previous
+          colorChips.forEach(c => {
+            c.setAttribute('aria-checked', 'false');
+            c.classList.remove('ring-2', 'ring-primary');
+            c.classList.add('ring-0');
+            const icon = c.querySelector('.check-icon');
+            if (icon) icon.classList.add('hidden');
+          });
+
+          // Select current
+          chip.setAttribute('aria-checked', 'true');
+          chip.classList.remove('ring-0');
+          chip.classList.add('ring-2', 'ring-primary');
+          const check = chip.querySelector('.check-icon');
+          if (check) check.classList.remove('hidden');
+
+          const colorName = chip.getAttribute('data-color-name');
+          const colorHex = chip.getAttribute('data-color-hex');
+
+          selectedColorLabel.textContent = colorName;
+
+          // Update Preview Pin Border & Glow
+          avatarPin.style.borderColor = colorHex;
+          avatarPin.style.boxShadow = `0 0 20px ${colorHex}80`;
+          avatarAura.style.backgroundColor = `${colorHex}40`;
+          haloPulse.style.backgroundColor = `${colorHex}25`;
+        });
+      });
+
+      // Simple mock for save action
+      const saveBtn = document.getElementById('btn-save');
+      saveBtn.addEventListener('click', () => {
+        const originalContent = saveBtn.innerHTML;
+        saveBtn.innerHTML = `<span class="material-symbols-outlined animate-spin text-[20px]">sync</span> Tersimpan...`;
+        setTimeout(() => {
+          saveBtn.innerHTML = originalContent;
+        }, 1200);
+      });
+    });
+  </script>
+</body></html>

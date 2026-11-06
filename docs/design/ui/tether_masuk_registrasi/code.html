@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tether - Autentikasi</title>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus Jakarta Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-fixed": "#acedff",
+            "background": "#0f131c",
+            "on-secondary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#00dce6",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "error": "#ffb4ab",
+            "inverse-primary": "#00696f",
+            "surface-container-lowest": "#0a0e16",
+            "on-tertiary": "#003640",
+            "surface-bright": "#353942",
+            "on-primary": "#00373a",
+            "secondary": "#4edea3",
+            "on-surface-variant": "#b9cacb",
+            "on-tertiary-container": "#00697c",
+            "error-container": "#93000a",
+            "inverse-on-surface": "#2c3039",
+            "outline": "#849495",
+            "on-primary-fixed-variant": "#004f53",
+            "inverse-surface": "#dfe2ee",
+            "surface-dim": "#0f131c",
+            "outline-variant": "#3a494b",
+            "surface-variant": "#31353e",
+            "surface": "#0f131c",
+            "secondary-container": "#00a572",
+            "on-secondary-container": "#00311f",
+            "surface-container": "#1c2028",
+            "surface-container-low": "#181c24",
+            "on-background": "#dfe2ee",
+            "secondary-fixed-dim": "#4edea3",
+            "tertiary-container": "#91e8ff",
+            "on-secondary-fixed": "#002113",
+            "secondary-fixed": "#6ffbbe",
+            "primary-fixed": "#6ff6ff",
+            "on-tertiary-fixed": "#001f26",
+            "on-secondary": "#003824",
+            "surface-tint": "#00dce6",
+            "surface-container-highest": "#31353e",
+            "primary-container": "#00f2fe",
+            "on-error-container": "#ffdad6",
+            "primary": "#e0fdff",
+            "on-primary-fixed": "#002022",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "tertiary": "#ecfaff",
+            "surface-container-high": "#262a33",
+            "on-primary-container": "#006a70",
+            "on-surface": "#dfe2ee",
+            "on-error": "#690005"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xl": "1.75rem",
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem",
+            "space-lg": "1.25rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "headline-xl": ["Plus Jakarta Sans"],
+            "caption": ["Inter"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Inter"],
+            "body-md": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-xl": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "caption": ["10px", { "lineHeight": "12px", "fontWeight": "500" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    
+    /* Radial Beacon Animation */
+    @keyframes pulseRing {
+      0% { transform: scale(0.92); opacity: 0.55; }
+      50% { transform: scale(1.08); opacity: 0.9; }
+      100% { transform: scale(0.92); opacity: 0.55; }
+    }
+    .beacon-pulse {
+      animation: pulseRing 4s ease-in-out infinite;
+    }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .spin-slow {
+      animation: spinSlow 20s linear infinite;
+    }
+    .spin-reverse {
+      animation: spinSlow 28s linear infinite reverse;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col justify-between items-center selection:bg-primary-container selection:text-surface-container-lowest relative overflow-x-hidden antialiased">
+<!-- Ambient Obsidian Background Gradients -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<!-- Top Cyan Ambient Glow -->
+<div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[420px] h-[420px] bg-primary-container/15 rounded-full blur-[110px]"></div>
+<!-- Soft Bottom Teal/Slate Hue -->
+<div class="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[520px] h-[360px] bg-secondary-container/10 rounded-full blur-[130px]"></div>
+</div>
+<!-- Mobile Device Shell Frame -->
+<div class="w-full max-w-md mx-auto min-h-screen flex flex-col justify-between relative z-10 px-margin py-6">
+<!-- Top Window Bar Decoration (matching tether macOS/App header) -->
+<header class="w-full flex items-center justify-between pt-1 pb-4">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-error/70 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-secondary-fixed-dim/70 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-secondary-container/80 inline-block"></span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant/70 tracking-widest lowercase">tether</span>
+<div class="w-12 flex justify-end items-center">
+<span class="inline-flex items-center text-on-surface-variant/60 hover:text-primary-container transition-colors cursor-pointer" title="Bantuan Privasi">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</span>
+</div>
+</header>
+<!-- Main Content Container -->
+<main class="w-full flex flex-col items-center my-auto py-2">
+<!-- Tether Quantum Beacon Logo -->
+<div class="relative flex items-center justify-center mb-5">
+<!-- Diffuse Backing Glow -->
+<div class="absolute w-28 h-28 bg-primary-container/25 rounded-full blur-2xl beacon-pulse"></div>
+<!-- Glass Badge Icon Base -->
+<div class="relative w-20 h-20 rounded-[22px] bg-gradient-to-b from-surface-container-high/90 to-surface-container-lowest/90 border border-outline-variant/50 backdrop-blur-2xl shadow-[0_12px_32px_-4px_rgba(0,0,0,0.8)] flex items-center justify-center overflow-hidden p-3 group">
+<!-- Subtle Inner Shine -->
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none"></div>
+<!-- Rotating Quantum Rings (CSS SVG) -->
+<svg class="w-full h-full spin-slow relative z-10" fill="none" viewbox="0 0 100 100">
+<ellipse cx="50" cy="50" rx="38" ry="17" stroke="#00f2fe" stroke-opacity="0.85" stroke-width="2.5" transform="rotate(-30 50 50)"></ellipse>
+<ellipse cx="50" cy="50" rx="38" ry="17" stroke="#4edea3" stroke-opacity="0.75" stroke-width="2" transform="rotate(35 50 50)"></ellipse>
+<ellipse cx="50" cy="50" rx="34" ry="14" stroke="#6ff6ff" stroke-opacity="0.6" stroke-width="1.5" transform="rotate(85 50 50)"></ellipse>
+</svg>
+<!-- Core Warm Amber Family Node (as seen in original tether beacon) -->
+<div class="absolute z-20 w-3.5 h-3.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-300 shadow-[0_0_14px_#f59e0b] border border-amber-200/90"></div>
+</div>
+</div>
+<!-- Brand Headlines -->
+<div class="text-center mb-6 space-y-1">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight font-bold">Tether</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px] mx-auto leading-relaxed">
+          Berbagi lokasi dengan keluarga, dengan tenang.
+        </p>
+</div>
+<!-- Segmented Control Glass Tab (Masuk / Daftar) -->
+<div class="w-full p-1 bg-surface-container-low/90 border border-outline-variant/30 rounded-xl backdrop-blur-xl mb-4 flex items-center shadow-inner relative">
+<button class="flex-1 py-2.5 rounded-lg font-label-md text-label-md text-center transition-all duration-200 text-on-surface-variant hover:text-on-surface focus:outline-none" id="tab-masuk" onclick="switchAuthMode('masuk')" type="button">
+          Masuk
+        </button>
+<button class="flex-1 py-2.5 rounded-lg font-label-md text-label-md text-center transition-all duration-200 bg-surface-container-high/90 text-on-surface shadow-md border border-white/10 font-bold focus:outline-none" id="tab-daftar" onclick="switchAuthMode('daftar')" type="button">
+          Daftar
+        </button>
+</div>
+<!-- Glassmorphic Auth Form Container -->
+<div class="w-full bg-surface-container/75 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_16px_36px_-6px_rgba(0,0,0,0.65)] p-4 sm:p-5 relative transition-all duration-300">
+<form class="space-y-3" id="auth-form" onsubmit="event.preventDefault();">
+<!-- Field: Nama yang dilihat keluarga (Daftar Mode Only) -->
+<div class="space-y-1.5 transition-all duration-200" id="row-name">
+<label class="font-label-sm text-label-sm text-on-surface-variant/90 flex items-center justify-between px-1">
+<span>Nama Panggilan</span>
+<span class="text-primary-container text-[10px] font-caption">Tampil di peta keluarga</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/70 text-[20px] pointer-events-none">person</span>
+<input autocomplete="name" class="w-full bg-surface-container-low/90 text-on-surface placeholder:text-on-surface-variant/50 font-body-md text-body-md pl-11 pr-4 py-3 rounded-xl border border-outline-variant/40 focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-colors" id="input-name" placeholder="Nama yang dilihat keluarga" type="text"/>
+</div>
+</div>
+<!-- Field: Email -->
+<div class="space-y-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant/90 px-1 block">
+              Email
+            </label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/70 text-[20px] pointer-events-none">mail</span>
+<input autocomplete="email" class="w-full bg-surface-container-low/90 text-on-surface placeholder:text-on-surface-variant/50 font-body-md text-body-md pl-11 pr-4 py-3 rounded-xl border border-outline-variant/40 focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-colors" id="input-email" placeholder="nama@contoh.com" required="" type="email"/>
+</div>
+</div>
+<!-- Field: Kata Sandi -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between px-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant/90">
+                Kata Sandi
+              </label>
+<a class="hidden font-caption text-caption text-primary-container hover:underline transition-all" href="#" id="link-forgot-pw">
+                Lupa sandi?
+              </a>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/70 text-[20px] pointer-events-none">lock</span>
+<input autocomplete="current-password" class="w-full bg-surface-container-low/90 text-on-surface placeholder:text-on-surface-variant/50 font-body-md text-body-md pl-11 pr-11 py-3 rounded-xl border border-outline-variant/40 focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-colors" id="input-password" placeholder="Minimal 8 karakter" required="" type="password"/>
+<button class="absolute right-3 text-on-surface-variant/70 hover:text-on-surface p-1 rounded-lg focus:outline-none transition-colors" onclick="togglePasswordVisibility()" title="Tampilkan sandi" type="button">
+<span class="material-symbols-outlined text-[19px]" id="pw-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Action Button (Cyan Radiant CTA) -->
+<div class="pt-2">
+<button class="w-full py-3.5 px-6 rounded-xl font-headline-md text-headline-md font-bold bg-primary-container text-surface-container-lowest hover:brightness-110 active:scale-[0.985] shadow-[0_0_24px_rgba(0,242,254,0.38)] transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer" id="submit-cta" type="submit">
+<span id="cta-label">Buat akun</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Divider OR -->
+<div class="relative my-4 flex items-center justify-center">
+<div class="border-t border-outline-variant/30 w-full"></div>
+<span class="bg-surface-container px-3 font-caption text-caption text-on-surface-variant/70 uppercase tracking-widest absolute">atau</span>
+</div>
+<!-- Secondary SSO Option (Google / Family ID) -->
+<button class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high/60 hover:bg-surface-container-high border border-outline-variant/40 hover:border-outline-variant/80 text-on-surface font-label-md text-label-md flex items-center justify-center gap-3 transition-colors active:scale-[0.99]" type="button">
+<svg class="w-4 h-4 shrink-0" viewbox="0 0 24 24">
+<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.15z" fill="#4285F4"></path>
+<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.36 7.33 24 12 24z" fill="#34A853"></path>
+<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.94 0 12c0 2.06.46 3.84 1.26 5.42l4.02-3.15z" fill="#FBBC05"></path>
+<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.25 2.64 1.26 6.58l4.02 3.55C6.23 6.85 8.88 4.75 12 4.75z" fill="#EA4335"></path>
+</svg>
+<span class="tracking-tight">Lanjutkan dengan Google</span>
+</button>
+</div>
+<!-- Trust Badge & End-to-End Encryption Note -->
+<div class="mt-4 flex items-center justify-center gap-2 text-on-surface-variant/75 px-2">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+<span class="font-caption text-caption text-center">
+          Terenkripsi E2E • Lokasi privat hanya dalam Circle
+        </span>
+</div>
+</main>
+<!-- Footer Terms & Microcopy -->
+<footer class="w-full text-center pt-3 pb-1">
+<p class="font-caption text-caption text-on-surface-variant/50 max-w-xs mx-auto leading-normal">
+        Dengan melanjutkan, Anda menyetujui 
+        <a class="text-on-surface-variant/80 hover:text-primary-container underline transition-colors" href="#">Ketentuan Layanan</a> 
+        dan 
+        <a class="text-on-surface-variant/80 hover:text-primary-container underline transition-colors" href="#">Kebijakan Privasi</a> Tether.
+      </p>
+</footer>
+</div>
+<!-- Interactive State Script -->
+<script>
+    let currentMode = 'daftar';
+
+    function switchAuthMode(mode) {
+      currentMode = mode;
+      const tabMasuk = document.getElementById('tab-masuk');
+      const tabDaftar = document.getElementById('tab-daftar');
+      const rowName = document.getElementById('row-name');
+      const submitCta = document.getElementById('cta-label');
+      const linkForgot = document.getElementById('link-forgot-pw');
+
+      if (mode === 'masuk') {
+        // Tab styling update
+        tabMasuk.className = "flex-1 py-2.5 rounded-lg font-label-md text-label-md text-center transition-all duration-200 bg-surface-container-high/90 text-on-surface shadow-md border border-white/10 font-bold focus:outline-none";
+        tabDaftar.className = "flex-1 py-2.5 rounded-lg font-label-md text-label-md text-center transition-all duration-200 text-on-surface-variant hover:text-on-surface focus:outline-none";
+
+        // Form adjustments
+        rowName.style.display = 'none';
+        submitCta.textContent = 'Masuk';
+        linkForgot.classList.remove('hidden');
+      } else {
+        // Tab styling update
+        tabDaftar.className = "flex-1 py-2.5 rounded-lg font-label-md text-label-md text-center transition-all duration-200 bg-surface-container-high/90 text-on-surface shadow-md border border-white/10 font-bold focus:outline-none";
+        tabMasuk.className = "flex-1 py-2.5 rounded-lg font-label-md text-label-md text-center transition-all duration-200 text-on-surface-variant hover:text-on-surface focus:outline-none";
+
+        // Form adjustments
+        rowName.style.display = 'block';
+        submitCta.textContent = 'Buat akun';
+        linkForgot.classList.add('hidden');
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const pwInput = document.getElementById('input-password');
+      const icon = document.getElementById('pw-icon');
+      if (pwInput.type === 'password') {
+        pwInput.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        pwInput.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    }
+  </script>
+</body></html>

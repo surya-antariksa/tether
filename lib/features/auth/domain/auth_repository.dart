@@ -39,5 +39,8 @@ abstract interface class AuthRepository {
 
   Future<void> signIn({required String email, required String password});
 
+  /// Mengirim tautan pemulihan kata sandi ke email pengguna.
+  Future<void> resetPassword({required String email});
+
   Future<void> signOut();
 }

@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/features/auth/domain/auth_repository.dart';
+import 'package:tether/features/auth/presentation/auth_strings.dart';
+import 'package:tether/features/auth/presentation/session_verify_dialog.dart';
 import 'package:tether/features/map/presentation/map_tab_page.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../support/fakes.dart';
 import '../../support/pump_app.dart';
@@ -67,8 +70,33 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(auth.calls, ['signIn:rina@contoh.com']);
+    // Sesudah masuk lewat formulir: konfirmasi sesi dulu, lalu peta.
+    expect(find.byType(SessionVerifyDialog), findsOneWidget);
+    expect(find.byType(MapTabPage), findsNothing);
+    await tester.tap(find.text(AuthStrings.confirmContinue));
+    await tester.pumpAndSettle();
     expect(find.byType(MapTabPage), findsOneWidget);
   });
+
+  testWidgets(
+    'konfirmasi sesi: Ganti Akun / Batal keluar dan kembali ke auth',
+    (tester) async {
+      final auth = FakeAuthRepository();
+      await pumpTetherApp(tester, auth: auth);
+      await tester.enterText(emailField, 'rina@contoh.com');
+      await tester.enterText(passwordField, 'rahasia123');
+      await tester.tap(submitSignIn);
+      await tester.pumpAndSettle();
+      expect(find.byType(SessionVerifyDialog), findsOneWidget);
+
+      await tester.tap(find.text(AuthStrings.confirmSwitch));
+      await tester.pumpAndSettle();
+      expect(auth.calls, contains('signOut'));
+      expect(find.byType(SessionVerifyDialog), findsNothing);
+      expect(find.text(AuthStrings.modeSignIn), findsWidgets);
+      expect(find.byType(MapTabPage), findsNothing);
+    },
+  );
 
   testWidgets('daftar meminta nama 1..40 dan mengirim display_name', (
     tester,
@@ -94,6 +122,8 @@ void main() {
     await tester.tap(submitSignUp);
     await tester.pumpAndSettle();
     expect(auth.lastSignUp?['displayName'], '  Rina Wati  ');
+    await tester.tap(find.text(AuthStrings.confirmContinue));
+    await tester.pumpAndSettle();
     expect(find.byType(MapTabPage), findsOneWidget);
   });
 
@@ -148,40 +178,66 @@ void main() {
       await tester.tap(submitSignIn);
       await tester.pumpAndSettle();
       expect(shownText('rina@contoh.com'), findsNothing, reason: '$k');
-      expect(
-        find.byIcon(CupertinoIcons.exclamationmark_circle_fill),
-        findsOneWidget,
-        reason: '$k',
-      );
+      expect(find.byIcon(Symbols.error), findsOneWidget, reason: '$k');
       // Bongkar pohon agar tes berikutnya mulai dari nol.
       await tester.pumpWidget(const SizedBox());
     }
   });
 
-  testWidgets('memproses: ikon aktivitas tampil dan tombol nonaktif', (
-    tester,
-  ) async {
-    final handle = tester.ensureSemantics();
-    final auth = FakeAuthRepository()..gate = Completer<void>();
-    await pumpTetherApp(tester, auth: auth);
+  testWidgets(
+    'memproses: pop-up verifikasi langsung tampil, tombol tanpa putaran',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      final auth = FakeAuthRepository()..gate = Completer<void>();
+      await pumpTetherApp(tester, auth: auth);
 
-    await tester.enterText(emailField, 'rina@contoh.com');
-    await tester.enterText(passwordField, 'rahasia123');
-    await tester.tap(submitSignIn);
-    await tester.pump();
+      await tester.enterText(emailField, 'rina@contoh.com');
+      await tester.enterText(passwordField, 'rahasia123');
+      await tester.tap(submitSignIn);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
-    final button = tester.widget<CupertinoButton>(
-      find.byType(CupertinoButton).last,
-    );
-    expect(button.onPressed, isNull);
-    expect(find.bySemanticsLabel('Memproses'), findsOneWidget);
+      // Pop-up verifikasi tampil selagi masuk berjalan.
+      expect(find.byType(SessionVerifyDialog), findsOneWidget);
+      expect(find.text(AuthStrings.verifying), findsOneWidget);
+      expect(find.text(AuthStrings.stepCredentials), findsOneWidget);
+      expect(find.text(AuthStrings.confirmContinue), findsNothing);
+      // Tombol Masuk di halaman tidak menampilkan indikator putar.
+      final submit = find.descendant(
+        of: find.byType(CupertinoButton),
+        matching: find.byType(CupertinoActivityIndicator),
+      );
+      expect(submit, findsNothing);
+      expect(find.bySemanticsLabel('Memproses'), findsNothing);
 
-    auth.gate!.complete();
-    await tester.pumpAndSettle();
-    expect(find.byType(MapTabPage), findsOneWidget);
-    handle.dispose();
-  });
+      auth.gate!.complete();
+      await tester.pumpAndSettle();
+      // Sesudah masuk: langkah selesai, akun dan tombol lanjut tampil.
+      expect(find.text(AuthStrings.confirmReady), findsOneWidget);
+      expect(find.text(AuthStrings.confirmContinue), findsOneWidget);
+      await tester.tap(find.text(AuthStrings.confirmContinue));
+      await tester.pumpAndSettle();
+      expect(find.byType(SessionVerifyDialog), findsNothing);
+      expect(find.byType(MapTabPage), findsOneWidget);
+      handle.dispose();
+    },
+  );
+
+  testWidgets(
+    'masuk gagal: pop-up tertutup dan pesan galat tampil di halaman',
+    (tester) async {
+      final auth = FakeAuthRepository()
+        ..failure = const AuthFailure(AuthFailureKind.invalidCredentials);
+      await pumpTetherApp(tester, auth: auth);
+      await tester.enterText(emailField, 'rina@contoh.com');
+      await tester.enterText(passwordField, 'salahsemua');
+      await tester.tap(submitSignIn);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SessionVerifyDialog), findsNothing);
+      expect(find.text('Email atau kata sandi tidak cocok.'), findsOneWidget);
+    },
+  );
 
   testWidgets('hanya satu tombol utama (filled) di halaman auth', (
     tester,
@@ -196,7 +252,10 @@ void main() {
       (w) =>
           w is Image &&
           w.image is AssetImage &&
-          (w.image as AssetImage).assetName == 'assets/branding/app_icon.png',
+          const {
+            'assets/branding/app_icon.png',
+            'assets/branding/app_icon_dark.png',
+          }.contains((w.image as AssetImage).assetName),
     );
     expect(imgFinder, findsOneWidget);
   });
@@ -234,10 +293,36 @@ void main() {
             )
             .first,
       );
+      await tester.ensureVisible(submitSignUp);
+      await tester.pumpAndSettle();
       await tester.tap(submitSignUp);
       await tester.pumpAndSettle();
+      // Kembali ke atas: kolom nama di luar area bangun saat di bawah.
+      await tester.scrollUntilVisible(
+        find.text('Nama tidak boleh kosong.'),
+        -200,
+        scrollable: find
+            .descendant(
+              of: find.byType(ListView),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
       expect(find.text('Nama tidak boleh kosong.'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('mengetuk Lupa sandi? membuka ForgotPasswordSheet', (
+    tester,
+  ) async {
+    final auth = FakeAuthRepository();
+    await pumpTetherApp(tester, auth: auth);
+
+    expect(find.text(AuthStrings.forgotPasswordLink), findsOneWidget);
+    await tester.tap(find.text(AuthStrings.forgotPasswordLink));
+    await tester.pumpAndSettle();
+
+    expect(find.text(AuthStrings.forgotPasswordTitle), findsOneWidget);
+  });
 }

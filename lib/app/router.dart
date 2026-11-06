@@ -12,6 +12,7 @@ import '../features/circle/presentation/circle_tab_page.dart';
 import '../features/location_tracking/presentation/spike_page.dart';
 import '../features/map/map_routes.dart';
 import '../features/map/presentation/map_tab_page.dart';
+import '../features/auth/data/session_confirm.dart';
 import '../features/profile/presentation/profile_tab_page.dart';
 import '../features/profile/profile_routes.dart';
 import '../features/tracking/tracking_routes.dart';
@@ -20,16 +21,24 @@ import 'routes.dart';
 
 /// Belum masuk -> /auth; sudah masuk -> /. Halaman dev (/dev/...) hanya ada
 /// di mode debug dan tidak dipaksa ke /auth (spike masuk anonim sendiri).
-String? authRedirect({required bool signedIn, required String path}) {
+String? authRedirect({
+  required bool signedIn,
+  required String path,
+  bool confirmPending = false,
+}) {
   if (kDebugMode && path.startsWith('/dev/')) return null;
-  if (path == AppRoutes.auth) return signedIn ? AppRoutes.map : null;
-  return signedIn ? null : AppRoutes.auth;
+  if (!signedIn) return path == AppRoutes.auth ? null : AppRoutes.auth;
+  // Baru masuk lewat formulir: tetap di /auth selama pop-up verifikasi sesi
+  // terbuka; sesudah "Lanjutkan" penanda dibersihkan dan jatuh ke peta.
+  if (path == AppRoutes.auth) return confirmPending ? null : AppRoutes.map;
+  return null;
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
   // Auth gate memicu evaluasi ulang redirect saat status masuk berubah.
   final refresh = ValueNotifier<int>(0);
   ref.listen(currentUserIdProvider, (_, _) => refresh.value++);
+  ref.listen(sessionConfirmProvider, (_, _) => refresh.value++);
 
   final router = GoRouter(
     navigatorKey: rootNavigatorKey,
@@ -38,6 +47,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) => authRedirect(
       signedIn: ref.read(currentUserIdProvider) != null,
       path: state.uri.path,
+      confirmPending: ref.read(sessionConfirmProvider),
     ),
     routes: [
       GoRoute(path: AppRoutes.auth, builder: (_, _) => const AuthPage()),

@@ -1,3 +1,5 @@
+import 'dart:ui' show Size;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/app/app.dart';
@@ -16,6 +18,9 @@ Future<void> pumpTetherApp(
   FakeProfileRepository? profile,
   double textScale = 1.0,
 }) async {
+  tester.view.physicalSize = const Size(800, 1000);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.reset);
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
   await tester.pumpWidget(

@@ -44,6 +44,12 @@ class FakeAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> resetPassword({required String email}) async {
+    calls.add('resetPassword:$email');
+    await _maybeFail();
+  }
+
+  @override
   Future<SignUpOutcome> signUp({
     required String email,
     required String password,

@@ -11,6 +11,30 @@ import '../support/fakes.dart';
 import '../support/pump_app.dart';
 
 void main() {
+  group('konfirmasi sesi', () {
+    test('baru masuk: tetap di /auth selama pop-up verifikasi terbuka', () {
+      expect(
+        authRedirect(
+          signedIn: true,
+          path: AppRoutes.auth,
+          confirmPending: true,
+        ),
+        isNull,
+      );
+    });
+
+    test('tanpa penanda: sudah masuk di /auth kembali ke peta', () {
+      expect(authRedirect(signedIn: true, path: AppRoutes.auth), AppRoutes.map);
+    });
+
+    test('belum masuk: penanda diabaikan, tetap ke /auth', () {
+      expect(
+        authRedirect(signedIn: false, path: '/', confirmPending: true),
+        AppRoutes.auth,
+      );
+    });
+  });
+
   group('authRedirect', () {
     test('belum masuk -> /auth, kecuali sudah di /auth', () {
       expect(authRedirect(signedIn: false, path: '/'), '/auth');

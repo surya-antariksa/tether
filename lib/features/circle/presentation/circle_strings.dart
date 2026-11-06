@@ -3,6 +3,8 @@ import '../domain/circle_error.dart';
 
 /// Teks UI fitur Circle (bahasa Indonesia).
 abstract final class CircleStrings {
+  static const subtitle = 'Kelola lingkar aman keluarga & perangkat';
+  static const activeBadge = 'Aktif';
   static const title = 'Circle';
 
   // Keadaan kosong
@@ -75,6 +77,12 @@ abstract final class CircleStrings {
       'Dia tidak akan lagi melihat atau dilihat di Circle ini.';
 
   // Gabung
+  static const scanQr = 'Pindai QR undangan';
+  static const scanTitle = 'Pindai QR';
+  static const scanHint = 'Arahkan kamera ke QR undangan Circle.';
+  static const scanInvalid = 'QR ini bukan undangan Tether. Coba QR lain.';
+  static const scanError =
+      'Kamera tidak bisa dibuka. Izinkan akses kamera di pengaturan, atau ketik kode manual.';
   static const joinTitle = 'Gabung dengan kode';
   static const joinHint = 'Masukkan kode 6 karakter dari keluargamu.';
   static const codeLabel = 'Kode undangan';

@@ -136,7 +136,10 @@ void main() {
         );
         await pumpCircleApp(tester, repo: repo);
 
-        expect(find.text('Berbagi lokasi'), findsNWidgets(3)); // 2 status + baris sakelar
+        expect(
+          find.text('Berbagi lokasi'),
+          findsNWidgets(3),
+        ); // 2 status + baris sakelar
         expect(find.text('Berbagi lokasi dimatikan'), findsOneWidget);
         expect(find.text('Menjeda berbagi lokasi'), findsNothing);
       },
@@ -154,7 +157,9 @@ void main() {
   });
 
   group('sakelar berbagi', () {
-    testWidgets('sakelar mengikuti status berbagi diri sendiri', (tester) async {
+    testWidgets('sakelar mengikuti status berbagi diri sendiri', (
+      tester,
+    ) async {
       final repo = FakeCircleRepository(
         circles: [keluarga],
         members: {
@@ -210,8 +215,10 @@ void main() {
       await tester.tap(sw(value: true));
       await tester.pumpAndSettle();
 
-      expect(inDialog('Tidak bisa terhubung. Periksa koneksi internet kamu.'),
-          findsOneWidget);
+      expect(
+        inDialog('Tidak bisa terhubung. Periksa koneksi internet kamu.'),
+        findsOneWidget,
+      );
       expect(sw(value: true), findsOneWidget);
       expect(find.text('Berbagi lokasi dimatikan'), findsNothing);
       await tester.tap(inDialog('Tutup'));
@@ -552,7 +559,7 @@ void main() {
           find
               .ancestor(
                 of: find.text(label),
-                matching: find.byType(CupertinoButton),
+                matching: find.byType(GestureDetector),
               )
               .first,
         );
@@ -562,7 +569,7 @@ void main() {
         find
             .ancestor(
               of: find.text('Keluarkan').first,
-              matching: find.byType(CupertinoButton),
+              matching: find.byType(GestureDetector),
             )
             .first,
       );

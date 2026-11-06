@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/selected_circle.dart';
+import '../../../core/widgets/design_widgets.dart';
+import '../../../core/widgets/glass_card.dart';
 import '../../../core/widgets/member_avatar.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../../auth/data/auth_providers.dart';
@@ -65,49 +68,104 @@ class CircleTabPage extends ConsumerWidget {
     final hasCircles = circles.value?.isNotEmpty ?? false;
     return CupertinoPageScaffold(
       backgroundColor: AppColors.groupedBackground,
-      child: CustomScrollView(
-        slivers: [
-          CupertinoSliverNavigationBar(
-            largeTitle: const Text(CircleStrings.title),
-            trailing: hasCircles
-                ? Semantics(
-                    button: true,
-                    label: CircleStrings.add,
-                    excludeSemantics: true,
-                    child: CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      minimumSize: const Size(44, 44),
-                      onPressed: () => _showAddSheet(context),
-                      child: const Icon(CupertinoIcons.add),
-                    ),
-                  )
-                : null,
-          ),
-          CupertinoSliverRefreshControl(
-            onRefresh: () => _refresh(context, ref),
-          ),
-          SliverSafeArea(
-            top: false,
-            sliver: SliverToBoxAdapter(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 560),
-                  child: circles.when(
-                    skipLoadingOnReload: true,
-                    data: (list) => list.isEmpty
-                        ? const _EmptyState()
-                        : _CircleContent(circles: list),
-                    loading: () => const Padding(
-                      padding: EdgeInsets.all(48),
-                      child: Center(child: CupertinoActivityIndicator()),
-                    ),
-                    error: (_, _) => _LoadFailed(
-                      message: CircleStrings.loadFailed,
-                      onRetry: () => ref.invalidate(myCirclesProvider),
+      child: AtmosphereBackground(
+        child: SafeArea(
+          bottom: false,
+          child: CustomScrollView(
+            slivers: [
+              CupertinoSliverRefreshControl(
+                onRefresh: () => _refresh(context, ref),
+              ),
+              SliverToBoxAdapter(
+                child: _TitleBar(
+                  onAdd: hasCircles ? () => _showAddSheet(context) : null,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 560),
+                    child: circles.when(
+                      skipLoadingOnReload: true,
+                      data: (list) => list.isEmpty
+                          ? const _EmptyState()
+                          : _CircleContent(circles: list),
+                      loading: () => const Padding(
+                        padding: EdgeInsets.all(48),
+                        child: Center(child: CupertinoActivityIndicator()),
+                      ),
+                      error: (_, _) => _LoadFailed(
+                        message: CircleStrings.loadFailed,
+                        onRetry: () => ref.invalidate(myCirclesProvider),
+                      ),
                     ),
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Judul halaman: "Circle", subjudul, lencana Aktif, dan tombol tambah.
+class _TitleBar extends StatelessWidget {
+  const _TitleBar({required this.onAdd});
+
+  final VoidCallback? onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    CircleStrings.title,
+                    style: AppTextStyles.largeTitle(context, emphasized: true),
+                  ),
+                ),
+                Text(
+                  CircleStrings.subtitle,
+                  style: AppTextStyles.footnote(
+                    context,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (onAdd != null) ...[
+            Semantics(
+              button: true,
+              label: CircleStrings.add,
+              excludeSemantics: true,
+              onTap: onAdd,
+              child: CupertinoButton(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(44, 44),
+                onPressed: onAdd,
+                child: Icon(
+                  Symbols.add,
+                  color: AppColors.tint.resolveFrom(context),
+                ),
+              ),
+            ),
+          ],
+          const Padding(
+            padding: EdgeInsets.only(top: 6),
+            child: StatusBadge(
+              text: CircleStrings.activeBadge,
+              dotColor: AppColors.success,
             ),
           ),
         ],
@@ -135,7 +193,7 @@ class _EmptyState extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Icon(
-            CupertinoIcons.person_2_fill,
+            Symbols.group,
             size: 64,
             color: CupertinoDynamicColor.resolve(
               AppColors.textSecondary,
@@ -340,7 +398,7 @@ class _CircleContentState extends ConsumerState<_CircleContent> {
     final isAdmin = list.any((m) => m.userId == uid && m.isAdmin);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -348,23 +406,23 @@ class _CircleContentState extends ConsumerState<_CircleContent> {
             circle: current,
             memberCount: members.hasValue ? list.length : null,
             onSwitch: circles.length > 1 ? () => _switch(current) : null,
+            invite: isAdmin
+                ? TintPillButton(
+                    label: _inviting
+                        ? CircleStrings.inviting
+                        : CircleStrings.invite,
+                    icon: Symbols.person_add,
+                    expand: true,
+                    busy: _inviting,
+                    onPressed: () => _invite(current),
+                  )
+                : null,
           ),
-          if (isAdmin) ...[
-            const SizedBox(height: 16),
-            PrimaryButton(
-              label: CircleStrings.invite,
-              busyLabel: CircleStrings.inviting,
-              busy: _inviting,
-              onPressed: () => _invite(current),
-            ),
-          ],
           if (members.hasValue && list.any((m) => m.userId == uid)) ...[
             const SizedBox(height: 16),
             const _SectionHeader(CircleStrings.sharingSection),
             _ShareCard(
-              enabled: list
-                  .firstWhere((m) => m.userId == uid)
-                  .sharingEnabled,
+              enabled: list.firstWhere((m) => m.userId == uid).sharingEnabled,
               busy: _sharing,
               onChanged: (v) => _toggleSharing(current, v),
             ),
@@ -389,19 +447,15 @@ class _CircleContentState extends ConsumerState<_CircleContent> {
             ),
           ),
           const SizedBox(height: 32),
-          _Card(
-            child: CupertinoButton(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              minimumSize: const Size.fromHeight(44),
-              onPressed: members.hasValue
-                  ? () => _leave(current, list.length)
-                  : null,
-              child: Text(
-                CircleStrings.leave,
-                style: AppTextStyles.body(context, color: AppColors.danger),
-              ),
-            ),
+          _DangerButton(
+            label: CircleStrings.leave,
+            icon: Symbols.logout,
+            onPressed: members.hasValue
+                ? () => _leave(current, list.length)
+                : null,
           ),
+          // Ruang untuk tab bar melayang.
+          const SizedBox(height: 72),
         ],
       ),
     );
@@ -413,65 +467,89 @@ class _CircleHeader extends StatelessWidget {
     required this.circle,
     required this.memberCount,
     required this.onSwitch,
+    required this.invite,
   });
 
   final Circle circle;
   final int? memberCount;
   final VoidCallback? onSwitch;
 
+  /// Tombol undang (hanya admin).
+  final Widget? invite;
+
   @override
   Widget build(BuildContext context) {
-    final secondary = CupertinoDynamicColor.resolve(
-      AppColors.textSecondary,
-      context,
-    );
-    final info = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final tint = AppColors.tint.resolveFrom(context);
+    final info = Row(
       children: [
-        Text(
-          circle.name,
-          style: AppTextStyles.title2(context, emphasized: true),
+        ExcludeSemantics(child: Icon(Symbols.shield, size: 28, color: tint)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                circle.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.title2(context, emphasized: true),
+              ),
+              if (memberCount != null)
+                Text(
+                  CircleStrings.memberCount(memberCount!),
+                  style: AppTextStyles.callout(
+                    context,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+            ],
+          ),
         ),
-        if (memberCount != null)
-          Text(
-            CircleStrings.memberCount(memberCount!),
-            style: AppTextStyles.subhead(
-              context,
-              color: AppColors.textSecondary,
+        if (onSwitch != null)
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceHigh.resolveFrom(context),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: AppColors.separator.resolveFrom(context),
+              ),
+            ),
+            child: Icon(
+              Symbols.swap_horiz,
+              size: 22,
+              color: AppColors.textSecondary.resolveFrom(context),
             ),
           ),
       ],
     );
-    return _Card(
-      child: onSwitch == null
-          ? Padding(padding: const EdgeInsets.all(16), child: info)
-          : Semantics(
-              button: true,
-              label: '${CircleStrings.switchCircle}: ${circle.name}',
-              excludeSemantics: true,
+    final tappable = onSwitch == null
+        ? info
+        : Semantics(
+            button: true,
+            label: '${CircleStrings.switchCircle}: ${circle.name}',
+            excludeSemantics: true,
+            onTap: onSwitch,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: onSwitch,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: onSwitch,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 44),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Expanded(child: info),
-                        const SizedBox(width: 8),
-                        Icon(
-                          CupertinoIcons.chevron_up_chevron_down,
-                          size: 18,
-                          color: secondary,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 44),
+                child: info,
               ),
             ),
+          );
+    return GlassCard(
+      padding: const EdgeInsets.all(20),
+      glow: tint,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          tappable,
+          if (invite != null) ...[const SizedBox(height: 16), invite!],
+        ],
+      ),
     );
   }
 }
@@ -499,7 +577,7 @@ class _MembersCard extends StatelessWidget {
             if (i > 0)
               Container(
                 height: 0.5,
-                margin: const EdgeInsetsDirectional.only(start: 68),
+                margin: const EdgeInsetsDirectional.only(start: 76),
                 color: CupertinoDynamicColor.resolve(
                   AppColors.separator,
                   context,
@@ -541,9 +619,9 @@ class _MemberRow extends StatelessWidget {
       context,
     );
     final statusIcon = switch (status) {
-      SharingStatus.sharing => CupertinoIcons.location_fill,
-      SharingStatus.paused => CupertinoIcons.pause_circle_fill,
-      SharingStatus.off => CupertinoIcons.location_slash_fill,
+      SharingStatus.sharing => Symbols.near_me,
+      SharingStatus.paused => Symbols.pause_circle,
+      SharingStatus.off => Symbols.location_off,
     };
     // Teks besar: tombol Keluarkan pindah ke bawah teks agar nama tidak terjepit.
     final stacked = MediaQuery.textScalerOf(context).scale(17) > 17 * 1.3;
@@ -552,16 +630,37 @@ class _MemberRow extends StatelessWidget {
       label: CircleStrings.removeLabel(member.displayName),
       excludeSemantics: true,
       onTap: onRemove,
-      child: CupertinoButton(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        minimumSize: const Size(44, 44),
-        onPressed: onRemove,
-        child: Text(
-          CircleStrings.remove,
-          style: AppTextStyles.subhead(context, color: AppColors.danger),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onRemove,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.danger
+                    .resolveFrom(context)
+                    .withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.danger
+                      .resolveFrom(context)
+                      .withValues(alpha: 0.3),
+                ),
+              ),
+              child: Text(
+                CircleStrings.remove,
+                style: AppTextStyles.labelMd(context, color: AppColors.danger),
+              ),
+            ),
+          ),
         ),
       ),
     );
+    final statusColor = status == SharingStatus.sharing
+        ? AppColors.success.resolveFrom(context)
+        : secondary;
     final info = Semantics(
       container: true,
       label: CircleStrings.memberLabel(member.displayName, member.role, status),
@@ -570,41 +669,51 @@ class _MemberRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Wrap(
-            spacing: 4,
+            spacing: 6,
+            runSpacing: 2,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text(member.displayName, style: AppTextStyles.headline(context)),
+              Text(
+                member.displayName,
+                style: AppTextStyles.body(context, emphasized: true),
+              ),
               if (isSelf)
                 Text(
                   CircleStrings.you,
-                  style: AppTextStyles.subhead(
+                  style: AppTextStyles.footnote(
                     context,
                     color: AppColors.textSecondary,
                   ),
                 ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceHigh.resolveFrom(context),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  CircleStrings.role(member.role),
+                  style: AppTextStyles.caption2(
+                    context,
+                    emphasized: true,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ),
             ],
           ),
-          Text(
-            CircleStrings.role(member.role),
-            style: AppTextStyles.subhead(
-              context,
-              color: AppColors.textSecondary,
-            ),
-          ),
+          const SizedBox(height: 2),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 2, right: 4),
-                child: Icon(statusIcon, size: 13, color: secondary),
+                child: Icon(statusIcon, size: 14, color: statusColor),
               ),
               Expanded(
                 child: Text(
                   CircleStrings.status(status),
-                  style: AppTextStyles.footnote(
-                    context,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: AppTextStyles.footnote(context, color: statusColor),
                 ),
               ),
             ],
@@ -612,16 +721,42 @@ class _MemberRow extends StatelessWidget {
         ],
       ),
     );
+    final avatar = Stack(
+      clipBehavior: Clip.none,
+      children: [
+        MemberAvatar(
+          name: member.displayName,
+          colorHex: member.color,
+          size: 48,
+        ),
+        Positioned(
+          right: -1,
+          bottom: -1,
+          child: Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: statusColor,
+              border: Border.all(
+                color: AppColors.groupedItemBackground.resolveFrom(context),
+                width: 2,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 44),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                MemberAvatar(name: member.displayName, colorHex: member.color),
+                avatar,
                 const SizedBox(width: 12),
                 Expanded(child: info),
                 if (canRemove && !stacked) removeButton,
@@ -629,7 +764,7 @@ class _MemberRow extends StatelessWidget {
             ),
             if (canRemove && stacked)
               Padding(
-                padding: const EdgeInsetsDirectional.only(start: 44),
+                padding: const EdgeInsetsDirectional.only(start: 60),
                 child: removeButton,
               ),
           ],
@@ -655,23 +790,107 @@ class _ShareCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return _Card(
       child: Padding(
-        padding: const EdgeInsetsDirectional.only(start: 16, end: 16),
-        child: CupertinoListTile(
-          backgroundColor: CupertinoColors.transparent,
-          title: Text(
-            CircleStrings.sharingRow,
-            style: AppTextStyles.body(context),
-          ),
-          subtitle: Text(
-            CircleStrings.sharingHint,
-            style: AppTextStyles.footnote(
-              context,
-              color: AppColors.textSecondary,
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      ExcludeSemantics(
+                        child: Icon(
+                          Symbols.location_on,
+                          size: 22,
+                          color: AppColors.success.resolveFrom(context),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          CircleStrings.sharingRow,
+                          style: AppTextStyles.body(context, emphasized: true),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    CircleStrings.sharingHint,
+                    style: AppTextStyles.footnote(
+                      context,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          trailing: CupertinoSwitch(
-            value: enabled,
-            onChanged: busy ? null : onChanged,
+            const SizedBox(width: 12),
+            CupertinoSwitch(
+              value: enabled,
+              activeTrackColor: AppColors.success.resolveFrom(context),
+              onChanged: busy ? null : onChanged,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Tombol destruktif bergaya hantu: latar merah 8%, garis merah 25%.
+class _DangerButton extends StatelessWidget {
+  const _DangerButton({
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = AppColors.danger.resolveFrom(context);
+    return Semantics(
+      button: true,
+      enabled: onPressed != null,
+      label: label,
+      excludeSemantics: true,
+      onTap: onPressed,
+      child: Opacity(
+        opacity: onPressed == null ? 0.5 : 1,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onPressed,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 52),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: c.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: c.withValues(alpha: 0.28)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 22, color: c),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.body(
+                      context,
+                      emphasized: true,
+                      color: AppColors.danger,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -686,16 +905,7 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: CupertinoDynamicColor.resolve(
-          AppColors.groupedItemBackground,
-          context,
-        ),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: child,
-    );
+    return GlassCard(padding: EdgeInsets.zero, child: child);
   }
 }
 
@@ -707,17 +917,8 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Semantics(
-        header: true,
-        child: Text(
-          text.toUpperCase(),
-          style: AppTextStyles.footnote(
-            context,
-            color: AppColors.textSecondary,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.only(bottom: 8),
+      child: SectionLabel(text),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +13,7 @@ import '../domain/circle.dart';
 import '../domain/circle_error.dart';
 import '../domain/invite_code.dart';
 import 'circle_strings.dart';
+import 'scan_invite_page.dart';
 
 /// Huruf besar, spasi dan karakter di luar alfabet kode dibuang, maksimal 6.
 class InviteCodeFormatter extends TextInputFormatter {
@@ -31,14 +34,19 @@ class InviteCodeFormatter extends TextInputFormatter {
 
 /// Alur gabung: kode -> pratinjau -> konfirmasi -> join.
 class JoinCirclePage extends ConsumerStatefulWidget {
-  const JoinCirclePage({super.key});
+  const JoinCirclePage({super.key, this.initialCode});
+
+  /// Kode dari deep link atau QR; mengisi kolom di awal.
+  final String? initialCode;
 
   @override
   ConsumerState<JoinCirclePage> createState() => _JoinCirclePageState();
 }
 
 class _JoinCirclePageState extends ConsumerState<JoinCirclePage> {
-  final _controller = TextEditingController();
+  late final _controller = TextEditingController(
+    text: InviteCode.normalize(widget.initialCode ?? ''),
+  );
   bool _busy = false;
   String? _error;
 
@@ -46,6 +54,24 @@ class _JoinCirclePageState extends ConsumerState<JoinCirclePage> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  /// Kamera hanya ada di Android dan iOS.
+  bool get _canScan =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
+  Future<void> _scan() async {
+    final code = await Navigator.of(
+      context,
+    ).push<String>(CupertinoPageRoute(builder: (_) => const ScanInvitePage()));
+    if (code == null || !mounted) return;
+    setState(() {
+      _controller.text = code;
+      _error = null;
+    });
+    await _next();
   }
 
   Future<bool> _confirm(InvitePreview preview) async {
@@ -188,6 +214,29 @@ class _JoinCirclePageState extends ConsumerState<JoinCirclePage> {
                       busy: _busy,
                       onPressed: _next,
                     ),
+                    if (_canScan)
+                      CupertinoButton(
+                        minimumSize: const Size(44, 44),
+                        onPressed: _busy ? null : _scan,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Symbols.qr_code_scanner, size: 20),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                CircleStrings.scanQr,
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.body(
+                                  context,
+                                  emphasized: true,
+                                  color: AppColors.tint,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),

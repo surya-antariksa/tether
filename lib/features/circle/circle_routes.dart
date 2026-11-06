@@ -21,6 +21,7 @@ final List<RouteBase> circleRoutes = [
   GoRoute(
     path: 'join',
     parentNavigatorKey: rootNavigatorKey,
-    builder: (_, _) => const JoinCirclePage(),
+    builder: (_, state) =>
+        JoinCirclePage(initialCode: state.uri.queryParameters['code']),
   ),
 ];

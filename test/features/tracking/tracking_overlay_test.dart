@@ -42,6 +42,9 @@ Future<void> _pump(
   GoRouter? router,
   double textScale = 1,
 }) async {
+  tester.view.physicalSize = const Size(800, 900);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.reset);
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
   _container = ProviderContainer(overrides: overrides);

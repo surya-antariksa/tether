@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/core/selected_circle.dart';
+import 'package:tether/core/widgets/glass_card.dart';
 import 'package:tether/features/activity/data/activity_providers.dart';
 import 'package:tether/features/activity/domain/activity_event.dart';
 import 'package:tether/features/activity/domain/notification_gateway.dart';
@@ -287,7 +288,7 @@ void main() {
     await pumpActivityApp(tester, repo: sampleRepo());
     final tile = find.ancestor(
       of: find.text('Sinta tiba di Rumah'),
-      matching: find.byType(ConstrainedBox),
+      matching: find.byType(GlassCard),
     );
     expect(tester.getSize(tile.first).height, greaterThanOrEqualTo(44));
   });

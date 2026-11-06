@@ -1,14 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/routes.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/selected_circle.dart';
+import '../../../core/widgets/design_widgets.dart';
+import '../../../core/widgets/glass_card.dart';
+import '../../map/presentation/relative_time.dart';
 import '../../auth/data/auth_providers.dart';
 import '../../circle/data/circle_providers.dart';
 import '../../circle/domain/circle.dart';
+import '../../safety/presentation/safety_sheet.dart';
 import '../data/activity_providers.dart';
 import '../domain/activity_event.dart';
 import 'activity_strings.dart';
@@ -22,6 +27,20 @@ class ActivityTabPage extends ConsumerStatefulWidget {
   ConsumerState<ActivityTabPage> createState() => _ActivityTabPageState();
 }
 
+/// Kategori filter feed (hanya menyaring tampilan, bukan data).
+enum _Filter { all, safety, places, circle }
+
+bool _inFilter(_Filter f, ActivityType t) => switch (f) {
+  _Filter.all => true,
+  _Filter.safety => t == ActivityType.checkin || t == ActivityType.sos,
+  _Filter.places => t == ActivityType.arrive || t == ActivityType.leave,
+  _Filter.circle =>
+    t != ActivityType.checkin &&
+        t != ActivityType.sos &&
+        t != ActivityType.arrive &&
+        t != ActivityType.leave,
+};
+
 class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
     with WidgetsBindingObserver {
   late final ActivityUnread _unread;
@@ -29,6 +48,7 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
   bool _appResumed = true;
   bool _visible = false;
   DateTime? _markedUpTo;
+  _Filter _filter = _Filter.all;
 
   @override
   void initState() {
@@ -97,38 +117,39 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
 
     return CupertinoPageScaffold(
       backgroundColor: AppColors.groupedBackground,
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text(ActivityStrings.title),
-      ),
-      child: SafeArea(
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
-            if (circles == null)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: circlesAsync.hasError
-                    ? _Failed(onRetry: () => ref.invalidate(myCirclesProvider))
-                    : const Center(child: CupertinoActivityIndicator()),
-              )
-            else if (circles.isEmpty)
-              const SliverFillRemaining(
-                hasScrollBody: false,
-                child: _Message(
-                  icon: CupertinoIcons.bell,
-                  title: ActivityStrings.noCircleTitle,
-                  body: ActivityStrings.noCircleBody,
+      child: AtmosphereBackground(
+        child: SafeArea(
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              if (circles == null)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: circlesAsync.hasError
+                      ? _Failed(
+                          onRetry: () => ref.invalidate(myCirclesProvider),
+                        )
+                      : const Center(child: CupertinoActivityIndicator()),
+                )
+              else if (circles.isEmpty)
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: _Message(
+                    icon: Symbols.notifications,
+                    title: ActivityStrings.noCircleTitle,
+                    body: ActivityStrings.noCircleBody,
+                  ),
+                )
+              else
+                ..._buildCircleSlivers(
+                  context,
+                  circles,
+                  selectedId,
+                  selfId,
+                  now,
                 ),
-              )
-            else
-              ..._buildCircleSlivers(
-                context,
-                circles,
-                selectedId,
-                selfId,
-                now,
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -164,7 +185,8 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
           hasScrollBody: false,
           child: async.hasError
               ? _Failed(
-                  onRetry: () => ref.invalidate(activityListProvider(current.id)),
+                  onRetry: () =>
+                      ref.invalidate(activityListProvider(current.id)),
                 )
               : const Center(child: CupertinoActivityIndicator()),
         ),
@@ -176,6 +198,10 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
     final notifier = ref.read(activityListProvider(current.id).notifier);
     final canSwitch = circles.length > 1;
     final eventCount = state.events.length;
+    final visible = [
+      for (final e in state.events)
+        if (_inFilter(_filter, e.type)) e,
+    ];
 
     return [
       CupertinoSliverRefreshControl(onRefresh: notifier.refresh),
@@ -187,35 +213,72 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
           onTap: canSwitch ? () => _pick(context, current, circles) : null,
         ),
       ),
+      SliverToBoxAdapter(
+        child: _StatusCard(
+          lastCheckin: state.events
+              .where(
+                (e) => e.type == ActivityType.checkin && e.userId == selfId,
+              )
+              .map((e) => e.shownAt)
+              .firstOrNull,
+          now: now,
+          onCheckin: () => showSafetySheet(context, circleId: current.id),
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: _Filters(
+          selected: _filter,
+          onSelect: (f) => setState(() => _filter = f),
+        ),
+      ),
       if (eventCount == 0)
         const SliverFillRemaining(
           hasScrollBody: false,
           child: _Message(
-            icon: CupertinoIcons.bell,
+            icon: Symbols.notifications,
             title: ActivityStrings.emptyTitle,
             body: ActivityStrings.emptyBody,
           ),
         )
+      else if (visible.isEmpty)
+        const SliverToBoxAdapter(
+          child: Padding(padding: EdgeInsets.all(32), child: _FilterEmpty()),
+        )
       else ...[
-        SliverList.separated(
-          itemCount: eventCount,
-          separatorBuilder: (context, _) => const SizedBox(height: 8),
+        SliverList.builder(
+          itemCount: visible.length,
           itemBuilder: (context, i) {
-            final e = state.events[i];
+            final e = visible[i];
             final isSelf = e.userId == selfId;
             final who = isSelf
                 ? ActivityStrings.you
                 : (e.displayName ??
                       state.names[e.userId] ??
                       ActivityStrings.someone);
-            return ActivityTile(
-              key: ValueKey(e.id),
-              event: e,
-              who: who,
-              now: now,
-              onShowOnMap: e.type == ActivityType.sos && e.hasCoordinates
-                  ? () => _showOnMap(context, e)
-                  : null,
+            final day = e.shownAt.toLocal();
+            final newDay =
+                i == 0 || !_sameDay(day, visible[i - 1].shownAt.toLocal());
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (newDay)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 6, 16, 10),
+                      child: SectionLabel(ActivityStrings.dayLabel(day, now)),
+                    ),
+                  ActivityTile(
+                    key: ValueKey(e.id),
+                    event: e,
+                    who: who,
+                    now: now,
+                    onShowOnMap: e.type == ActivityType.sos && e.hasCoordinates
+                        ? () => _showOnMap(context, e)
+                        : null,
+                  ),
+                ],
+              ),
             );
           },
         ),
@@ -228,8 +291,13 @@ class _ActivityTabPageState extends ConsumerState<ActivityTabPage>
           ),
         ),
       ],
+      // Ruang untuk tab bar melayang.
+      const SliverToBoxAdapter(child: SizedBox(height: 88)),
     ];
   }
+
+  static bool _sameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
 
   Future<void> _pick(
     BuildContext context,
@@ -285,60 +353,192 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final secondary = CupertinoColors.secondaryLabel.resolveFrom(context);
-    final title = Row(
-      children: [
-        Flexible(
-          child: Text(
-            name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.title3(context, emphasized: true),
-          ),
-        ),
-        if (canSwitch) ...[
-          const SizedBox(width: 4),
-          ExcludeSemantics(
-            child: Icon(
-              CupertinoIcons.chevron_down,
-              size: 14,
-              color: secondary,
-            ),
-          ),
-        ],
-      ],
-    );
+    final secondary = AppColors.textSecondary.resolveFrom(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Semantics(
-              button: canSwitch,
-              label: ActivityStrings.circleLabel(name, canSwitch: canSwitch),
-              excludeSemantics: true,
-              onTap: onTap,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 10,
+                runSpacing: 4,
+                children: [
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      ActivityStrings.title,
+                      style: AppTextStyles.largeTitle(context),
+                    ),
+                  ),
+                  offline
+                      ? Semantics(
+                          label: ActivityStrings.realtimeOfflineLabel,
+                          excludeSemantics: true,
+                          child: const StatusBadge(
+                            text: ActivityStrings.realtimeOffline,
+                            dotColor: AppColors.warning,
+                          ),
+                        )
+                      : const StatusBadge(text: ActivityStrings.realtimeBadge),
+                ],
+              ),
+              CirclePill(
+                name: name,
+                canSwitch: canSwitch,
                 onTap: onTap,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 44),
-                  child: Align(alignment: Alignment.centerLeft, child: title),
+                semanticLabel: ActivityStrings.circleLabel(
+                  name,
+                  canSwitch: canSwitch,
                 ),
               ),
-            ),
+            ],
           ),
-          if (offline)
-            Semantics(
-              label: ActivityStrings.realtimeOfflineLabel,
-              excludeSemantics: true,
-              child: Text(
-                ActivityStrings.realtimeOffline,
-                style: AppTextStyles.footnote(context, color: secondary),
-              ),
-            ),
+          const SizedBox(height: 4),
+          Text(
+            ActivityStrings.subtitle,
+            style: AppTextStyles.footnote(context, color: secondary),
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// Kartu "Status Anda": waktu kabar terakhir dan tombol Kabar Aman.
+class _StatusCard extends StatelessWidget {
+  const _StatusCard({
+    required this.lastCheckin,
+    required this.now,
+    required this.onCheckin,
+  });
+
+  final DateTime? lastCheckin;
+  final DateTime now;
+  final VoidCallback onCheckin;
+
+  @override
+  Widget build(BuildContext context) {
+    final detail = lastCheckin == null
+        ? ActivityStrings.statusNone
+        : ActivityStrings.statusUpdated(formatRelativeTime(lastCheckin!, now));
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: GlassCard(
+        padding: const EdgeInsets.all(14),
+        glow: AppColors.success.resolveFrom(context),
+        child: _statusBody(context, detail),
+      ),
+    );
+  }
+
+  Widget _statusBody(BuildContext context, String detail) {
+    final large = MediaQuery.textScalerOf(context).scale(16) > 16 * 1.5;
+    final texts = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          ActivityStrings.statusTitle,
+          style: AppTextStyles.labelMd(context),
+        ),
+        Text(
+          detail,
+          style: AppTextStyles.footnote(
+            context,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
+    );
+    final button = TintPillButton(
+      label: ActivityStrings.checkinButton,
+      icon: Symbols.check_circle,
+      onPressed: onCheckin,
+    );
+    const icon = IconTile(
+      icon: Symbols.verified_user,
+      color: AppColors.success,
+      size: 40,
+      iconSize: 22,
+    );
+    if (large) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              icon,
+              const SizedBox(width: 12),
+              Expanded(child: texts),
+            ],
+          ),
+          const SizedBox(height: 12),
+          button,
+        ],
+      );
+    }
+    return Row(
+      children: [
+        icon,
+        const SizedBox(width: 12),
+        Expanded(child: texts),
+        const SizedBox(width: 8),
+        button,
+      ],
+    );
+  }
+}
+
+class _Filters extends StatelessWidget {
+  const _Filters({required this.selected, required this.onSelect});
+
+  final _Filter selected;
+  final ValueChanged<_Filter> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    const items = [
+      (_Filter.all, ActivityStrings.filterAll, Symbols.all_inclusive),
+      (_Filter.safety, ActivityStrings.filterSafety, Symbols.shield),
+      (_Filter.places, ActivityStrings.filterPlaces, Symbols.pin_drop),
+      (_Filter.circle, ActivityStrings.filterCircle, Symbols.group),
+    ];
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      child: Row(
+        children: [
+          for (final (f, label, icon) in items) ...[
+            FilterPill(
+              label: label,
+              icon: icon,
+              selected: f == selected,
+              onTap: () => onSelect(f),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterEmpty extends StatelessWidget {
+  const _FilterEmpty();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      ActivityStrings.filterEmpty,
+      textAlign: TextAlign.center,
+      style: AppTextStyles.callout(context, color: AppColors.textSecondary),
     );
   }
 }
@@ -372,7 +572,7 @@ class _Footer extends StatelessWidget {
           textAlign: TextAlign.center,
           style: AppTextStyles.footnote(
             context,
-            color: CupertinoColors.secondaryLabel.resolveFrom(context),
+            color: AppColors.textSecondary.resolveFrom(context),
           ),
         ),
       );
@@ -411,7 +611,7 @@ class _Message extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: 48,
-                  color: CupertinoColors.secondaryLabel.resolveFrom(context),
+                  color: AppColors.textSecondary.resolveFrom(context),
                 ),
               ),
               const SizedBox(height: 16),
@@ -426,7 +626,7 @@ class _Message extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: AppTextStyles.body(
                   context,
-                  color: CupertinoColors.secondaryLabel,
+                  color: AppColors.textSecondary,
                 ),
               ),
             ],

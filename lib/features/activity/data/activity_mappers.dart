@@ -48,7 +48,8 @@ ActivityEvent? activityEventFromRow(Map<dynamic, dynamic> row) {
             _ => null,
           }
         : null,
-    sharingEnabled: type == ActivityType.sharingChanged && payload['enabled'] is bool
+    sharingEnabled:
+        type == ActivityType.sharingChanged && payload['enabled'] is bool
         ? payload['enabled'] as bool
         : null,
     clientId: type == ActivityType.sos && payload['client_id'] is String

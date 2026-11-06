@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../data/activity_providers.dart';
 import 'activity_strings.dart';
@@ -11,7 +12,10 @@ const activityBadgeColor = Color(0xFFB91C1C);
 /// [activityUnreadProvider], sehingga memasangnya di tab bar juga menjaga
 /// pemantau event dan notifikasi lokal tetap hidup selama aplikasi terbuka.
 class ActivityTabIcon extends ConsumerWidget {
-  const ActivityTabIcon({super.key});
+  const ActivityTabIcon({super.key, this.filled = false});
+
+  /// Ikon terisi untuk tab aktif.
+  final bool filled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,7 +25,7 @@ class ActivityTabIcon extends ConsumerWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          const Icon(CupertinoIcons.bell_fill),
+          Icon(Symbols.notifications, fill: filled ? 1 : 0),
           if (unread > 0)
             Positioned(
               top: -4,

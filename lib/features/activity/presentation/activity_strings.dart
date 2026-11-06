@@ -4,6 +4,45 @@ import '../domain/activity_event.dart';
 abstract final class ActivityStrings {
   static const title = 'Aktivitas';
   static const you = 'Anda';
+  static const subtitle =
+      'Pemberitahuan lokasi, status keamanan, dan riwayat lingkaran Anda.';
+  static const realtimeBadge = 'Realtime';
+  static const statusTitle = 'Status Anda';
+  static const statusNone = 'Belum ada kabar dari Anda';
+  static String statusUpdated(String ago) => 'Terakhir diperbarui $ago';
+  static const checkinButton = 'Kabar Aman';
+  static const filterAll = 'Semua';
+  static const filterSafety = 'Keamanan';
+  static const filterPlaces = 'Tempat';
+  static const filterCircle = 'Circle';
+  static const filterEmpty = 'Tidak ada aktivitas di kategori ini.';
+  static const today = 'Hari ini';
+  static const yesterday = 'Kemarin';
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'Mei',
+    'Jun',
+    'Jul',
+    'Agu',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Des',
+  ];
+
+  /// Judul kelompok hari: Hari ini, Kemarin, atau "6 Nov".
+  static String dayLabel(DateTime day, DateTime now) {
+    final d = DateTime(day.year, day.month, day.day);
+    final n = DateTime(now.year, now.month, now.day);
+    final diff = n.difference(d).inDays;
+    if (diff == 0) return today;
+    if (diff == 1) return yesterday;
+    return '${d.day} ${_months[d.month - 1]}';
+  }
+
   static const someone = 'Seorang anggota';
   static const unknownPlace = 'sebuah tempat';
 

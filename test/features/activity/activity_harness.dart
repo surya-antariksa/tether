@@ -48,7 +48,7 @@ Future<ActivityHarness> pumpActivityApp(
   double textScale = 1.0,
   DateTime? marker,
 }) async {
-  tester.view.physicalSize = const Size(390, 844);
+  tester.view.physicalSize = const Size(390, 1400);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
   tester.platformDispatcher.textScaleFactorTestValue = textScale;

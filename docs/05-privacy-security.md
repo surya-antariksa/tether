@@ -149,7 +149,7 @@ Tabel di bawah menggambarkan perilaku SERVER yang sudah diimplementasikan dan di
 
 | Data | Retensi | Catatan |
 |------|---------|---------|
-| Titik lokasi (`location_points`) | 48 jam | Dibuang `purge_old_location_points()` tiap jam. Server juga menolak titik lebih tua dari 48 jam. Anggota lain hanya bisa membaca titik 48 jam terakhir selama berbagi aktif |
+| Titik lokasi (`location_points`) | 30 hari | Dibuang `purge_old_location_points()` tiap jam. Server menolak titik yang lebih tua dari 30 hari. Pemilik melihat 30 hari; anggota lain hanya membaca titik 48 jam terakhir selama berbagi aktif. Diperpanjang dari 48 jam pada 2026-11-06: data lokasi presisi yang tersimpan lebih lama menambah risiko privasi dan perlu masuk tinjauan hukum UU PDP |
 | Posisi terakhir (`member_status`) | Selama akun ada | Berhenti diperbarui bila berbagi dijeda atau dimatikan di semua Circle. Dihapus saat hapus akun. TIDAK dihapus oleh "hapus riwayat". Rancangan awal "hapus saat keluar Circle" **tidak diimplementasikan**: keluar Circle menghapus status geofence, bukan `member_status` |
 | Events (`events`) | 90 hari | `purge_old_events()` harian 03:10 UTC |
 | Koordinat SOS | 48 jam | Setelah 48 jam hanya pelaku yang bisa membaca event SOS (RLS); `purge_old_events()` membuang `lat`, `lng`, `accuracy_m` dari payload. Karena cron harian, data fisik bisa bertahan sampai sekitar 72 jam |
@@ -160,9 +160,9 @@ Tabel di bawah menggambarkan perilaku SERVER yang sudah diimplementasikan dan di
 | Antrean lokal di ponsel (titik lokasi, SOS) | Sampai terkirim | SOS lebih tua dari 1 hari dibuang. Berkas antrean SOS memuat koordinat di perangkat |
 | Akun | Nonaktif segera, tuntas dalam 30 hari | Lihat bagian 7a |
 
-Pengguna dapat: melihat riwayat lokasi 48 jam sendiri, menjeda (per Circle), keluar Circle, menghapus riwayat lokasi (`delete_my_location_history()`), menghapus akun (`delete_account()`).
+Pengguna dapat: melihat riwayat lokasi 30 hari sendiri, menjeda (per Circle), keluar Circle, menghapus riwayat lokasi (`delete_my_location_history()`), menghapus akun (`delete_account()`).
 
-Hak "mengakses data" dan "mengoreksi" sebatas profil dan riwayat 48 jam yang tampil di aplikasi; ekspor data lengkap **belum ada**. Dampak untuk UU PDP perlu ditinjau hukum.
+Hak "mengakses data" dan "mengoreksi" sebatas profil dan riwayat 30 hari yang tampil di aplikasi; ekspor data lengkap **belum ada**. Dampak untuk UU PDP perlu ditinjau hukum.
 
 ### 7a. Hapus akun
 1. Segera: akun ditandai `deleted_at`, login diblokir, sesi dicabut, keluar dari semua Circle (promosi admin atau penghapusan Circle bila anggota terakhir), titik lokasi, event, perangkat, posisi terakhir, status geofence, dan antrean push dihapus. Aplikasi meminta konfirmasi ganda (ketik `HAPUS`).

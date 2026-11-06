@@ -189,7 +189,7 @@ Catatan: versi Postgres, pemilihan GitHub Actions sebagai CI, dan struktur proye
 
 ### ADR-008: Retensi lokasi
 - **Status:** diterima dan diimplementasikan (migrasi `130600`, `130700`).
-- 48 jam untuk `location_points` (`purge_old_location_points`, tiap jam). `member_status` hanya menyimpan posisi terakhir.
+- **30 hari** untuk `location_points` (`purge_old_location_points`, tiap jam). Diubah dari 48 jam pada 2026-11-06 (migrasi `20261106120000`) atas permintaan produk. Anggota Circle lain tetap hanya membaca titik 48 jam terakhir (RLS); hanya pemilik titik yang melihat 30 hari. `upload_points` menerima titik sampai 30 hari ke belakang. `member_status` hanya menyimpan posisi terakhir.
 - `events` dihapus setelah 90 hari (`purge_old_events`, harian 03:10 UTC). Koordinat SOS (`lat`, `lng`, `accuracy_m`) dibuang dari payload setelah 48 jam oleh fungsi yang sama.
 - Akun yang ditandai hapus dibersihkan tuntas setelah 30 hari (`purge_deleted_accounts`, harian 03:00 UTC).
 - Penjadwalan memakai `pg_cron` secara bersyarat (ADR-013). Partisi harian `location_points` yang dulu direncanakan **belum dikerjakan**: tabel masih biasa, dengan indeks `recorded_at` untuk purge.

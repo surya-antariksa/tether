@@ -727,7 +727,7 @@ void main() {
 
     // ----------------------------------------------------------- history
     test(
-      'history: 48 jam milik sendiri, hapus riwayat hanya milik sendiri',
+      'history: 30 hari milik sendiri, hapus riwayat hanya milik sendiri',
       () async {
         Future<void> clean() async {
           await a.history.deleteAll();
@@ -739,7 +739,7 @@ void main() {
         await _newCircle('Riwayat E2E', a, [b]);
 
         final now = DateTime.now().toUtc();
-        // A: 3 titik sah + 1 titik 49 jam (di luar retensi, dibuang RPC).
+        // A: 3 titik sah + 1 titik 31 hari (di luar retensi 30 hari, dibuang RPC).
         final inserted = await _upload(a, [
           _pt(
             -6.20,
@@ -750,7 +750,7 @@ void main() {
           ),
           _pt(-6.21, 106.81, now.subtract(const Duration(hours: 5))),
           _pt(-6.22, 106.82, now.subtract(const Duration(hours: 47))),
-          _pt(-6.30, 106.90, now.subtract(const Duration(hours: 49))),
+          _pt(-6.30, 106.90, now.subtract(const Duration(days: 31))),
         ]);
         expect(inserted, 3);
         expect(
@@ -769,7 +769,7 @@ void main() {
             .eq('user_id', b.id);
         expect(raw, hasLength(2), reason: 'prasyarat: RLS Circle mengizinkan');
 
-        final mine = await a.history.fetchLast48h();
+        final mine = await a.history.fetchHistory();
         expect(mine, hasLength(3));
         expect(mine.map((p) => p.point.latitude), [
           closeTo(-6.20, 1e-6),
@@ -786,17 +786,17 @@ void main() {
         final windowStart = DateTime.now().subtract(HistoryRepository.window);
         expect(mine.every((p) => p.recordedAt.isAfter(windowStart)), isTrue);
 
-        final theirs = await b.history.fetchLast48h();
+        final theirs = await b.history.fetchHistory();
         expect(theirs, hasLength(2));
         expect(theirs.every((p) => p.point.latitude < -6.9), isTrue);
 
         // A menghapus riwayatnya: 3 baris, milik B utuh.
         expect(await a.history.deleteAll(), 3);
-        expect(await a.history.fetchLast48h(), isEmpty);
-        expect(await b.history.fetchLast48h(), hasLength(2));
+        expect(await a.history.fetchHistory(), isEmpty);
+        expect(await b.history.fetchHistory(), hasLength(2));
         expect(await a.history.deleteAll(), 0); // idempoten
         expect(await b.history.deleteAll(), 2);
-        expect(await b.history.fetchLast48h(), isEmpty);
+        expect(await b.history.fetchHistory(), isEmpty);
       },
     );
 

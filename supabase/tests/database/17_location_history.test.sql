@@ -1,4 +1,4 @@
--- Sprint 5: riwayat lokasi 48 jam (F11): baca milik sendiri dan hapus lewat RPC.
+-- Riwayat lokasi 30 hari (F11): baca milik sendiri dan hapus lewat RPC.
 begin;
 create extension if not exists pgtap with schema extensions;
 select plan(12);
@@ -33,8 +33,8 @@ select public.upload_points(jsonb_build_array(pg_temp.pt(15), pg_temp.pt(5)));
 select pg_temp.as_user(1);
 select is((select count(*)::int from public.location_points where user_id = pg_temp.uid(1)), 3,
   'u1 membaca 3 titik miliknya');
-select is((select min(recorded_at) > now() - interval '48 hours' from public.location_points
-  where user_id = pg_temp.uid(1)), true, 'titik u1 ada dalam jendela 48 jam');
+select is((select min(recorded_at) > now() - interval '30 days' from public.location_points
+  where user_id = pg_temp.uid(1)), true, 'titik u1 ada dalam jendela 30 hari');
 
 -- Klien tetap tidak bisa menghapus langsung
 select throws_ok($$delete from public.location_points$$, '42501', null::text,

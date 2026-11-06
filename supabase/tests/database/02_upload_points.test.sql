@@ -103,9 +103,9 @@ select unalike(pg_temp.try_upload(jsonb_build_array(
 select is(public.upload_points(jsonb_build_array(
     jsonb_build_object('lat', 90, 'lng', 180, 'recorded_at', now() + interval '4 minutes'))),
   1, 'batas lat 90, lng 180, dan 4 menit di masa depan diterima');
-select is(public.upload_points(jsonb_build_array(pg_temp.pt(-6.2, 106.8167, 49 * 60))),
-  0, 'titik lebih dari 48 jam dilewati tanpa gagal');
-select is(public.upload_points(jsonb_build_array(pg_temp.pt(-6.2, 106.8167, 49 * 60), pg_temp.pt(-6.2, 106.8167, 20))),
+select is(public.upload_points(jsonb_build_array(pg_temp.pt(-6.2, 106.8167, 31 * 24 * 60))),
+  0, 'titik lebih dari 30 hari dilewati tanpa gagal');
+select is(public.upload_points(jsonb_build_array(pg_temp.pt(-6.2, 106.8167, 31 * 24 * 60), pg_temp.pt(-6.2, 106.8167, 20))),
   1, 'batch campuran: yang tua dilewati, yang baru masuk');
 
 select unalike(pg_temp.try_upload(jsonb_build_array(

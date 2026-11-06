@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/routes.dart';
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../../core/selected_circle.dart';
 import '../../../core/widgets/primary_button.dart';
@@ -95,7 +97,7 @@ class _MapTabPageState extends ConsumerState<MapTabPage>
             );
     }
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.systemBackground,
+      backgroundColor: AppColors.background,
       child: body,
     );
   }
@@ -136,9 +138,9 @@ class _NoCircle extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                CupertinoIcons.map,
+                Symbols.map,
                 size: 48,
-                color: CupertinoColors.secondaryLabel.resolveFrom(context),
+                color: AppColors.textSecondary.resolveFrom(context),
               ),
               const SizedBox(height: 16),
               Text(
@@ -152,7 +154,7 @@ class _NoCircle extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: AppTextStyles.body(
                   context,
-                  color: CupertinoColors.secondaryLabel,
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 24),

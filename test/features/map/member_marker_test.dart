@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/app/theme/app_theme.dart';
 import 'package:tether/features/map/domain/presence.dart';
 import 'package:tether/features/map/domain/vehicle_type.dart';
 import 'package:tether/features/map/presentation/member_marker.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 Future<int Function()> pumpMarker(
   WidgetTester tester, {
@@ -104,25 +104,16 @@ void main() {
 
   testWidgets('ikon gerak: bergerak, diam, atau tanpa lencana', (tester) async {
     await pumpMarker(tester, isMoving: true);
-    expect(
-      find.byIcon(CupertinoIcons.arrow_up_right_circle_fill),
-      findsOneWidget,
-    );
-    expect(find.byIcon(CupertinoIcons.stop_circle), findsNothing);
+    expect(find.byIcon(Symbols.near_me), findsOneWidget);
+    expect(find.byIcon(Symbols.radio_button_checked), findsNothing);
 
     await pumpMarker(tester, isMoving: false);
-    expect(find.byIcon(CupertinoIcons.stop_circle), findsOneWidget);
-    expect(
-      find.byIcon(CupertinoIcons.arrow_up_right_circle_fill),
-      findsNothing,
-    );
+    expect(find.byIcon(Symbols.radio_button_checked), findsOneWidget);
+    expect(find.byIcon(Symbols.near_me), findsNothing);
 
     await pumpMarker(tester, isMoving: null);
-    expect(find.byIcon(CupertinoIcons.stop_circle), findsNothing);
-    expect(
-      find.byIcon(CupertinoIcons.arrow_up_right_circle_fill),
-      findsNothing,
-    );
+    expect(find.byIcon(Symbols.radio_button_checked), findsNothing);
+    expect(find.byIcon(Symbols.near_me), findsNothing);
   });
 
   testWidgets('badge kendaraan: motor dan mobil di atas marker', (
@@ -134,7 +125,7 @@ void main() {
       vehicle: VehicleType.motorcycle,
       speedKmh: 35,
     );
-    expect(find.byIcon(Icons.two_wheeler), findsOneWidget);
+    expect(find.byIcon(Symbols.two_wheeler), findsOneWidget);
     expect(find.text('35 km/j'), findsOneWidget);
 
     await pumpMarker(
@@ -143,7 +134,7 @@ void main() {
       vehicle: VehicleType.car,
       speedKmh: 60,
     );
-    expect(find.byIcon(CupertinoIcons.car_fill), findsOneWidget);
+    expect(find.byIcon(Symbols.directions_car), findsOneWidget);
     expect(find.text('60 km/j'), findsOneWidget);
   });
 

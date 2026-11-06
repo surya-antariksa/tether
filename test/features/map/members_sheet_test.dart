@@ -6,6 +6,7 @@ import 'package:tether/features/map/domain/paused_until.dart';
 import 'package:tether/features/map/presentation/members_sheet.dart';
 import 'package:tether/features/map/presentation/pause_sheet.dart';
 import 'package:tether/features/map/presentation/relative_time.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import 'fake_map_repository.dart';
 import 'map_harness.dart' show fixedNow;
@@ -149,10 +150,7 @@ void main() {
       expect(inRow('Bergerak'), findsOneWidget);
       expect(inRow('Diperbarui 3 mnt lalu'), findsOneWidget);
       expect(inRow('64%'), findsOneWidget);
-      expect(
-        find.byIcon(CupertinoIcons.arrow_up_right_circle_fill),
-        findsOneWidget,
-      );
+      expect(find.byIcon(Symbols.near_me), findsOneWidget);
     });
 
     testWidgets('badge kendaraan: motor dan mobil di kartu anggota sheet', (
@@ -197,7 +195,7 @@ void main() {
 
       expect(inRow('Diam'), findsOneWidget);
       expect(inRow('Aktif'), findsOneWidget);
-      expect(find.byIcon(CupertinoIcons.stop_circle), findsOneWidget);
+      expect(find.byIcon(Symbols.radio_button_checked), findsOneWidget);
       expect(inRow('Baterai 0%'), findsNothing);
     });
 
@@ -223,10 +221,7 @@ void main() {
         expect(find.textContaining('Diperbarui'), findsNothing);
         expect(inRow('12%'), findsOneWidget);
         // Ikon gerak hanya untuk anggota aktif.
-        expect(
-          find.byIcon(CupertinoIcons.arrow_up_right_circle_fill),
-          findsNothing,
-        );
+        expect(find.byIcon(Symbols.near_me), findsNothing);
       },
     );
 

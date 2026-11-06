@@ -5,7 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
 import '../../activity/data/activity_providers.dart';
 import '../../places/data/place_providers.dart';
@@ -15,6 +17,7 @@ import '../../places/presentation/place_strings.dart';
 import '../../safety/presentation/safety_sheet.dart';
 import '../../tracking/presentation/tracking_overlay.dart';
 import '../data/map_providers.dart';
+import '../data/map_style_provider.dart';
 import '../domain/map_circle.dart';
 import '../domain/map_member.dart';
 import '../domain/map_repository.dart';
@@ -22,6 +25,7 @@ import '../domain/presence.dart';
 import '../domain/vehicle_type.dart';
 import 'glass.dart';
 import 'map_strings.dart';
+import 'map_type_sheet.dart';
 import 'members_map.dart';
 import 'members_sheet.dart';
 import 'osm_attribution.dart';
@@ -246,9 +250,7 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
               isMoving: loc.isMoving,
               ago: ago,
             ),
-            updated: isActive
-                ? MapStrings.updated(ago)
-                : null,
+            updated: isActive ? MapStrings.updated(ago) : null,
           ),
         ),
       );
@@ -256,6 +258,14 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
     // Diri sendiri digambar paling atas.
     entries.sort((a, b) => (a.isSelf ? 1 : 0).compareTo(b.isSelf ? 1 : 0));
     return entries;
+  }
+
+  Future<void> _pickMapType() async {
+    final current = ref.read(mapStyleProvider);
+    final picked = await showMapTypeSheet(context, current);
+    if (picked != null) {
+      await ref.read(mapStyleProvider.notifier).select(picked);
+    }
   }
 
   @override
@@ -352,28 +362,34 @@ class _CircleMapViewState extends ConsumerState<CircleMapView>
                   Column(
                     children: [
                       GlassIconButton(
-                        icon: CupertinoIcons.viewfinder,
+                        icon: Symbols.crop_free,
                         label: MapStrings.centerAll,
                         onPressed: entries.isEmpty
                             ? null
                             : () => _fitAll(entries),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       GlassIconButton(
-                        icon: CupertinoIcons.location_fill,
+                        icon: Symbols.near_me,
                         label: MapStrings.centerMe,
                         onPressed: selfEntry == null
                             ? null
                             : () => _focus(selfEntry.point),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       GlassIconButton(
-                        icon: CupertinoIcons.placemark_fill,
+                        icon: Symbols.location_on,
                         label: PlaceStrings.openFromMap,
                         onPressed: () =>
                             context.push(PlacesRoutes.list(widget.circle.id)),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
+                      GlassIconButton(
+                        icon: Symbols.layers,
+                        label: MapStrings.mapTypeLabel,
+                        onPressed: _pickMapType,
+                      ),
+                      const SizedBox(height: 8),
                       SafetyActionsButton(circleId: widget.circle.id),
                     ],
                   ),
@@ -434,6 +450,25 @@ class _TitlePill extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.success.resolveFrom(context),
+                  boxShadow: AppColors.isDark(context)
+                      ? [
+                          BoxShadow(
+                            color: AppColors.success
+                                .resolveFrom(context)
+                                .withValues(alpha: 0.8),
+                            blurRadius: 8,
+                          ),
+                        ]
+                      : null,
+                ),
+              ),
+              const SizedBox(width: 8),
               Flexible(
                 child: Text(
                   name,
@@ -445,9 +480,9 @@ class _TitlePill extends StatelessWidget {
               if (canSwitch) ...[
                 const SizedBox(width: 4),
                 Icon(
-                  CupertinoIcons.chevron_down,
-                  size: 14,
-                  color: CupertinoColors.label.resolveFrom(context),
+                  Symbols.expand_more,
+                  size: 18,
+                  color: AppColors.textSecondary.resolveFrom(context),
                 ),
               ],
             ],
@@ -476,9 +511,9 @@ class _OfflineChip extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                CupertinoIcons.wifi_slash,
+                Symbols.wifi_off,
                 size: 14,
-                color: CupertinoColors.label.resolveFrom(context),
+                color: AppColors.textPrimary.resolveFrom(context),
               ),
               const SizedBox(width: 6),
               Flexible(

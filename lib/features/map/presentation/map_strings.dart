@@ -27,6 +27,23 @@ abstract final class MapStrings {
   static String circleTitleLabel(String name, {required bool canSwitch}) =>
       canSwitch ? 'Circle $name, ketuk untuk ganti Circle' : 'Circle $name';
 
+  // Tipe peta
+  static const mapTypeLabel = 'Tipe peta';
+  static const mapTypeTitle = 'Pilih tipe peta';
+  static const mapTypeSubtitle =
+      'Ubah visualisasi & tema navigasi peta keluarga';
+  static const mapTypeActive = 'Aktif';
+  static const mapTypeAuto = 'Otomatis (ikut tema)';
+  static const mapTypeAutoDesc = 'Sinkron dengan mode sistem perangkat';
+  static const mapTypeStandardDesc = 'Peta jalan kontras tinggi & jelas';
+  static const mapTypeDarkDesc = 'Obsidian malam hemat daya baterai';
+  static const mapTypeTopoDesc = 'Kontur elevasi, pegunungan & relief bumi';
+  static const mapTypeStandard = 'Standar';
+  static const mapTypeDark = 'Gelap';
+  static const mapTypeTopo = 'Topografi';
+  static const osmAttributionTopo =
+      '© OpenStreetMap contributors, © OpenTopoMap (CC-BY-SA)';
+
   // Kontrol melayang
   static const centerAll = 'Pusatkan semua anggota';
   static const centerMe = 'Ke lokasi saya';

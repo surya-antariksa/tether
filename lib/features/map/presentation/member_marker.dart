@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Icons;
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
@@ -89,12 +89,20 @@ class MemberMarker extends StatelessWidget {
                                   : CupertinoColors.white,
                               width: isSelf ? 3 : 2,
                             ),
-                            boxShadow: const [
-                              BoxShadow(
+                            boxShadow: [
+                              const BoxShadow(
                                 color: Color(0x40000000),
                                 blurRadius: 4,
                                 offset: Offset(0, 1),
                               ),
+                              // Cahaya aksen hanya untuk diri sendiri di gelap.
+                              if (isSelf && AppColors.isDark(context))
+                                BoxShadow(
+                                  color: AppColors.tint
+                                      .resolveFrom(context)
+                                      .withValues(alpha: 0.5),
+                                  blurRadius: 16,
+                                ),
                             ],
                           ),
                           child: MemberAvatar(
@@ -131,10 +139,7 @@ class MemberMarker extends StatelessWidget {
 
 /// Lencana kendaraan di atas marker (mobil atau motor) dan angka km/jam.
 class _VehicleMarkerBadge extends StatelessWidget {
-  const _VehicleMarkerBadge({
-    required this.vehicle,
-    this.speedKmh,
-  });
+  const _VehicleMarkerBadge({required this.vehicle, this.speedKmh});
 
   final VehicleType vehicle;
   final double? speedKmh;
@@ -142,9 +147,9 @@ class _VehicleMarkerBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconData = switch (vehicle) {
-      VehicleType.motorcycle => Icons.two_wheeler,
-      VehicleType.car => CupertinoIcons.car_fill,
-      VehicleType.walking => Icons.directions_walk,
+      VehicleType.motorcycle => Symbols.two_wheeler,
+      VehicleType.car => Symbols.directions_car,
+      VehicleType.walking => Symbols.directions_walk,
       VehicleType.none => null,
     };
     if (iconData == null) return const SizedBox.shrink();
@@ -154,10 +159,7 @@ class _VehicleMarkerBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: CupertinoColors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color(0x1F000000),
-          width: 0.5,
-        ),
+        border: Border.all(color: const Color(0x1F000000), width: 0.5),
         boxShadow: const [
           BoxShadow(
             color: Color(0x26000000),
@@ -169,11 +171,7 @@ class _VehicleMarkerBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            iconData,
-            size: 13,
-            color: const Color(0xFF1C1C1E),
-          ),
+          Icon(iconData, size: 13, color: const Color(0xFF1C1C1E)),
           if (speedKmh != null && speedKmh! >= 1.5) ...[
             const SizedBox(width: 3),
             Text(
@@ -208,10 +206,8 @@ class _MotionBadge extends StatelessWidget {
         color: CupertinoColors.white,
       ),
       child: Icon(
-        moving
-            ? CupertinoIcons.arrow_up_right_circle_fill
-            : CupertinoIcons.stop_circle,
-        size: 18,
+        moving ? Symbols.near_me : Symbols.radio_button_checked,
+        size: 14,
         color: const Color(0xFF3A3A3C),
       ),
     );

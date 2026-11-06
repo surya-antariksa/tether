@@ -9,6 +9,7 @@ import '../../places/data/place_providers.dart';
 import '../domain/map_circle.dart';
 import '../domain/map_member.dart';
 import '../domain/map_repository.dart';
+import 'shared_tile_provider.dart';
 import 'supabase_map_repository.dart';
 
 /// Override di tes dengan repository palsu.
@@ -17,9 +18,11 @@ final mapRepositoryProvider = Provider<MapRepository>(
 );
 
 /// Penyedia tile. Override di tes agar tidak mengakses jaringan.
-final mapTileProviderProvider = Provider<TileProvider>(
-  (ref) => NetworkTileProvider(),
-);
+final mapTileProviderProvider = Provider<TileProvider>((ref) {
+  final provider = SharedNetworkTileProvider();
+  ref.onDispose(provider.close);
+  return provider;
+});
 
 /// Jam peta: memperbarui waktu relatif dan status jeda/basi tiap 30 detik.
 /// Override di tes dengan subclass yang waktunya tetap.
@@ -128,9 +131,7 @@ class MapMembersNotifier extends AsyncNotifier<MapSnapshot> {
         unawaited(refresh());
       case PlacesChanged():
         // Tempat berubah (oleh anggota lain): muat ulang daftar tempat.
-        unawaited(
-          ref.read(placesProvider(circleId).notifier).refresh(),
-        );
+        unawaited(ref.read(placesProvider(circleId).notifier).refresh());
       case ConnectionChanged(:final connected):
         _setConnected(connected);
     }

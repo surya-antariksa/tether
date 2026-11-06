@@ -1,5 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' show Icons;
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
@@ -16,9 +18,9 @@ const double kSheetCompact = 0.16;
 const double kSheetMedium = 0.45;
 const double kSheetFull = 0.9;
 
-/// Panel anggota nonmodal di atas peta (lapisan konten: latar opak, bukan
-/// Liquid Glass). Peta di belakangnya tetap bisa digerakkan karena area di
-/// atas panel tidak menangkap sentuhan.
+/// Panel anggota nonmodal di atas peta (kaca obsidian di gelap, putih bersih
+/// di terang). Peta di belakangnya tetap bisa digerakkan karena area di atas
+/// panel tidak menangkap sentuhan.
 class MembersSheet extends StatelessWidget {
   const MembersSheet({
     super.key,
@@ -68,20 +70,7 @@ class MembersSheet extends StatelessWidget {
         return Semantics(
           container: true,
           label: MapStrings.sheetLabel,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.background.resolveFrom(context),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x33000000),
-                  blurRadius: 12,
-                  offset: Offset(0, -2),
-                ),
-              ],
-            ),
+          child: _SheetSurface(
             child: ListView(
               controller: scrollController,
               padding: EdgeInsets.zero,
@@ -124,6 +113,48 @@ class MembersSheet extends StatelessWidget {
   }
 }
 
+/// Latar panel: kaca berkabut (blur) dengan sudut atas 28 dan tepi atas tipis.
+class _SheetSurface extends StatelessWidget {
+  const _SheetSurface({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    const radius = BorderRadius.vertical(top: Radius.circular(28));
+    final dark = AppColors.isDark(context);
+    final solid = MediaQuery.highContrastOf(context);
+    final fill = AppColors.glassFill.resolveFrom(context);
+    final surface = DecoratedBox(
+      decoration: BoxDecoration(
+        color: dark
+            ? fill.withValues(alpha: solid ? 1 : 0.9)
+            : AppColors.background.resolveFrom(context),
+        borderRadius: radius,
+        border: Border(
+          top: BorderSide(color: AppColors.glassBorder.resolveFrom(context)),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(dark ? 0xB3000000 : 0x1A000000),
+            blurRadius: dark ? 40 : 24,
+            offset: const Offset(0, -12),
+          ),
+        ],
+      ),
+      child: child,
+    );
+    if (!dark || solid) return surface;
+    return ClipRRect(
+      borderRadius: radius,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+        child: surface,
+      ),
+    );
+  }
+}
+
 class _Grabber extends StatelessWidget {
   const _Grabber();
 
@@ -133,11 +164,13 @@ class _Grabber extends StatelessWidget {
       child: Center(
         child: Container(
           margin: const EdgeInsets.only(top: 8, bottom: 4),
-          width: 36,
-          height: 5,
+          width: 40,
+          height: 4,
           decoration: BoxDecoration(
-            color: CupertinoColors.tertiaryLabel.resolveFrom(context),
-            borderRadius: BorderRadius.circular(3),
+            color: AppColors.separator
+                .resolveFrom(context)
+                .withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
       ),
@@ -176,7 +209,7 @@ class _Header extends StatelessWidget {
               Expanded(
                 child: Semantics(
                   header: true,
-                  child: Text(title, style: AppTextStyles.headline(context)),
+                  child: Text(title, style: AppTextStyles.title3(context)),
                 ),
               ),
               if (canPause)
@@ -192,6 +225,10 @@ class _Header extends StatelessWidget {
                         onPressed: selfPaused ? onResume : onPause,
                         child: Text(
                           selfPaused ? MapStrings.resume : MapStrings.pause,
+                          style: AppTextStyles.labelMd(
+                            context,
+                            color: AppColors.tint,
+                          ),
                         ),
                       ),
             ],
@@ -224,11 +261,7 @@ class _SelfPausedNote extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: Icon(
-                CupertinoIcons.pause_circle_fill,
-                size: 18,
-                color: color,
-              ),
+              child: Icon(Symbols.pause_circle, size: 18, color: color),
             ),
             const SizedBox(width: 6),
             Expanded(
@@ -316,15 +349,53 @@ class MemberRow extends StatelessWidget {
         alignment: Alignment.centerLeft,
         // Anggota tanpa marker tidak punya titik untuk dipusatkan.
         onPressed: showFix ? onTap : null,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.groupedItemBackground
+                .resolveFrom(context)
+                .withValues(alpha: AppColors.isDark(context) ? 0.7 : 1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.isDark(context)
+                  ? const Color(0x0DFFFFFF)
+                  : AppColors.separator.resolveFrom(context),
+            ),
+          ),
           child: Row(
             children: [
               Opacity(
                 opacity: dim ? 0.55 : 1,
-                child: MemberAvatar(
-                  name: member.displayName,
-                  colorHex: member.colorHex,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    MemberAvatar(
+                      name: member.displayName,
+                      colorHex: member.colorHex,
+                      size: 44,
+                    ),
+                    Positioned(
+                      right: -1,
+                      bottom: -1,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: presence == PresenceState.active
+                              ? AppColors.success.resolveFrom(context)
+                              : AppColors.textTertiary.resolveFrom(context),
+                          border: Border.all(
+                            color: AppColors.groupedItemBackground.resolveFrom(
+                              context,
+                            ),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 12),
@@ -336,7 +407,7 @@ class MemberRow extends StatelessWidget {
                       isSelf
                           ? '${member.displayName} (${MapStrings.you})'
                           : member.displayName,
-                      style: AppTextStyles.body(context, emphasized: true),
+                      style: AppTextStyles.callout(context, emphasized: true),
                     ),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -345,7 +416,7 @@ class MemberRow extends StatelessWidget {
                       children: [
                         Text(
                           status,
-                          style: AppTextStyles.subhead(
+                          style: AppTextStyles.footnote(
                             context,
                             color: presence == PresenceState.paused
                                 ? AppColors.warning
@@ -365,7 +436,7 @@ class MemberRow extends StatelessWidget {
                         MapStrings.updated(updated),
                         style: AppTextStyles.footnote(
                           context,
-                          color: secondary,
+                          color: AppColors.textTertiary,
                         ),
                       ),
                   ],
@@ -379,15 +450,16 @@ class MemberRow extends StatelessWidget {
                     if (battery != null)
                       Text(
                         '$battery%',
-                        style: AppTextStyles.subhead(context, color: secondary),
+                        style: AppTextStyles.caption1(
+                          context,
+                          color: secondary,
+                        ),
                       ),
                     if (moving != null)
                       Icon(
-                        moving
-                            ? CupertinoIcons.arrow_up_right_circle_fill
-                            : CupertinoIcons.stop_circle,
-                        size: 20,
-                        color: secondary.resolveFrom(context),
+                        moving ? Symbols.near_me : Symbols.radio_button_checked,
+                        size: 18,
+                        color: AppColors.success.resolveFrom(context),
                       ),
                   ],
                 ),
@@ -402,10 +474,7 @@ class MemberRow extends StatelessWidget {
 
 /// Badge kendaraan (mobil/motor) dan kecepatan km/jam di kartu anggota sheet.
 class _VehicleSheetBadge extends StatelessWidget {
-  const _VehicleSheetBadge({
-    required this.vehicle,
-    this.speedKmh,
-  });
+  const _VehicleSheetBadge({required this.vehicle, this.speedKmh});
 
   final VehicleType vehicle;
   final double? speedKmh;
@@ -413,9 +482,9 @@ class _VehicleSheetBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconData = switch (vehicle) {
-      VehicleType.motorcycle => Icons.two_wheeler,
-      VehicleType.car => CupertinoIcons.car_fill,
-      VehicleType.walking => Icons.directions_walk,
+      VehicleType.motorcycle => Symbols.two_wheeler,
+      VehicleType.car => Symbols.directions_car,
+      VehicleType.walking => Symbols.directions_walk,
       VehicleType.none => null,
     };
     if (iconData == null) return const SizedBox.shrink();

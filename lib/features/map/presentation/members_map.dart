@@ -6,6 +6,7 @@ import '../../places/domain/place.dart';
 import '../../places/presentation/place_map_layers.dart';
 import '../domain/presence.dart';
 import '../domain/vehicle_type.dart';
+import 'map_theme.dart';
 import 'member_marker.dart';
 
 /// Pusat awal bila belum ada anggota yang punya marker (Jakarta).
@@ -14,8 +15,6 @@ const double kDefaultZoom = 11;
 
 /// Syarat kebijakan tile OSM: tile dari tile.openstreetmap.org dan
 /// User-Agent yang mengenali aplikasi.
-const String kTileUrlTemplate =
-    'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const String kUserAgentPackageName = 'id.tether.tether';
 
 /// Satu marker di peta.
@@ -84,6 +83,7 @@ class _MembersMapState extends State<MembersMap>
   Map<String, LatLng> _to = {};
 
   late final MapOptions _options = MapOptions(
+    backgroundColor: mapBackground(context),
     initialCenter: kDefaultCenter,
     initialZoom: kDefaultZoom,
     initialCameraFit: widget.entries.isEmpty
@@ -154,11 +154,9 @@ class _MembersMapState extends State<MembersMap>
       mapController: widget.controller,
       options: _options,
       children: [
-        TileLayer(
-          urlTemplate: kTileUrlTemplate,
+        ThemedTileLayer(
           userAgentPackageName: kUserAgentPackageName,
           tileProvider: widget.tileProvider,
-          maxNativeZoom: 19,
         ),
         PlaceCirclesLayer(places: widget.places),
         PlaceLabelsLayer(places: widget.places),

@@ -2,31 +2,35 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 
-/// Permukaan gaya kaca ringan untuk kontrol melayang di atas peta (lapisan
-/// fungsional, docs/08 bagian 2): blur + tint tipis, garis tipis dan bayangan
-/// untuk kontras. Memakai warna solid bila kontras tinggi diminta sistem.
-/// Bukan Liquid Glass asli.
+import '../../../app/theme/app_colors.dart';
+
+/// Permukaan kaca untuk kontrol melayang di atas peta (docs/10): blur, isi
+/// berkabut, tepi tipis. Gelap = kaca obsidian; terang = putih bersih tanpa
+/// bayangan berat. Memakai warna solid bila kontras tinggi diminta sistem.
 class GlassSurface extends StatelessWidget {
   const GlassSurface({
     super.key,
     required this.child,
     this.borderRadius = const BorderRadius.all(Radius.circular(22)),
+    this.blur = 16,
   });
 
   final Widget child;
   final BorderRadius borderRadius;
+  final double blur;
 
   @override
   Widget build(BuildContext context) {
     final solid = MediaQuery.highContrastOf(context);
-    final base = CupertinoColors.systemBackground.resolveFrom(context);
+    final dark = AppColors.isDark(context);
+    final fill = AppColors.glassFill.resolveFrom(context);
     final surface = DecoratedBox(
       decoration: BoxDecoration(
-        color: solid ? base : base.withValues(alpha: 0.72),
+        color: fill,
         borderRadius: borderRadius,
         border: Border.all(
-          color: CupertinoColors.separator.resolveFrom(context),
-          width: 0.5,
+          color: AppColors.glassBorder.resolveFrom(context),
+          width: 1,
         ),
       ),
       child: child,
@@ -34,11 +38,11 @@ class GlassSurface extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Color(0x26000000),
-            blurRadius: 8,
-            offset: Offset(0, 2),
+            color: Color(dark ? 0x59000000 : 0x14000000),
+            blurRadius: dark ? 16 : 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -47,7 +51,7 @@ class GlassSurface extends StatelessWidget {
           : ClipRRect(
               borderRadius: borderRadius,
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
                 child: surface,
               ),
             ),
@@ -67,7 +71,7 @@ class GlassIconButton extends StatelessWidget {
 
   final IconData icon;
 
-  /// Label VoiceOver.
+  /// Label pembaca layar.
   final String label;
   final VoidCallback? onPressed;
 
@@ -90,8 +94,8 @@ class GlassIconButton extends StatelessWidget {
             icon,
             size: 22,
             color: enabled
-                ? CupertinoColors.label.resolveFrom(context)
-                : CupertinoColors.tertiaryLabel.resolveFrom(context),
+                ? AppColors.textPrimary.resolveFrom(context)
+                : AppColors.textTertiary.resolveFrom(context),
           ),
         ),
       ),

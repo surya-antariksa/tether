@@ -15,10 +15,9 @@ const String foregroundNotificationText =
     'Tether sedang membagikan lokasimu ke Circle keluarga';
 const String foregroundNotificationChannel = 'Berbagi lokasi';
 
-/// iOS: pembaruan di background butuh UIBackgroundModes `location` di
-/// Info.plist, yang belum ditambahkan (ios/ belum disentuh). Tanpa itu,
-/// mengaktifkannya membuat CLLocationManager melempar pengecualian.
-const bool iosAllowBackgroundUpdates = false;
+/// iOS: pembaruan di background didukung lewat UIBackgroundModes `location`
+/// dan izin Always pada Info.plist.
+const bool iosAllowBackgroundUpdates = true;
 
 /// Pengaturan stream untuk [mode] dan [platform]. Akurasi per mode adalah
 /// asumsi awal (perlu kalibrasi di Sprint 0B); jarak dan interval dari

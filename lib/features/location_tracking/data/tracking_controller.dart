@@ -24,7 +24,7 @@ class TrackingState {
   final int queued;
   final int sent;
 
-  /// Titik terkirim yang dilewati server (duplikat atau lebih tua dari 48 jam).
+  /// Titik terkirim yang dilewati server (duplikat atau lebih tua dari 30 hari).
   final int skippedByServer;
 
   /// Titik tertua yang dibuang karena antrean penuh.

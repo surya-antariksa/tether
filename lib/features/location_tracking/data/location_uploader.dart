@@ -57,7 +57,7 @@ class LocationUploader {
   /// Titik yang benar-benar masuk di server (nilai kembalian uploadBatch).
   int get sentCount => _sentCount;
 
-  /// Titik terkirim yang dilewati server (duplikat atau lebih tua dari 48 jam).
+  /// Titik terkirim yang dilewati server (duplikat atau lebih tua dari 30 hari).
   int get skippedByServer => _skippedByServer;
 
   /// Titik yang dibuang karena server menolaknya sebagai tidak valid.

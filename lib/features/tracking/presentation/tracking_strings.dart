@@ -22,7 +22,7 @@ abstract final class TrackingStrings {
   static const whenInUsePoints = [
     'Hanya anggota Circle kamu yang bisa melihat lokasimu.',
     'Kamu bisa menjeda berbagi lokasi kapan saja.',
-    'Titik lokasi dihapus otomatis setelah 48 jam.',
+    'Titik lokasi dihapus otomatis setelah 30 hari.',
   ];
 
   static const alwaysTitle = 'Tetap berbagi saat aplikasi ditutup';

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../app/theme/app_colors.dart';
 import '../data/drift_point_queue.dart';
 import '../data/location_api.dart';
 import '../data/location_database.dart';
@@ -155,7 +156,9 @@ class _SpikePageState extends State<SpikePage> {
                     padding: const EdgeInsets.only(top: 12),
                     child: Text(
                       _message!,
-                      style: const TextStyle(color: CupertinoColors.systemRed),
+                      style: TextStyle(
+                        color: AppColors.danger.resolveFrom(context),
+                      ),
                     ),
                   ),
               ],

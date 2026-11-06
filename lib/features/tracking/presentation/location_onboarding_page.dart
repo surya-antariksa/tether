@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/routes.dart';
 import '../../../app/theme/app_colors.dart';
@@ -153,7 +154,7 @@ class _LocationOnboardingPageState
     return switch (step) {
       _Step.whenInUse => _StepLayout(
         key: ValueKey(step),
-        icon: CupertinoIcons.location_fill,
+        icon: Symbols.near_me,
         title: TrackingStrings.whenInUseTitle,
         paragraphs: const [TrackingStrings.reasonWhenInUse],
         points: TrackingStrings.whenInUsePoints,
@@ -170,7 +171,7 @@ class _LocationOnboardingPageState
       ),
       _Step.always => _StepLayout(
         key: ValueKey(step),
-        icon: CupertinoIcons.location_circle_fill,
+        icon: Symbols.my_location,
         title: TrackingStrings.alwaysTitle,
         paragraphs: const [
           TrackingStrings.reasonAlways,
@@ -189,7 +190,7 @@ class _LocationOnboardingPageState
       ),
       _Step.notification => _StepLayout(
         key: ValueKey(step),
-        icon: CupertinoIcons.bell_fill,
+        icon: Symbols.notifications,
         title: TrackingStrings.notificationTitle,
         paragraphs: const [TrackingStrings.reasonNotification],
         actions: [
@@ -205,14 +206,14 @@ class _LocationOnboardingPageState
       ),
       _Step.locationDenied => _StepLayout(
         key: ValueKey(step),
-        icon: CupertinoIcons.location_slash_fill,
+        icon: Symbols.location_off,
         title: TrackingStrings.locationDeniedTitle,
         paragraphs: const [TrackingStrings.locationDeniedBody],
         actions: [primary(TrackingStrings.done, _finish), settings],
       ),
       _Step.alwaysDenied => _StepLayout(
         key: ValueKey(step),
-        icon: CupertinoIcons.location_slash_fill,
+        icon: Symbols.location_off,
         title: TrackingStrings.alwaysDeniedTitle,
         paragraphs: const [TrackingStrings.alwaysDeniedBody],
         actions: [
@@ -222,7 +223,7 @@ class _LocationOnboardingPageState
       ),
       _Step.notificationDenied => _StepLayout(
         key: ValueKey(step),
-        icon: CupertinoIcons.bell_slash_fill,
+        icon: Symbols.notifications_off,
         title: TrackingStrings.notificationDeniedTitle,
         paragraphs: const [TrackingStrings.notificationDeniedBody],
         actions: [
@@ -232,7 +233,7 @@ class _LocationOnboardingPageState
       ),
       _Step.battery => _StepLayout(
         key: ValueKey(step),
-        icon: CupertinoIcons.battery_charging,
+        icon: Symbols.battery_charging_full,
         title: TrackingStrings.batteryTitle,
         paragraphs: const [TrackingStrings.batteryIntro],
         guides: TrackingStrings.batteryBrands,
@@ -277,7 +278,11 @@ class _StepLayout extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ExcludeSemantics(
-                  child: Icon(icon, size: 56, color: AppColors.tint),
+                  child: Icon(
+                    icon,
+                    size: 56,
+                    color: AppColors.tint.resolveFrom(context),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Semantics(
@@ -351,11 +356,11 @@ class _Point extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const ExcludeSemantics(
+          ExcludeSemantics(
             child: Icon(
-              CupertinoIcons.checkmark_circle_fill,
+              Symbols.check_circle,
               size: 20,
-              color: AppColors.tint,
+              color: AppColors.tint.resolveFrom(context),
             ),
           ),
           const SizedBox(width: 8),

@@ -40,7 +40,7 @@ class TrackingSnapshot {
   final int queued;
   final int sent;
 
-  /// Dilewati server (duplikat, lebih tua dari 48 jam, atau berbagi dijeda).
+  /// Dilewati server (duplikat, lebih tua dari 30 hari, atau berbagi dijeda).
   final int skippedByServer;
 
   /// Dibuang karena antrean penuh.

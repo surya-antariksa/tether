@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tether/core/widgets/glass_card.dart';
 import 'package:tether/features/places/data/place_providers.dart';
 import 'package:tether/features/places/domain/place.dart';
 import 'package:tether/features/places/domain/place_error.dart';
@@ -75,7 +76,7 @@ void main() {
     expect(find.text('Circle lain'), findsNothing);
     expect(find.text('Radius 200 m'), findsOneWidget);
     expect(find.text('Radius 1,5 km'), findsOneWidget);
-    expect(find.text(PlaceStrings.count(2)), findsOneWidget);
+    expect(find.text(PlaceStrings.count(2).toUpperCase()), findsOneWidget);
     expect(find.text(PlaceStrings.limitNote), findsNothing);
   });
 
@@ -330,10 +331,7 @@ void main() {
 
     for (final f in [
       find.widgetWithText(CupertinoButton, PlaceStrings.add),
-      find.ancestor(
-        of: find.text('Rumah'),
-        matching: find.byType(CupertinoListTile),
-      ),
+      find.ancestor(of: find.text('Rumah'), matching: find.byType(GlassCard)),
     ]) {
       final size = tester.getSize(f);
       expect(size.height, greaterThanOrEqualTo(44));

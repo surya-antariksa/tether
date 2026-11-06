@@ -12,6 +12,17 @@ abstract final class PlaceStrings {
   static const loadFailed = 'Daftar tempat tidak bisa dimuat.';
 
   // Daftar
+  static const savedCountZero = '0 Tempat Disimpan';
+  static const quickSuggestions = 'Rekomendasi cepat';
+  static const tapToSet = 'Sentuh untuk set';
+  static const suggestHome = 'Rumah';
+  static const suggestHomeHint = 'Lokasi utama';
+  static const suggestSchool = 'Sekolah';
+  static const suggestSchoolHint = 'Rute rutin';
+  static const suggestFav = 'Favorit';
+  static const suggestFavHint = 'Kustom';
+  static const geofenceNote =
+      'Kabar tiba dan pergi otomatis saat anggota melewati tempat ini';
   static const emptyTitle = 'Belum ada tempat';
   static const emptyBody =
       'Tandai tempat penting seperti rumah atau sekolah. Anggota Circle '

@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
@@ -10,11 +11,12 @@ import '../../../core/widgets/primary_button.dart';
 import '../../map/data/map_providers.dart';
 import '../../map/presentation/glass.dart';
 import '../../map/presentation/members_map.dart'
-    show kDefaultCenter, kDefaultZoom, kTileUrlTemplate, kUserAgentPackageName;
+    show kDefaultCenter, kDefaultZoom, kUserAgentPackageName;
 import '../../map/presentation/osm_attribution.dart';
 import '../data/place_providers.dart';
 import '../domain/place.dart';
 import '../domain/place_error.dart';
+import '../../map/presentation/map_theme.dart';
 import 'place_form.dart';
 import 'place_map_layers.dart';
 import 'place_strings.dart';
@@ -22,9 +24,20 @@ import 'place_strings.dart';
 /// Buat tempat: pilih titik dengan mengetuk atau menahan peta, lalu isi nama
 /// dan radius. Koordinat tidak pernah ditampilkan, dicatat, atau masuk galat.
 class PlacePickerPage extends ConsumerStatefulWidget {
-  const PlacePickerPage({super.key, required this.circleId});
+  const PlacePickerPage({
+    super.key,
+    required this.circleId,
+    this.initialCenter,
+    this.initialName,
+  });
 
   final String circleId;
+
+  /// Titik awal (mis. dari detail titik riwayat): langsung berpin di sana.
+  final LatLng? initialCenter;
+
+  /// Nama awal (mis. saran cepat "Rumah").
+  final String? initialName;
 
   @override
   ConsumerState<PlacePickerPage> createState() => _PlacePickerPageState();
@@ -42,7 +55,9 @@ class _PlacePickerPageState extends ConsumerState<PlacePickerPage> {
   @override
   void initState() {
     super.initState();
-    final start = _startingPoint();
+    _name.text = widget.initialName ?? '';
+    _pin = widget.initialCenter;
+    final start = widget.initialCenter ?? _startingPoint();
     _options = MapOptions(
       initialCenter: start ?? kDefaultCenter,
       initialZoom: start == null ? kDefaultZoom : 15,
@@ -138,11 +153,9 @@ class _PlacePickerPageState extends ConsumerState<PlacePickerPage> {
                     mapController: _map,
                     options: _options,
                     children: [
-                      TileLayer(
-                        urlTemplate: kTileUrlTemplate,
+                      ThemedTileLayer(
                         userAgentPackageName: kUserAgentPackageName,
                         tileProvider: tiles,
-                        maxNativeZoom: 19,
                       ),
                       PlaceCirclesLayer(places: existing),
                       PlaceLabelsLayer(places: existing),
@@ -171,7 +184,7 @@ class _PlacePickerPageState extends ConsumerState<PlacePickerPage> {
                                   label: PlaceStrings.draftPinLabel,
                                   excludeSemantics: true,
                                   child: Icon(
-                                    CupertinoIcons.location_solid,
+                                    Symbols.near_me,
                                     size: 40,
                                     color: tint,
                                   ),
@@ -188,7 +201,7 @@ class _PlacePickerPageState extends ConsumerState<PlacePickerPage> {
                     top: 12,
                     right: 16,
                     child: GlassIconButton(
-                      icon: CupertinoIcons.scope,
+                      icon: Symbols.gps_fixed,
                       label: PlaceStrings.useMapCenter,
                       onPressed: _saving
                           ? null
@@ -260,7 +273,7 @@ class _Panel extends StatelessWidget {
         color: AppColors.background.resolveFrom(context),
         border: Border(
           top: BorderSide(
-            color: CupertinoColors.separator.resolveFrom(context),
+            color: AppColors.separator.resolveFrom(context),
             width: 0.5,
           ),
         ),

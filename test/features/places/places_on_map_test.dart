@@ -78,7 +78,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(PlacesPage), findsOneWidget);
     expect(h.router.state.uri.path, '/places/c1');
-    expect(find.text(PlaceStrings.count(1)), findsOneWidget);
+    expect(find.text(PlaceStrings.count(1).toUpperCase()), findsOneWidget);
   });
 
   testWidgets('tombol Kelola tempat: area sentuh minimal 44 pt', (

@@ -191,7 +191,7 @@ class _PlaceEditSheetState extends ConsumerState<PlaceEditSheet> {
                             style: AppTextStyles.body(
                               context,
                               color: _busy
-                                  ? CupertinoColors.tertiaryLabel
+                                  ? AppColors.textTertiary
                                   : AppColors.danger,
                             ),
                           ),

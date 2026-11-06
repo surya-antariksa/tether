@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
@@ -74,7 +75,7 @@ class _PlaceChip extends StatelessWidget {
     return Center(
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: CupertinoColors.systemBackground
+          color: AppColors.background
               .resolveFrom(context)
               .withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(14),
@@ -87,7 +88,7 @@ class _PlaceChip extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(CupertinoIcons.placemark_fill, size: 12, color: tint),
+                Icon(Symbols.location_on, size: 12, color: tint),
                 const SizedBox(width: 4),
                 Flexible(
                   child: Text(

@@ -10,6 +10,7 @@ import 'package:tether/features/places/domain/place.dart';
 import 'package:tether/features/places/domain/place_error.dart';
 import 'package:tether/features/places/places_routes.dart';
 import 'package:tether/features/places/presentation/place_strings.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../map/fake_map_repository.dart';
 import '../map/map_harness.dart' show fixedNow;
@@ -44,7 +45,7 @@ void main() {
     await tapMap(tester);
     expect(nameField, findsOneWidget);
     expect(find.byType(CupertinoSlider), findsOneWidget);
-    expect(find.byIcon(CupertinoIcons.location_solid), findsOneWidget);
+    expect(find.byIcon(Symbols.near_me), findsOneWidget);
     final layer = tester.widget<CircleLayer>(find.byType(CircleLayer).last);
     final c = layer.circles.single;
     expect(c.useRadiusInMeter, isTrue);

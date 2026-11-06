@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_text_styles.dart';
+import '../../../core/widgets/design_widgets.dart';
+import '../../../core/widgets/glass_card.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../../auth/data/auth_providers.dart';
 import '../data/place_providers.dart';
@@ -33,25 +36,52 @@ class PlacesPage extends ConsumerWidget {
           padding: EdgeInsets.zero,
           minimumSize: const Size(44, 44),
           onPressed: canAdd ? () => _add(context) : null,
-          child: const Text(PlaceStrings.add),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                color: AppColors.tint
+                    .resolveFrom(context)
+                    .withValues(alpha: canAdd ? 0.5 : 0.2),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Symbols.add,
+                  size: 16,
+                  color: AppColors.tint.resolveFrom(context),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  PlaceStrings.add,
+                  style: AppTextStyles.labelMd(context, color: AppColors.tint),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
-      child: SafeArea(
-        child: places == null
-            ? (async.hasError
-                  ? _Failed(
-                      onRetry: () => ref.invalidate(placesProvider(circleId)),
-                    )
-                  : const Center(child: CupertinoActivityIndicator()))
-            : places.isEmpty
-            ? _Empty(onAdd: () => _add(context))
-            : _List(circleId: circleId, places: places, full: full),
+      child: AtmosphereBackground(
+        child: SafeArea(
+          child: places == null
+              ? (async.hasError
+                    ? _Failed(
+                        onRetry: () => ref.invalidate(placesProvider(circleId)),
+                      )
+                    : const Center(child: CupertinoActivityIndicator()))
+              : places.isEmpty
+              ? _Empty(onAdd: (name) => _add(context, name: name))
+              : _List(circleId: circleId, places: places, full: full),
+        ),
       ),
     );
   }
 
-  void _add(BuildContext context) =>
-      context.push(PlacesRoutes.create(circleId));
+  void _add(BuildContext context, {String? name}) =>
+      context.push(PlacesRoutes.create(circleId, name: name));
 }
 
 class _List extends ConsumerWidget {
@@ -79,27 +109,35 @@ class _List extends ConsumerWidget {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 560),
-              child: CupertinoListSection.insetGrouped(
-                header: Semantics(
-                  header: true,
-                  child: Text(PlaceStrings.count(places.length)),
-                ),
-                footer: full
-                    ? Text(
-                        PlaceStrings.limitNote,
-                        style: AppTextStyles.footnote(
-                          context,
-                          color: AppColors.textSecondary,
-                        ),
-                      )
-                    : null,
-                children: [
-                  for (final p in places)
-                    _PlaceRow(
-                      place: p,
-                      canManage: p.canManage(userId: uid, isAdmin: isAdmin),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: SectionLabel(PlaceStrings.count(places.length)),
                     ),
-                ],
+                    for (final p in places) ...[
+                      _PlaceRow(
+                        place: p,
+                        canManage: p.canManage(userId: uid, isAdmin: isAdmin),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                    if (full)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(
+                          PlaceStrings.limitNote,
+                          style: AppTextStyles.footnote(
+                            context,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -123,15 +161,52 @@ class _PlaceRow extends StatelessWidget {
       label: PlaceStrings.rowLabel(place, canManage: canManage),
       onTap: canManage ? edit : null,
       excludeSemantics: true,
-      child: CupertinoListTile.notched(
-        leading: Icon(
-          CupertinoIcons.placemark_fill,
-          color: AppColors.tint.resolveFrom(context),
-        ),
-        title: Text(place.name, maxLines: 2, overflow: TextOverflow.ellipsis),
-        subtitle: Text(PlaceStrings.radiusOf(place.radiusM)),
-        trailing: canManage ? const CupertinoListTileChevron() : null,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: canManage ? edit : null,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 56),
+          child: GlassCard(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                const IconTile(
+                  icon: Symbols.location_on,
+                  color: AppColors.tint,
+                  size: 40,
+                  iconSize: 22,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        place.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.body(context, emphasized: true),
+                      ),
+                      Text(
+                        PlaceStrings.radiusOf(place.radiusM),
+                        style: AppTextStyles.footnote(
+                          context,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (canManage)
+                  Icon(
+                    Symbols.chevron_right,
+                    size: 20,
+                    color: AppColors.textSecondary.resolveFrom(context),
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -140,34 +215,71 @@ class _PlaceRow extends StatelessWidget {
 class _Empty extends StatelessWidget {
   const _Empty({required this.onAdd});
 
-  final VoidCallback onAdd;
+  /// Dipanggil dengan nama awal (saran cepat) atau null (tambah biasa).
+  final void Function(String? name) onAdd;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(32),
+    final tint = AppColors.tint.resolveFrom(context);
+    final suggestions = [
+      (PlaceStrings.suggestHome, PlaceStrings.suggestHomeHint, Symbols.home),
+      (
+        PlaceStrings.suggestSchool,
+        PlaceStrings.suggestSchoolHint,
+        Symbols.school,
+      ),
+      (PlaceStrings.suggestFav, PlaceStrings.suggestFavHint, Symbols.star),
+    ];
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(24, 32, 24, 96),
+      child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                CupertinoIcons.placemark,
-                size: 48,
-                color: CupertinoColors.secondaryLabel.resolveFrom(context),
+              Container(
+                width: 128,
+                height: 128,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: tint.withValues(alpha: 0.25)),
+                ),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: tint.withValues(alpha: 0.4)),
+                  ),
+                  child: const IconTile(
+                    icon: Symbols.location_on,
+                    color: AppColors.tint,
+                    size: 64,
+                    iconSize: 32,
+                  ),
+                ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                PlaceStrings.emptyTitle,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.title2(context, emphasized: true),
+              const SizedBox(height: 12),
+              const StatusBadge(
+                text: PlaceStrings.savedCountZero,
+                dotColor: AppColors.tint,
+              ),
+              const SizedBox(height: 20),
+              Semantics(
+                header: true,
+                child: Text(
+                  PlaceStrings.emptyTitle,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.title1(context),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 PlaceStrings.emptyBody,
                 textAlign: TextAlign.center,
-                style: AppTextStyles.body(
+                style: AppTextStyles.callout(
                   context,
                   color: AppColors.textSecondary,
                 ),
@@ -176,7 +288,97 @@ class _Empty extends StatelessWidget {
               PrimaryButton(
                 label: PlaceStrings.addPlace,
                 busyLabel: PlaceStrings.addPlace,
-                onPressed: onAdd,
+                onPressed: () => onAdd(null),
+              ),
+              const SizedBox(height: 32),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SectionLabel(
+                  PlaceStrings.quickSuggestions,
+                  trailing: Text(
+                    PlaceStrings.tapToSet,
+                    style: AppTextStyles.caption2(
+                      context,
+                      emphasized: true,
+                      color: AppColors.tint,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  for (var i = 0; i < suggestions.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 10),
+                    Expanded(
+                      child: Semantics(
+                        button: true,
+                        label: '${suggestions[i].$1}, ${suggestions[i].$2}',
+                        excludeSemantics: true,
+                        onTap: () => onAdd(suggestions[i].$1),
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => onAdd(suggestions[i].$1),
+                          child: GlassCard(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 14,
+                            ),
+                            child: Column(
+                              children: [
+                                Icon(suggestions[i].$3, size: 22, color: tint),
+                                const SizedBox(height: 8),
+                                Text(
+                                  suggestions[i].$1,
+                                  style: AppTextStyles.callout(
+                                    context,
+                                    emphasized: true,
+                                  ),
+                                ),
+                                Text(
+                                  suggestions[i].$2,
+                                  textAlign: TextAlign.center,
+                                  style: AppTextStyles.caption2(
+                                    context,
+                                    color: AppColors.textTertiary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 14),
+              GlassCard(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Symbols.verified_user,
+                      size: 16,
+                      color: AppColors.success.resolveFrom(context),
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        PlaceStrings.geofenceNote,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.caption1(
+                          context,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

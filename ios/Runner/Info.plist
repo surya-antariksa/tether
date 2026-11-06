@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Kamera dipakai untuk memindai QR undangan Circle.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -53,6 +55,16 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Tether membutuhkan izin lokasi untuk menampilkan posisi Anda pada peta radar Circle.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Tether membutuhkan izin lokasi di latar belakang agar anggota Circle keluarga tetap dapat memantau keamanan Anda secara langsung.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Tether membutuhkan izin lokasi sepanjang waktu untuk memperbarui lokasi Anda ke Circle keluarga secara langsung.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -2,6 +2,13 @@ import 'dart:ui';
 
 import 'contrast.dart';
 
+/// Opsi warna penanda visual berlabel untuk pemilih warna di profil.
+class MarkerColorChip {
+  const MarkerColorChip({required this.hex, required this.name});
+  final String hex;
+  final String name;
+}
+
 /// Palet penanda anggota (profiles.color), disimpan sebagai '#RRGGBB'.
 /// Urutan tetap: teal, biru, oranye, pink, ungu, hijau, amber, slate.
 abstract final class MemberColors {
@@ -14,6 +21,18 @@ abstract final class MemberColors {
     '#15803D',
     '#B45309',
     '#475569',
+  ];
+
+  /// Palet neon / cyan obsidian modern untuk UI pemilih warna HUD.
+  static const List<MarkerColorChip> palette = [
+    MarkerColorChip(hex: '#00F2FE', name: 'Teal Cyan'),
+    MarkerColorChip(hex: '#4CD7F6', name: 'Electric Blue'),
+    MarkerColorChip(hex: '#4EDEA3', name: 'Neon Green'),
+    MarkerColorChip(hex: '#FF8D5C', name: 'Neon Orange'),
+    MarkerColorChip(hex: '#F43F5E', name: 'Vivid Magenta'),
+    MarkerColorChip(hex: '#A855F7', name: 'Violet Purple'),
+    MarkerColorChip(hex: '#FBBF24', name: 'Amber Gold'),
+    MarkerColorChip(hex: '#64748B', name: 'Slate Blue'),
   ];
 
   static const String defaultHex = '#0F766E';

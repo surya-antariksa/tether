@@ -125,14 +125,24 @@ void main() {
   // memburuk. Lihat laporan: ini nilai sistem Apple atau akibat warna yang
   // ditetapkan, bukan token merek.
   group('pengecualian terdokumentasi (lantai 3:1)', () {
-    test('putih di atas tint gelap gagal, maka onTint gelap = hitam', () {
-      const white = Color(0xFFFFFFFF);
-      expect(
-        contrastRatio(white, pick(AppColors.tint, Appearance.dark)),
-        lessThan(4.5),
-      );
-      expect(pick(AppColors.onTint, Appearance.dark), const Color(0xFF000000));
-    });
+    test(
+      'putih di atas tint gelap (cyan) gagal, maka onTint gelap = #00373A',
+      () {
+        const white = Color(0xFFFFFFFF);
+        expect(
+          contrastRatio(white, pick(AppColors.tint, Appearance.dark)),
+          lessThan(4.5),
+        );
+        expect(
+          pick(AppColors.onTint, Appearance.dark),
+          const Color(0xFF00373A),
+        );
+        expect(
+          ratio(AppColors.onTint, AppColors.tint, Appearance.dark),
+          greaterThanOrEqualTo(4.5),
+        );
+      },
+    );
 
     test('secondaryLabel (sistem) di latar polos', () {
       for (final m in Appearance.values) {
@@ -175,17 +185,17 @@ void main() {
       return Color(CupertinoTheme.of(ctx).primaryColor.toARGB32());
     }
 
-    expect(await resolved(), const Color(0xFF0F766E));
+    expect(await resolved(), const Color(0xFF00696F));
 
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
-    expect(await resolved(), const Color(0xFF2DD4BF));
+    expect(await resolved(), const Color(0xFF00F2FE));
 
     tester.platformDispatcher.accessibilityFeaturesTestValue =
         const FakeAccessibilityFeatures(highContrast: true);
-    expect(await resolved(), const Color(0xFF5EEAD4));
+    expect(await resolved(), const Color(0xFF6FF6FF));
 
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
-    expect(await resolved(), const Color(0xFF0B5C55));
+    expect(await resolved(), const Color(0xFF004F53));
   });
 
   testWidgets('gaya teks sesuai tabel iOS dan mengikuti textScaler', (
@@ -211,14 +221,16 @@ void main() {
         ),
       ),
     );
-    expect(largeTitle.fontSize, 34);
-    expect(largeTitle.height! * largeTitle.fontSize!, closeTo(41, 0.001));
-    expect(largeTitle.fontWeight, FontWeight.w400);
-    expect(caption2.fontSize, 11);
-    expect(caption2.height! * 11, closeTo(13, 0.001));
-    expect(caption2.fontWeight, FontWeight.w600);
-    expect(body.fontSize, 17);
-    expect(body.height! * 17, closeTo(22, 0.001));
+    expect(largeTitle.fontSize, 28);
+    expect(largeTitle.height! * largeTitle.fontSize!, closeTo(34, 0.001));
+    expect(largeTitle.fontWeight, FontWeight.w700);
+    expect(largeTitle.fontFamily, 'PlusJakartaSans');
+    expect(caption2.fontSize, 10);
+    expect(caption2.height! * 10, closeTo(12, 0.001));
+    expect(caption2.fontWeight, FontWeight.w700);
+    expect(caption2.fontFamily, 'Inter');
+    expect(body.fontSize, 16);
+    expect(body.height! * 16, closeTo(24, 0.001));
     expect(bodyBold.fontWeight, FontWeight.w600);
     expect(headline.fontWeight, FontWeight.w600);
   });

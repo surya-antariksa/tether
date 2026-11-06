@@ -6,6 +6,7 @@ import 'app_strings.dart';
 import 'config_missing_page.dart';
 import 'router.dart';
 import 'theme/app_theme.dart';
+import 'theme/theme_mode_provider.dart';
 
 // Teks bawaan framework (salin, tempel, dialog) dalam bahasa Indonesia.
 const _locale = Locale('id');
@@ -21,7 +22,7 @@ class TetherApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return CupertinoApp.router(
       title: AppStrings.appName,
-      theme: appTheme,
+      theme: ref.watch(themeModeProvider).theme,
       locale: _locale,
       supportedLocales: const [_locale],
       localizationsDelegates: _localizationsDelegates,

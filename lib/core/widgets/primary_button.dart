@@ -11,6 +11,7 @@ class PrimaryButton extends StatelessWidget {
     required this.busyLabel,
     required this.onPressed,
     this.busy = false,
+    this.trailingIcon,
   });
 
   final String label;
@@ -19,6 +20,9 @@ class PrimaryButton extends StatelessWidget {
   final String busyLabel;
   final VoidCallback? onPressed;
   final bool busy;
+
+  /// Ikon di kanan label (mis. panah maju).
+  final IconData? trailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,7 @@ class PrimaryButton extends StatelessWidget {
       excludeSemantics: true,
       child: CupertinoButton.filled(
         minimumSize: const Size(44, 50),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(999),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         onPressed: busy ? null : onPressed,
         child: Row(
@@ -48,9 +52,13 @@ class PrimaryButton extends StatelessWidget {
                   context,
                   emphasized: true,
                   color: onPrimary,
-                ),
+                ).copyWith(fontWeight: FontWeight.w700),
               ),
             ),
+            if (trailingIcon != null && !busy) ...[
+              const SizedBox(width: 8),
+              Icon(trailingIcon, size: 20, color: onPrimary),
+            ],
           ],
         ),
       ),

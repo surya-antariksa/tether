@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import 'app_strings.dart';
 import 'theme/app_colors.dart';
@@ -20,7 +21,7 @@ class ConfigMissingPage extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               children: [
                 Icon(
-                  CupertinoIcons.exclamationmark_triangle_fill,
+                  Symbols.warning,
                   size: 40,
                   color: CupertinoDynamicColor.resolve(
                     AppColors.warning,

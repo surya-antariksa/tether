@@ -16,11 +16,11 @@ final historyClockProvider = Provider<DateTime Function()>(
   (ref) => DateTime.now,
 );
 
-/// Riwayat 48 jam milik pengguna yang sedang masuk, terbaru dulu. Dimuat ulang
+/// Riwayat 30 hari milik pengguna yang sedang masuk, terbaru dulu. Dimuat ulang
 /// tiap halaman dibuka dan bila pengguna ganti.
 final locationHistoryProvider = FutureProvider.autoDispose<List<HistoryPoint>>((
   ref,
 ) async {
   if (ref.watch(currentUserIdProvider) == null) return const [];
-  return ref.watch(historyRepositoryProvider).fetchLast48h();
+  return ref.watch(historyRepositoryProvider).fetchHistory();
 }, retry: (_, _) => null);

@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tether/features/history/domain/history_repository.dart';
 import 'package:tether/features/history/presentation/history_page.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../profile/profile_harness.dart';
 
@@ -39,7 +40,7 @@ void main() {
 
     gate.complete();
     await tester.pumpAndSettle();
-    expect(find.text('3 titik dalam 48 jam terakhir'), findsOneWidget);
+    expect(find.text('3 titik dalam 30 hari terakhir'), findsOneWidget);
   });
 
   testWidgets('kosong: pesan, keterangan privasi, tanpa tombol hapus', (
@@ -48,7 +49,7 @@ void main() {
     await openHistory(tester, history: FakeHistoryRepository());
 
     expect(find.text('Belum ada riwayat'), findsOneWidget);
-    expect(find.textContaining('disimpan 48 jam'), findsOneWidget);
+    expect(find.textContaining('disimpan 30 hari'), findsOneWidget);
     expect(find.text('Hapus riwayat'), findsNothing);
     expect(find.byType(FlutterMap), findsNothing);
   });
@@ -64,7 +65,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(repo.fetchCalls, 2);
-    expect(find.text('3 titik dalam 48 jam terakhir'), findsOneWidget);
+    expect(find.text('3 titik dalam 30 hari terakhir'), findsOneWidget);
   });
 
   testWidgets('sukses: peta ringkas, daftar per hari, tanpa jaringan', (
@@ -103,7 +104,7 @@ void main() {
       await tester.tap(inDialog('Batal'));
       await tester.pumpAndSettle();
       expect(h.history.deleteCalls, 0);
-      expect(find.text('3 titik dalam 48 jam terakhir'), findsOneWidget);
+      expect(find.text('3 titik dalam 30 hari terakhir'), findsOneWidget);
 
       await tester.tap(find.text('Hapus riwayat'));
       await tester.pumpAndSettle();
@@ -137,7 +138,7 @@ void main() {
     );
     await tester.tap(inDialog('Tutup'));
     await tester.pumpAndSettle();
-    expect(find.text('3 titik dalam 48 jam terakhir'), findsOneWidget);
+    expect(find.text('3 titik dalam 30 hari terakhir'), findsOneWidget);
     final button = tester.widget<CupertinoButton>(
       find.widgetWithText(CupertinoButton, 'Hapus riwayat'),
     );
@@ -151,7 +152,7 @@ void main() {
     await openHistory(tester);
 
     expect(
-      find.bySemanticsLabel('Peta jejak lokasi Anda dalam 48 jam terakhir'),
+      find.bySemanticsLabel('Peta jejak lokasi Anda dalam 30 hari terakhir'),
       findsOneWidget,
     );
     expect(
@@ -183,5 +184,22 @@ void main() {
     await openHistory(tester, textScale: 2.0);
     expect(tester.takeException(), isNull);
     expect(find.text('Hapus riwayat'), findsOneWidget);
+  });
+
+  testWidgets('bagikan rute: tombol di bar navigasi membuka ShareRouteSheet', (
+    tester,
+  ) async {
+    await openHistory(tester);
+    expect(find.byIcon(Symbols.share), findsOneWidget);
+
+    await tester.tap(find.byIcon(Symbols.share));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bagikan Rute Perjalanan'), findsOneWidget);
+    expect(find.text('Salin Tautan Ringkasan'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Symbols.close));
+    await tester.pumpAndSettle();
+    expect(find.text('Bagikan Rute Perjalanan'), findsNothing);
   });
 }

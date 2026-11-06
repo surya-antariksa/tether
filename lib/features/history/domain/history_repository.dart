@@ -14,11 +14,11 @@ class HistoryFailure implements Exception {
 
 abstract interface class HistoryRepository {
   /// Jendela riwayat (sama dengan retensi server).
-  static const window = Duration(hours: 48);
+  static const window = Duration(days: 30);
 
   /// Titik milik pengguna yang sedang masuk dalam [window] terakhir, TERBARU
   /// dulu. Maksimal [maxHistoryPoints] (batas baris PostgREST); yang terlama terpotong.
-  Future<List<HistoryPoint>> fetchLast48h();
+  Future<List<HistoryPoint>> fetchHistory();
 
   /// Hapus semua titik lokasi milik sendiri. Mengembalikan jumlah yang dihapus.
   Future<int> deleteAll();

@@ -15,7 +15,7 @@ class SupabaseHistoryRepository implements HistoryRepository {
   final DateTime Function() _now;
 
   @override
-  Future<List<HistoryPoint>> fetchLast48h() async {
+  Future<List<HistoryPoint>> fetchHistory() async {
     final uid = _client.auth.currentUser?.id;
     if (uid == null) {
       throw const HistoryFailure(HistoryFailureKind.unauthorized);
@@ -25,7 +25,9 @@ class SupabaseHistoryRepository implements HistoryRepository {
       // RLS juga membolehkan titik anggota Circle lain: filter user_id wajib.
       final rows = await _client
           .from('location_points')
-          .select('point, recorded_at, accuracy_m, is_moving')
+          .select(
+            'point, recorded_at, accuracy_m, is_moving, speed_mps, battery_pct',
+          )
           .eq('user_id', uid)
           .gte('recorded_at', since.toIso8601String())
           .order('recorded_at', ascending: false)
@@ -76,5 +78,11 @@ HistoryPoint? parseHistoryRow(Map<String, dynamic> row) {
     recordedAt: at.toLocal(),
     accuracyM: acc is num ? acc.toDouble() : null,
     isMoving: row['is_moving'] == true,
+    speedMps: row['speed_mps'] is num
+        ? (row['speed_mps'] as num).toDouble()
+        : null,
+    batteryPct: row['battery_pct'] is num
+        ? (row['battery_pct'] as num).toInt()
+        : null,
   );
 }

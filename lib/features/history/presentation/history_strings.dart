@@ -4,13 +4,13 @@ import '../domain/history_repository.dart';
 abstract final class HistoryStrings {
   static const title = 'Riwayat lokasi';
   static const rowTitle = 'Riwayat lokasi';
-  static const rowSubtitle = '48 jam terakhir';
+  static const rowSubtitle = '30 hari terakhir';
 
-  static const mapLabel = 'Peta jejak lokasi Anda dalam 48 jam terakhir';
+  static const mapLabel = 'Peta jejak lokasi Anda dalam 30 hari terakhir';
   static const mapStart = 'Titik terlama';
   static const mapEnd = 'Titik terbaru';
 
-  static String count(int n) => '$n titik dalam 48 jam terakhir';
+  static String count(int n) => '$n titik dalam 30 hari terakhir';
   static String truncated(int n) =>
       'Menampilkan $n titik terbaru. Titik yang lebih lama tidak ditampilkan.';
 
@@ -30,7 +30,7 @@ abstract final class HistoryStrings {
   static const retry = 'Coba lagi';
 
   static const privacy =
-      'Titik lokasi disimpan 48 jam, lalu dihapus otomatis. Menghapus riwayat '
+      'Titik lokasi disimpan 30 hari, lalu dihapus otomatis. Menghapus riwayat '
       'membuang semua titik di atas dari server. Posisi terakhir yang tampil '
       'di peta keluarga tidak ikut dihapus; jeda berbagi lokasi bila ingin '
       'menghentikannya.';
@@ -39,7 +39,7 @@ abstract final class HistoryStrings {
   static const deleting = 'Menghapus riwayat';
   static const deleteTitle = 'Hapus riwayat lokasi?';
   static const deleteMessage =
-      'Semua titik lokasi Anda dalam 48 jam terakhir akan dihapus dan tidak '
+      'Semua titik lokasi Anda dalam 30 hari terakhir akan dihapus dan tidak '
       'bisa dikembalikan.';
   static const cancel = 'Batal';
   static const deletedTitle = 'Riwayat dihapus';
